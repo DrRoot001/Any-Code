@@ -10,13 +10,13 @@ mod provider_commands;
 mod terminal_commands;
 mod workspace;
 
-use agent_commands::ApprovalResponse;
+use agent_commands::PendingApproval;
 use anycode_store::Store;
 use anycode_tools::ToolRegistry;
 use std::collections::HashMap;
-use std::sync::Mutex;
+use std::sync::atomic::AtomicBool;
+use std::sync::{Arc, Mutex};
 use tauri::{Manager, State};
-use tokio::sync::oneshot;
 use workspace::WorkspaceState;
 
 pub(crate) struct AppState {
@@ -24,7 +24,9 @@ pub(crate) struct AppState {
     workspace: Mutex<Option<WorkspaceState>>,
     terminals: Mutex<HashMap<String, anycode_terminal::PtySession>>,
     tools: ToolRegistry,
-    pending_approvals: Mutex<HashMap<String, oneshot::Sender<ApprovalResponse>>>,
+    pending_approvals: Mutex<HashMap<String, PendingApproval>>,
+    /// Cancellation flag per running agent task, keyed by task id.
+    running_tasks: Mutex<HashMap<String, Arc<AtomicBool>>>,
 }
 
 const THEME_KEY: &str = "theme";
@@ -61,6 +63,7 @@ pub fn run() {
                 terminals: Mutex::new(HashMap::new()),
                 tools: ToolRegistry::standard(),
                 pending_approvals: Mutex::new(HashMap::new()),
+                running_tasks: Mutex::new(HashMap::new()),
             });
             Ok(())
         })
@@ -97,6 +100,7 @@ pub fn run() {
             provider_commands::send_chat,
             agent_commands::run_task,
             agent_commands::respond_to_approval,
+            agent_commands::cancel_task,
         ])
         .run(tauri::generate_context!())
         .expect("error while running Any Code");

@@ -79,10 +79,31 @@ to Rust command to adapter is real, not mocked.
 
 ## Current phase: 3 · Agent runtime
 
-Not started. Ships: planner, task state machine, tool calls, filesystem/terminal/git
-tools routed through a permission/approval layer, event timeline, verification. Exit
-condition: an agent implements *and verifies* a simple repository task — not just
-generates a diff and calls it done (PRD §8.6, §33).
+- [x] Permission engine (`anycode-security`) — risk levels, allow/ask/deny, Critical
+      never overridable, unknown capabilities default to Medium
+- [x] Capability registry (`anycode-tools`) — the only path from a model-originated
+      request to the filesystem, git, or a shell
+- [x] Tool-calling in the OpenAI adapter (streaming fragments reassembled by index)
+- [x] Orchestration loop — every tool call gated before execution; results, including
+      denials, fed back to the model
+- [x] Approval UI — exact command/path, risk level, workspace scope; no global allow
+- [x] Task timeline — streamed text, tool calls, results, failures
+- [x] Cancellation (`cancel_task`) — architecture invariant #11
+- [x] Evidence on completion — measured `git status` delta and real command exit codes,
+      plus token totals
+- [ ] Exit condition demonstrated against a live provider — the loop is built and
+      unit-tested, but an end-to-end run needs an API key (see REVIEW.md)
+
+Deferred past Phase 3 (not needed for the exit condition): a task DAG and parallel
+subagents (Phase 5), tool-calling for Anthropic and Ollama (the abstraction is proven
+with one adapter; the others still honestly declare no tool support), and durable task
+history across restarts.
+
+**On verification:** the runtime records what it observed — which files `git status`
+reports as newly dirty, and what exit code each `shell.execute` returned — separately
+from anything the model says. A task where no command ran is reported as *unverified*,
+never as success. The model is instructed to verify its own work, but that instruction
+cannot set the flag; only real exit codes can.
 
 ## Distribution gate
 

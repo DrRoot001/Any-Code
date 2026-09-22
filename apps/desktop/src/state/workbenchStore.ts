@@ -21,6 +21,7 @@ interface WorkbenchState {
   bottomPanel: BottomPanel;
   commandPaletteOpen: boolean;
   diffPath: string | null;
+  agentDockOpen: boolean;
 
   setWorkspace: (workspace: WorkspaceInfo | null) => void;
   openTab: (path: string, content: string) => void;
@@ -34,6 +35,7 @@ interface WorkbenchState {
   setCommandPaletteOpen: (open: boolean) => void;
   openDiff: (path: string) => void;
   closeDiff: () => void;
+  toggleAgentDock: () => void;
 }
 
 export const useWorkbenchStore = create<WorkbenchState>((set) => ({
@@ -45,6 +47,7 @@ export const useWorkbenchStore = create<WorkbenchState>((set) => ({
   bottomPanel: "terminal",
   commandPaletteOpen: false,
   diffPath: null,
+  agentDockOpen: true,
 
   setWorkspace: (workspace) =>
     set({ workspace, tabs: [], activePath: null, diffPath: null, sidePanel: "explorer" }),
@@ -87,4 +90,5 @@ export const useWorkbenchStore = create<WorkbenchState>((set) => ({
   setCommandPaletteOpen: (commandPaletteOpen) => set({ commandPaletteOpen }),
   openDiff: (diffPath) => set({ diffPath }),
   closeDiff: () => set({ diffPath: null }),
+  toggleAgentDock: () => set((state) => ({ agentDockOpen: !state.agentDockOpen })),
 }));

@@ -8,16 +8,17 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 
 | Area | Last result | Evidence |
 |------|-------------|----------|
-| Rust workspace | Pass | 26 tests passed on 2026-08-24 |
+| Rust workspace | Pass | 53 tests passed on 2026-09-23 |
 | Rust lint | Pass | Clippy completed with warnings denied on 2026-08-24 |
 | TypeScript | Pass | Workspace typecheck passed on 2026-08-24 |
 | Web production build | Pass with warning | Vite production build completed on 2026-08-24; large Monaco chunks remain |
 | Rust formatting | Pass | `cargo fmt --all -- --check` on 2026-08-24 |
-| Native desktop compile | Pass | Release build completed and executable launched on 2026-08-23 |
+| Native desktop compile | Pass | Release build completed and `Any Code.app` launched on 2026-09-23 |
 | macOS bundle | Pass | `.app` and unsigned `.dmg` produced locally on 2026-08-23 |
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
 | Windows installer | Not run locally | GitHub Actions release job is the canonical Windows environment |
 | GitHub CI | Pass | Run `32608603364` passed on Linux, macOS, and Windows |
+| Agent runtime (live model) | **Not run** | No provider key available in this environment; see 2026-09-23 entry |
 
 ## Review protocol
 
@@ -137,6 +138,71 @@ the earlier failure.
   accessibility runner, or native UI harness. The module-scope-hook defect demonstrates why the
   TypeScript-only `lint` script is insufficient and should be strengthened.
 
+### 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence
+
+- **Scope:** completing the first usable MVP — the agent runtime's user-facing surface
+  (task timeline, approval dialog, cancellation, completion evidence), plus the defects
+  found while wiring it.
+- **Source:** `afd3b91` plus the working tree under review.
+- **Environment:** macOS, Node 20.19.5, pnpm 9.15.9, local Rust toolchain, no provider
+  API key present.
+
+**Defects found and fixed during this work:**
+
+- **Fail → fixed:** `task:tool_call` and `task:approval_requested` were emitted on
+  channels keyed by the *tool-call* id instead of the task id. No frontend could have
+  subscribed to them — every approval would have hung for the full 5-minute timeout and
+  then auto-denied. Both now use the task id.
+- **Fail → fixed:** the frontend subscribed to a task's channels *after* `run_task` had
+  already spawned it, so a fast-failing task could emit its terminal event before anyone
+  was listening, leaving the UI stuck on "Working…". The task id is now supplied by the
+  caller, which subscribes first and starts second.
+- **Fail → fixed:** a shell result with no exit code (killed by a signal) rendered a ✓ in
+  the timeline. It is now reported as a failure, matching what the evidence block already
+  counted it as.
+- **Fail → fixed:** saving an editor tab overwrote the file unconditionally, so an agent
+  edit to an open file was silently discarded (PRD §57). Save now compares against disk
+  and asks before overwriting.
+- **Fail → fixed:** the approval dialog rendered top-left because the shared `.overlay`
+  class carries no positioning by design; it was missing its own modifier.
+- **Fail → fixed:** `detach()` aborted mid-loop if any listener failed to unregister,
+  stranding the rest.
+
+**Verification performed:**
+
+- **Pass:** `cargo test --workspace` — 53 passed, 0 failed.
+- **Pass:** `cargo clippy --workspace --all-targets --all-features -- -D warnings` — no
+  output, both the workspace and the standalone `src-tauri` crate.
+- **Pass:** `cargo fmt --all --check`.
+- **Pass:** `pnpm exec tsc -b --noEmit`.
+- **Pass:** `pnpm tauri build` — `Any Code.app` and an unsigned `Any Code_0.1.0_x64.dmg`.
+- **Pass:** native launch — the bundled app started and stayed running; no crash reports
+  in `~/Library/Logs/DiagnosticReports`.
+- **Pass:** UI review against the dev server with a stubbed IPC bridge (test scaffolding
+  only; nothing stubbed ships). Confirmed visually: the agent dock renders with live
+  provider/model pickers; the timeline shows streamed text, tool calls with non-colour
+  risk labels, and pass/fail results; the approval dialog shows the exact subject,
+  capability, risk and workspace with Deny / Always-allow-in-workspace / Allow-once and
+  **no** global-allow; the evidence block reports "1 command ran, all exited 0" for a
+  clean run and "Verification failed — 1 of 1 command exited non-zero" for a failing one.
+- **Pass:** all 7 task event channels were registered *before* `run_task` was invoked,
+  confirming the subscribe-then-start fix.
+- **Pass:** browser console clean — 0 errors, 0 warnings — once the harness supplied the
+  event-plugin global the real runtime injects. The 7 errors seen before that were
+  entirely harness artifacts.
+
+**Not run / unverified:**
+
+- **The live agent loop.** No OpenAI/Anthropic key exists in this environment, so no real
+  model has driven a tool call through the permission gate end to end. The riskiest
+  untested seam is real streaming tool-call reassembly. To close it, a single command
+  now exists:
+  `OPENAI_API_KEY=sk-... cargo test -p anycode-models --test live_openai -- --ignored`.
+  Until that runs, Phase 3's exit condition is **not** demonstrated.
+- Screen-reader walkthrough of the new dock and dialog.
+- Windows and Linux execution of the new UI (CI builds them; nobody has run them).
+- Anthropic and Ollama tool-calling — still honestly unsupported, not merely untested.
+
 ## Open QA risks
 
 - Release artifacts are unsigned until protected Apple and Windows signing credentials are
@@ -146,3 +212,7 @@ the earlier failure.
 - Monaco is not yet split by language and makes the first production build slow and the package
   larger than necessary.
 - VPS service health is owner-reported and has not been independently checked in this QA run.
+- The agent runtime has never been exercised against a live model. Everything below the
+  provider boundary is unit-tested; the boundary itself is not.
+- Agent task history is in-memory only: closing the app loses the timeline, and a task
+  orphaned by a crash cannot be resumed.

@@ -1,12 +1,9 @@
 import { listen } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  providerCommands,
-  type ChatMessage,
-  type ModelDefinition,
-  type ProviderStatus,
-} from "../lib/tauri";
+import { useProviderModel } from "../hooks/useProviderModel";
+import { providerCommands, type ChatMessage } from "../lib/tauri";
 import { Icon } from "./Icons";
+import ModelPicker from "./ModelPicker";
 
 /**
  * Proves Phase 2's exit condition end to end: pick a provider, pick a model, send a
@@ -15,47 +12,14 @@ import { Icon } from "./Icons";
  * the Rust adapters; this component only ever sees the normalized chat/message shape.
  */
 export default function ChatPanel() {
-  const [providers, setProviders] = useState<ProviderStatus[] | null>(null);
-  const [providersError, setProvidersError] = useState<string | null>(null);
-  const [provider, setProvider] = useState<string | null>(null);
-  const [models, setModels] = useState<ModelDefinition[] | null>(null);
-  const [modelsError, setModelsError] = useState<string | null>(null);
-  const [model, setModel] = useState<string | null>(null);
+  const picker = useProviderModel();
+  const { provider, model } = picker;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState<string | null>(null);
   const [sendError, setSendError] = useState<string | null>(null);
   const sessionId = useMemo(() => crypto.randomUUID(), []);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const refreshProviders = useCallback(() => {
-    providerCommands
-      .listProviders()
-      .then((list) => {
-        setProviders(list);
-        setProvidersError(null);
-        setProvider((current) => current ?? list.find((p) => p.hasKey)?.id ?? null);
-      })
-      .catch((error) => setProvidersError(String(error)));
-  }, []);
-
-  useEffect(refreshProviders, [refreshProviders]);
-
-  useEffect(() => {
-    if (!provider) {
-      setModels(null);
-      return;
-    }
-    setModel(null);
-    setModelsError(null);
-    providerCommands
-      .listModels(provider)
-      .then((list) => {
-        setModels(list);
-        setModel(list[0]?.id ?? null);
-      })
-      .catch((error) => setModelsError(String(error)));
-  }, [provider]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -102,22 +66,21 @@ export default function ChatPanel() {
     });
   }, [provider, model, draft, pending, messages, sessionId]);
 
-  if (providersError) {
+  if (picker.providersError) {
     return (
       <div className="empty-state">
         <div>
           <strong>Could not load providers</strong>
-          {providersError}
+          {picker.providersError}
         </div>
       </div>
     );
   }
-  if (!providers) {
+  if (!picker.providers) {
     return <div className="empty-state muted">Loading providers…</div>;
   }
 
-  const connected = providers.filter((p) => p.hasKey);
-  if (connected.length === 0) {
+  if (picker.connected.length === 0) {
     return (
       <div className="empty-state">
         <div>
@@ -130,36 +93,15 @@ export default function ChatPanel() {
 
   return (
     <div className="panel">
-      <div className="panel-subheader chat-toolbar">
-        <label className="chat-select">
-          Provider
-          <select value={provider ?? ""} onChange={(e) => setProvider(e.target.value)}>
-            {connected.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="chat-select">
-          Model
-          {modelsError ? (
-            <span className="danger">{modelsError}</span>
-          ) : (
-            <select
-              value={model ?? ""}
-              onChange={(e) => setModel(e.target.value)}
-              disabled={!models}
-            >
-              {models?.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.displayName}
-                </option>
-              ))}
-            </select>
-          )}
-        </label>
-      </div>
+      <ModelPicker
+        connected={picker.connected}
+        provider={provider}
+        onProviderChange={picker.setProvider}
+        models={picker.models}
+        modelsError={picker.modelsError}
+        model={model}
+        onModelChange={picker.setModel}
+      />
 
       <div className="panel-scroll chat-messages" ref={scrollRef}>
         {messages.length === 0 && <p className="muted">Ask something to try {provider}.</p>}

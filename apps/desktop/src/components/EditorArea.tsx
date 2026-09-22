@@ -121,6 +121,20 @@ function MonacoPane({ path, initialContent }: { path: string; initialContent: st
     if (!editor) return;
     const content = editor.getValue();
     try {
+      // PRD §57: an agent must not silently overwrite — and must not be silently
+      // overwritten. If the file moved on disk since this buffer was loaded (the agent
+      // edited it), saying so beats quietly discarding one side of the change.
+      const onDisk = await commands.readFile(path).catch(() => null);
+      if (onDisk !== null && onDisk !== savedContentRef.current) {
+        const overwrite = window.confirm(
+          `${path} changed on disk since you opened it — the agent may have edited it.\n\n` +
+            `Overwrite those changes with this editor's version?`,
+        );
+        if (!overwrite) {
+          setSaveError(`Not saved. Close and reopen ${path} to load the version on disk.`);
+          return;
+        }
+      }
       await commands.writeFile(path, content);
       savedContentRef.current = content;
       markSaved(path, content);

@@ -620,3 +620,179 @@ input:focus-visible {
   padding: 6px 10px;
   font-size: 13px;
 }
+
+/* --- Agent dock (PRD §54/§55) ------------------------------------------- */
+.agent-dock {
+  width: 380px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--ac-border);
+  background: var(--ac-surface);
+}
+.agent-dock-body {
+  flex: 1;
+  min-height: 0;
+}
+.agent-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 12px;
+}
+.agent-entry p {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+.agent-entry--instruction {
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ac-border);
+}
+.agent-step {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  font-size: 12px;
+}
+.agent-step code {
+  color: var(--ac-text-secondary);
+}
+.agent-step-detail {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ac-text-muted);
+}
+.agent-working {
+  font-size: 12px;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Risk is never signalled by colour alone — the level is always spelled out. */
+.risk {
+  padding: 1px 6px;
+  border: 1px solid var(--ac-border);
+  border-radius: 999px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.risk--low {
+  color: var(--ac-text-muted);
+}
+.risk--medium {
+  color: var(--ac-warning);
+  border-color: var(--ac-warning);
+}
+.risk--high,
+.risk--critical {
+  color: var(--ac-danger);
+  border-color: var(--ac-danger);
+}
+
+/* --- Evidence (PRD §8.6 / §33) ------------------------------------------ */
+.evidence {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-canvas);
+  font-size: 12px;
+}
+.evidence h4,
+.evidence h5 {
+  margin: 0 0 6px;
+  color: var(--ac-text-secondary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.evidence h5 {
+  margin-top: 10px;
+}
+.evidence-verdict {
+  margin: 0 0 8px;
+}
+.evidence-verdict--passed {
+  color: var(--ac-success);
+}
+.evidence-verdict--failed {
+  color: var(--ac-danger);
+}
+.evidence-verdict--unverified {
+  color: var(--ac-warning);
+}
+.evidence-list {
+  margin: 0;
+  padding-left: 16px;
+  color: var(--ac-text-secondary);
+}
+.evidence-list li {
+  margin-bottom: 2px;
+}
+
+/* --- Approval dialog (PRD §50) ------------------------------------------ */
+.approval-overlay {
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.approval {
+  width: min(520px, calc(100vw - 32px));
+  max-height: 80vh;
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid var(--ac-border);
+  border-radius: 10px;
+  background: var(--ac-surface);
+  box-shadow: 0 16px 48px #0004;
+}
+.approval h2 {
+  margin: 0 0 14px;
+  font-size: 15px;
+}
+.approval-subject {
+  margin: 6px 0 14px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-canvas);
+  font-family: var(--ac-font-code);
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.approval-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin: 0 0 18px;
+  font-size: 12px;
+}
+.approval-facts dt {
+  color: var(--ac-text-muted);
+}
+.approval-facts dd {
+  margin: 0;
+}
+.approval-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* The dock stays mounted while hidden so a running task keeps its timeline and its
+   cancel button; only its layout box goes away. */
+.agent-dock[hidden] {
+  display: none;
+}

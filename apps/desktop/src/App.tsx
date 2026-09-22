@@ -2,6 +2,7 @@ import { open as openFolderDialog } from "@tauri-apps/plugin-dialog";
 import { applyTheme, type ThemeName } from "@anycode/design-tokens";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import logo from "../../../assets/brand/any-code-mark.png";
+import AgentPanel from "./components/AgentPanel";
 import ChatPanel from "./components/ChatPanel";
 import CommandPalette, { type Command } from "./components/CommandPalette";
 import DiffPane from "./components/DiffPane";
@@ -30,6 +31,8 @@ export default function App() {
     bottomPanel = useWorkbenchStore((s) => s.bottomPanel),
     setBottomPanel = useWorkbenchStore((s) => s.setBottomPanel),
     diffPath = useWorkbenchStore((s) => s.diffPath),
+    agentDockOpen = useWorkbenchStore((s) => s.agentDockOpen),
+    toggleAgentDock = useWorkbenchStore((s) => s.toggleAgentDock),
     paletteOpen = useWorkbenchStore((s) => s.commandPaletteOpen),
     setPaletteOpen = useWorkbenchStore((s) => s.setCommandPaletteOpen);
   useEffect(() => {
@@ -79,13 +82,14 @@ export default function App() {
       { id: "show-explorer", label: "View: Show Explorer", run: () => setSidePanel("explorer") },
       { id: "show-git", label: "View: Show Source Control", run: () => setSidePanel("git") },
       { id: "show-chat", label: "View: Show Chat", run: () => setBottomPanel("chat") },
+      { id: "toggle-agent", label: "View: Toggle Agent", run: toggleAgentDock },
       {
         id: "open-settings",
         label: "Preferences: Open Settings",
         run: () => setSettingsOpen(true),
       },
     ],
-    [openFolder, setSidePanel, toggleBottomPanel, setBottomPanel],
+    [openFolder, setSidePanel, toggleBottomPanel, setBottomPanel, toggleAgentDock],
   );
   if (theme === null)
     return (
@@ -113,6 +117,15 @@ export default function App() {
           {workspace.name}
         </div>
         <div className="toolbar">
+          <button
+            className="button"
+            onClick={toggleAgentDock}
+            aria-pressed={agentDockOpen}
+            title="Toggle the agent dock"
+          >
+            <Icon name="chat" />
+            <span className="button-label">Agent</span>
+          </button>
           <button className="button" onClick={() => setPaletteOpen(true)}>
             <Icon name="command" />
             <span className="button-label">Commands</span>
@@ -196,6 +209,17 @@ export default function App() {
             </section>
           )}
         </main>
+        <aside className="agent-dock" aria-label="Agent" hidden={!agentDockOpen}>
+          <div className="panel-header">
+            <span>Agent</span>
+            <button className="icon-button" onClick={toggleAgentDock} aria-label="Close agent">
+              <Icon name="close" size={14} />
+            </button>
+          </div>
+          <div className="agent-dock-body">
+            <AgentPanel />
+          </div>
+        </aside>
       </div>
       <StatusBar onOpenSettings={() => setSettingsOpen(true)} />
       <CommandPalette commands={paletteCommands} />

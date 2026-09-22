@@ -19,3 +19,7 @@ uuid = { workspace = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+# Integration tests link only against the public API plus dev-dependencies, so the
+# stream and JSON helpers the live test uses have to be declared here too.
+futures-util = { version = "0.3", default-features = false, features = ["std"] }
+serde_json = { workspace = true }

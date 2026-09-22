@@ -77,3 +77,75 @@ export const providerCommands = {
   sendChat: (provider: string, model: string, sessionId: string, messages: ChatMessage[]) =>
     invoke<string>("send_chat", { provider, model, sessionId, messages }),
 };
+
+export type RiskLevel = "low" | "medium" | "high" | "critical";
+
+/** Payload of `task:tool_call:{taskId}`. */
+export interface TaskToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+  risk: RiskLevel;
+}
+
+/** Payload of `task:tool_result:{taskId}`. */
+export interface TaskToolResult {
+  id: string;
+  name: string;
+  result: Record<string, unknown>;
+}
+
+/** Payload of `task:approval_requested:{taskId}`. */
+export interface TaskApprovalRequest {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+  risk: RiskLevel;
+}
+
+/** One command the agent actually ran, with the exit code the process returned. */
+export interface CommandRecord {
+  command: string;
+  exitCode: number | null;
+}
+
+/**
+ * What the runtime measured during a task — not what the model claimed. `filesChanged`
+ * is a real `git status` delta; `commands` are real exit codes.
+ */
+export interface TaskEvidence {
+  filesChanged: string[];
+  commands: CommandRecord[];
+}
+
+/** Tokens a task consumed. Reported in tokens, not currency — see TaskUsage in Rust. */
+export interface TaskUsage {
+  inputTokens: number;
+  outputTokens: number;
+}
+
+/** Payload of `task:done:{taskId}`. */
+export interface TaskDone {
+  text: string;
+  evidence: TaskEvidence;
+  usage: TaskUsage;
+}
+
+export type ApprovalResponse = "allow_once" | "allow_workspace" | "deny";
+
+export const agentCommands = {
+  /**
+   * `taskId` is supplied by the caller so it can subscribe to this task's event
+   * channels before the task starts — see run_task's docs in Rust.
+   */
+  runTask: (
+    taskId: string,
+    provider: string,
+    model: string,
+    sessionId: string,
+    instruction: string,
+  ) => invoke<string>("run_task", { taskId, provider, model, sessionId, instruction }),
+  respondToApproval: (id: string, response: ApprovalResponse) =>
+    invoke<void>("respond_to_approval", { id, response }),
+  cancelTask: (taskId: string) => invoke<void>("cancel_task", { taskId }),
+};
