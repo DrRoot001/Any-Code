@@ -42,7 +42,8 @@ export const commands = {
   gitDiff: (relative: string) => invoke<FileDiff>("git_diff", { relative }),
   gitBranch: () => invoke<string | null>("git_branch"),
 
-  terminalSpawn: (cols: number, rows: number) => invoke<string>("terminal_spawn", { cols, rows }),
+  terminalSpawn: (id: string, cols: number, rows: number) =>
+    invoke<void>("terminal_spawn", { id, cols, rows }),
   terminalWrite: (id: string, data: string) => invoke<void>("terminal_write", { id, data }),
   terminalResize: (id: string, cols: number, rows: number) =>
     invoke<void>("terminal_resize", { id, cols, rows }),

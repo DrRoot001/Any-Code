@@ -240,6 +240,11 @@ input:focus-visible {
   flex: 1;
   min-height: 0;
 }
+/* `display` here beats the user-agent rule for [hidden], so restate it. */
+.bottom-panel[hidden],
+.bottom-panel-body[hidden] {
+  display: none;
+}
 .bottom-panel-tabs {
   display: flex;
   gap: 4px;
@@ -522,7 +527,8 @@ input:focus-visible {
   padding: 7px 0;
 }
 .terminal-body {
-  height: calc(100% - 36px);
+  flex: 1;
+  min-height: 0;
   padding: 5px 8px;
 }
 @media (max-width: 720px) {

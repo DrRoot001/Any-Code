@@ -34,25 +34,43 @@ export default function TerminalPanel() {
     const fit = new FitAddon();
     term.loadAddon(fit);
     term.open(containerRef.current);
-    fit.fit();
 
-    const resizeObserver = new ResizeObserver(() => fit.fit());
+    // Hiding the panel collapses the container to 0×0; fitting to that would ask the
+    // PTY for a zero-column terminal, which some shells redraw very badly.
+    const refit = () => {
+      const box = containerRef.current;
+      if (box && box.clientWidth > 0 && box.clientHeight > 0) fit.fit();
+    };
+    // Fit once synchronously so the shell is spawned at the size it will be drawn at,
+    // rather than at xterm's 80×24 default.
+    refit();
+    const resizeObserver = new ResizeObserver(refit);
     resizeObserver.observe(containerRef.current);
 
     (async () => {
-      const id = await commands.terminalSpawn(term.cols, term.rows);
-      if (disposed) {
-        await commands.terminalKill(id);
-        return;
-      }
-      sessionIdRef.current = id;
+      const id = crypto.randomUUID();
 
+      // Subscribe before the shell exists. Tauri events are not buffered, so a
+      // listener registered after the spawn returns misses the first prompt.
       unlistenData = await listen<{ id: string; data: string }>(`terminal:data:${id}`, (event) => {
         term.write(decodeBase64(event.payload.data));
       });
       unlistenExit = await listen(`terminal:exit:${id}`, () => {
         term.write("\r\n[process exited]\r\n");
       });
+
+      try {
+        await commands.terminalSpawn(id, term.cols, term.rows);
+      } catch (reason) {
+        unlistenData?.();
+        unlistenExit?.();
+        throw reason;
+      }
+      if (disposed) {
+        await commands.terminalKill(id);
+        return;
+      }
+      sessionIdRef.current = id;
 
       const input = term.onData((data) => {
         commands

@@ -361,7 +361,7 @@
   },
   "Cargo.toml": {
     "mtime": 1787443015.7690716,
-    "seen": 1787596826.572073,
+    "seen": 1790118984.6799512,
     "ast_hash": "",
     "semantic_hash": ""
   },
@@ -396,9 +396,9 @@
     "semantic_hash": ""
   },
   "apps/desktop/src/App.tsx": {
-    "mtime": 1790117480.069409,
-    "seen": 1790118942.112443,
-    "ast_hash": "9c5c004215580f79a721071409f4926d",
+    "mtime": 1790139586.5830986,
+    "seen": 1790140652.5203788,
+    "ast_hash": "c9b582811970bf9e4766088ec22cc0e9",
     "semantic_hash": ""
   },
   "apps/desktop/src/main.tsx": {
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "REVIEW.md": {
-    "mtime": 1790118910.029131,
-    "seen": 1790118942.125485,
-    "ast_hash": "74a6ae89af5156191ef40989a9263543",
+    "mtime": 1790140547.8374913,
+    "seen": 1790140652.573636,
+    "ast_hash": "5b1aeb63028db3a4d665d3d463e3e5a3",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/capabilities/default.json": {
@@ -774,9 +774,9 @@
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/src/terminal_commands.rs": {
-    "mtime": 1787581267.3547115,
-    "seen": 1787583385.097876,
-    "ast_hash": "d27c3430986d741fcf724d263898619c",
+    "mtime": 1790139548.7377238,
+    "seen": 1790140652.518373,
+    "ast_hash": "c53477d45d6db926bd31a1326763a926",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/src/workspace.rs": {
@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   "apps/desktop/src/components/TerminalPanel.tsx": {
-    "mtime": 1787618998.057728,
-    "seen": 1787632857.366307,
-    "ast_hash": "c1e077104d379e417e62161733df200a",
+    "mtime": 1790139578.1004474,
+    "seen": 1790140652.523446,
+    "ast_hash": "f2144905f68ad0eb6dbd36df758532ba",
     "semantic_hash": ""
   },
   "apps/desktop/src/components/WelcomeScreen.tsx": {
@@ -852,9 +852,9 @@
     "semantic_hash": ""
   },
   "apps/desktop/src/lib/tauri.ts": {
-    "mtime": 1790117394.3743415,
-    "seen": 1790118942.113864,
-    "ast_hash": "184fc36fadcb63d90d5e011d510c4d51",
+    "mtime": 1790139552.5285118,
+    "seen": 1790140652.549406,
+    "ast_hash": "d41bff265618d917e296e6d668668033",
     "semantic_hash": ""
   },
   "apps/desktop/src/state/workbenchStore.ts": {
@@ -900,9 +900,9 @@
     "semantic_hash": ""
   },
   "crates/anycode-terminal/src/lib.rs": {
-    "mtime": 1787581117.5955534,
-    "seen": 1787583385.0979981,
-    "ast_hash": "eb143e77b7532c5f345f33a8e8517c47",
+    "mtime": 1790139620.538864,
+    "seen": 1790140652.5642009,
+    "ast_hash": "3a4ccf6f817e85aec0537b4b8d5a6a3d",
     "semantic_hash": ""
   },
   "crates/anycode-git/build.rs": {

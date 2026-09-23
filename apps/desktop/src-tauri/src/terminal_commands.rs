@@ -14,8 +14,7 @@ use crate::AppState;
 use base64::Engine;
 use serde::Serialize;
 use std::io::Read;
-use tauri::{AppHandle, Emitter, State};
-use uuid::Uuid;
+use tauri::{AppHandle, Emitter, Manager, State};
 
 #[derive(Clone, Serialize)]
 struct PtyDataEvent<'a> {
@@ -29,18 +28,28 @@ struct PtyExitEvent<'a> {
     id: &'a str,
 }
 
+/// The caller supplies `id` so it can subscribe to `terminal:data:{id}` *before* the
+/// shell starts. Minting the id here would emit the shell's greeting and first prompt
+/// into a void, leaving the user staring at a blank pane.
 #[tauri::command]
 pub fn terminal_spawn(
     app: AppHandle,
     state: State<AppState>,
+    id: String,
     cols: u16,
     rows: u16,
-) -> Result<String, String> {
+) -> Result<(), String> {
     let cwd = current_path(&state)?;
+    {
+        let terminals = state.terminals.lock().map_err(|e| e.to_string())?;
+        if terminals.contains_key(&id) {
+            return Err("a terminal session with that id already exists".to_string());
+        }
+    }
+
     let (session, mut reader) =
         anycode_terminal::PtySession::spawn(&cwd, cols, rows).map_err(|e| e.to_string())?;
 
-    let id = Uuid::new_v4().to_string();
     {
         let mut terminals = state.terminals.lock().map_err(|e| e.to_string())?;
         terminals.insert(id.clone(), session);
@@ -54,17 +63,34 @@ pub fn terminal_spawn(
                 Ok(0) => break,
                 Ok(n) => {
                     let data = base64::engine::general_purpose::STANDARD.encode(&buf[..n]);
-                    if app.emit(&format!("terminal:data:{reader_id}"), PtyDataEvent { id: &reader_id, data }).is_err() {
+                    if app
+                        .emit(
+                            &format!("terminal:data:{reader_id}"),
+                            PtyDataEvent {
+                                id: &reader_id,
+                                data,
+                            },
+                        )
+                        .is_err()
+                    {
                         break;
                     }
                 }
                 Err(_) => break,
             }
         }
-        let _ = app.emit(&format!("terminal:exit:{reader_id}"), PtyExitEvent { id: &reader_id });
+        // The shell is gone; drop the handle so a dead session can't accumulate in the
+        // table for the lifetime of the app.
+        if let Ok(mut terminals) = app.state::<AppState>().terminals.lock() {
+            terminals.remove(&reader_id);
+        }
+        let _ = app.emit(
+            &format!("terminal:exit:{reader_id}"),
+            PtyExitEvent { id: &reader_id },
+        );
     });
 
-    Ok(id)
+    Ok(())
 }
 
 #[tauri::command]

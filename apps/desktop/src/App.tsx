@@ -35,6 +35,13 @@ export default function App() {
     toggleAgentDock = useWorkbenchStore((s) => s.toggleAgentDock),
     paletteOpen = useWorkbenchStore((s) => s.commandPaletteOpen),
     setPaletteOpen = useWorkbenchStore((s) => s.setCommandPaletteOpen);
+  // Mounted on first use and never unmounted again: spawning a shell before the user
+  // asks for one would also spawn it before a workspace exists, which fails.
+  const terminalVisible = bottomPanelOpen && bottomPanel === "terminal";
+  const [terminalMounted, setTerminalMounted] = useState(false);
+  useEffect(() => {
+    if (terminalVisible) setTerminalMounted(true);
+  }, [terminalVisible]);
   useEffect(() => {
     commands
       .getTheme()
@@ -167,11 +174,14 @@ export default function App() {
           <div className="editor-region">
             {diffPath ? <DiffPane path={diffPath} key={diffPath} /> : <EditorArea />}
           </div>
-          {bottomPanelOpen && (
-            <section
-              className="bottom-panel"
-              aria-label={bottomPanel === "chat" ? "Chat" : "Terminal"}
-            >
+          {/* Kept mounted, never conditionally rendered: unmounting TerminalPanel kills
+              its shell, so closing the panel or switching to Chat would discard whatever
+              was running in it. */}
+          <section
+            className="bottom-panel"
+            aria-label={bottomPanel === "chat" ? "Chat" : "Terminal"}
+            hidden={!bottomPanelOpen}
+          >
               <div className="panel-header">
                 <div className="bottom-panel-tabs" role="tablist" aria-label="Bottom panel">
                   <button
@@ -203,11 +213,13 @@ export default function App() {
                   <Icon name="close" size={14} />
                 </button>
               </div>
-              <div className="bottom-panel-body">
-                {bottomPanel === "chat" ? <ChatPanel /> : <TerminalPanel />}
+              <div className="bottom-panel-body" hidden={bottomPanel !== "terminal"}>
+                {terminalMounted && <TerminalPanel />}
+              </div>
+              <div className="bottom-panel-body" hidden={bottomPanel !== "chat"}>
+                <ChatPanel />
               </div>
             </section>
-          )}
         </main>
         <aside className="agent-dock" aria-label="Agent" hidden={!agentDockOpen}>
           <div className="panel-header">

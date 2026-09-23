@@ -40,7 +40,7 @@
       "file_type": "code",
       "norm_label": "approvalresponse",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L134"
+      "source_location": "L135"
     },
     {
       "id": "apps_desktop_src_lib_tauri_chatmessage",
@@ -53,7 +53,7 @@
       "file_type": "code",
       "norm_label": "chatmessage",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L66"
+      "source_location": "L67"
     },
     {
       "id": "apps_desktop_src_lib_tauri_chatrole",
@@ -66,7 +66,7 @@
       "file_type": "code",
       "norm_label": "chatrole",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L64"
+      "source_location": "L65"
     },
     {
       "id": "apps_desktop_src_lib_tauri_commandrecord",
@@ -79,7 +79,7 @@
       "file_type": "code",
       "norm_label": "commandrecord",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L107"
+      "source_location": "L108"
     },
     {
       "id": "apps_desktop_src_lib_tauri_filediff",
@@ -118,7 +118,7 @@
       "file_type": "code",
       "norm_label": "modeldefinition",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L59"
+      "source_location": "L60"
     },
     {
       "id": "apps_desktop_src_lib_tauri_providerstatus",
@@ -131,7 +131,7 @@
       "file_type": "code",
       "norm_label": "providerstatus",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
       "id": "apps_desktop_src_lib_tauri_risklevel",
@@ -144,7 +144,7 @@
       "file_type": "code",
       "norm_label": "risklevel",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L81"
+      "source_location": "L82"
     },
     {
       "id": "apps_desktop_src_lib_tauri_taskapprovalrequest",
@@ -157,7 +157,7 @@
       "file_type": "code",
       "norm_label": "taskapprovalrequest",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L99"
+      "source_location": "L100"
     },
     {
       "id": "apps_desktop_src_lib_tauri_taskdone",
@@ -170,7 +170,7 @@
       "file_type": "code",
       "norm_label": "taskdone",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L128"
+      "source_location": "L129"
     },
     {
       "id": "apps_desktop_src_lib_tauri_taskevidence",
@@ -183,7 +183,7 @@
       "file_type": "code",
       "norm_label": "taskevidence",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L116"
+      "source_location": "L117"
     },
     {
       "id": "apps_desktop_src_lib_tauri_tasktoolcall",
@@ -196,7 +196,7 @@
       "file_type": "code",
       "norm_label": "tasktoolcall",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L84"
+      "source_location": "L85"
     },
     {
       "id": "apps_desktop_src_lib_tauri_tasktoolresult",
@@ -209,7 +209,7 @@
       "file_type": "code",
       "norm_label": "tasktoolresult",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L92"
+      "source_location": "L93"
     },
     {
       "id": "apps_desktop_src_lib_tauri_taskusage",
@@ -222,7 +222,7 @@
       "file_type": "code",
       "norm_label": "taskusage",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L122"
+      "source_location": "L123"
     },
     {
       "id": "apps_desktop_src_lib_monaco_monaco",
@@ -364,7 +364,7 @@
       "file_type": "code",
       "norm_label": "activity()",
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L236"
+      "source_location": "L241"
     },
     {
       "id": "apps_desktop_src_app_app",
@@ -388,7 +388,7 @@
       "file_type": "code",
       "norm_label": "notice()",
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L259"
+      "source_location": "L264"
     },
     {
       "id": "apps_desktop_src_components_icons_icon",
@@ -2208,17 +2208,6 @@
       "norm_label": ".get()",
       "source_file": "crates/anycode-tools/src/lib.rs",
       "source_location": "L99"
-    },
-    {
-      "id": "monaco_editor_monaco_editor",
-      "label": "monaco-editor",
-      "_origin": "ast",
-      "community": 101,
-      "community_name": "monaco-editor",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "monaco-editor",
-      "source_file": "monaco-editor"
     },
     {
       "id": "crates_anycode_tools_src_filesystem",
@@ -7946,17 +7935,6 @@
       "source_location": "L20"
     },
     {
-      "id": "crates_anycode_models_src_anthropic_anthropicprovider_manifest",
-      "label": ".manifest()",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "anthropic.rs",
-      "file_type": "code",
-      "norm_label": ".manifest()",
-      "source_file": "crates/anycode-models/src/anthropic.rs",
-      "source_location": "L94"
-    },
-    {
       "id": "crates_anycode_models_src_anthropic_anthropicprovider_models",
       "label": ".models()",
       "_origin": "ast",
@@ -8153,39 +8131,6 @@
       "norm_label": "splits_system_message_from_the_transcript()",
       "source_file": "crates/anycode-models/src/anthropic.rs",
       "source_location": "L186"
-    },
-    {
-      "id": "crates_anycode_models_src_provider_modelprovider",
-      "label": "ModelProvider",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "anthropic.rs",
-      "file_type": "code",
-      "norm_label": "modelprovider",
-      "source_file": "crates/anycode-models/src/provider.rs",
-      "source_location": "L12"
-    },
-    {
-      "id": "crates_anycode_models_src_provider_rs_send",
-      "label": "Send",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "anthropic.rs",
-      "file_type": "code",
-      "norm_label": "send",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_provider_rs_sync",
-      "label": "Sync",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "anthropic.rs",
-      "file_type": "code",
-      "norm_label": "sync",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "apps_desktop_vite_config",
@@ -8814,7 +8759,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:41:22z \u2014 brand integration baseline",
       "source_file": "REVIEW.md",
-      "source_location": "L39"
+      "source_location": "L100"
     },
     {
       "id": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
@@ -8826,7 +8771,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:45:09z \u2014 github ci after branding and governance push",
       "source_file": "REVIEW.md",
-      "source_location": "L64"
+      "source_location": "L125"
     },
     {
       "id": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
@@ -8838,7 +8783,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 phase 1 workbench review and ux remediation",
       "source_file": "REVIEW.md",
-      "source_location": "L76"
+      "source_location": "L137"
     },
     {
       "id": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
@@ -8850,7 +8795,19 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 second-pass ui/ux and ledger audit",
       "source_file": "REVIEW.md",
-      "source_location": "L115"
+      "source_location": "L176"
+    },
+    {
+      "id": "review_2026_09_23_integrated_terminal_defect_hunt",
+      "label": "2026-09-23 \u2014 Integrated terminal defect hunt",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "Verification history",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2026-09-23 \u2014 integrated terminal defect hunt",
+      "source_file": "REVIEW.md",
+      "source_location": "L40"
     },
     {
       "id": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
@@ -8862,7 +8819,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 mvp: agent dock, approvals, cancellation, evidence",
       "source_file": "REVIEW.md",
-      "source_location": "L141"
+      "source_location": "L202"
     },
     {
       "id": "review_current_quality_status",
@@ -8886,7 +8843,7 @@
       "node_kind": "heading",
       "norm_label": "open qa risks",
       "source_file": "REVIEW.md",
-      "source_location": "L206"
+      "source_location": "L267"
     },
     {
       "id": "review_qa_and_review_ledger",
@@ -8910,7 +8867,7 @@
       "node_kind": "heading",
       "norm_label": "review protocol",
       "source_file": "REVIEW.md",
-      "source_location": "L23"
+      "source_location": "L24"
     },
     {
       "id": "review_verification_history",
@@ -8922,7 +8879,7 @@
       "node_kind": "heading",
       "norm_label": "verification history",
       "source_file": "REVIEW.md",
-      "source_location": "L37"
+      "source_location": "L38"
     },
     {
       "id": "apps_desktop_src_components_agentpanel",
@@ -9010,7 +8967,7 @@
       "file_type": "code",
       "norm_label": "agentcommands",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L136"
+      "source_location": "L137"
     },
     {
       "id": "apps_desktop_src_lib_tauri_providercommands",
@@ -9021,7 +8978,7 @@
       "file_type": "code",
       "norm_label": "providercommands",
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L71"
+      "source_location": "L72"
     },
     {
       "id": "claude_any_code_agent_operating_instructions",
@@ -9887,7 +9844,7 @@
       "file_type": "code",
       "norm_label": "ptydataevent",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L21"
+      "source_location": "L20"
     },
     {
       "id": "apps_desktop_src_tauri_src_terminal_commands_ptyexitevent",
@@ -9898,7 +9855,7 @@
       "file_type": "code",
       "norm_label": "ptyexitevent",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L28"
+      "source_location": "L27"
     },
     {
       "id": "apps_desktop_src_tauri_src_terminal_commands_rs_apphandle",
@@ -9953,7 +9910,7 @@
       "file_type": "code",
       "norm_label": "terminal_kill()",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L85"
+      "source_location": "L111"
     },
     {
       "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
@@ -9964,7 +9921,7 @@
       "file_type": "code",
       "norm_label": "terminal_resize()",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L78"
+      "source_location": "L104"
     },
     {
       "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
@@ -9975,7 +9932,7 @@
       "file_type": "code",
       "norm_label": "terminal_spawn()",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33"
+      "source_location": "L35"
     },
     {
       "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
@@ -9986,7 +9943,7 @@
       "file_type": "code",
       "norm_label": "terminal_write()",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L71"
+      "source_location": "L97"
     },
     {
       "id": "apps_desktop_src_tauri_src_workspace",
@@ -10789,7 +10746,7 @@
       "file_type": "code",
       "norm_label": ".kill()",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L82"
+      "source_location": "L95"
     },
     {
       "id": "crates_anycode_terminal_src_lib_ptysession_resize",
@@ -10800,7 +10757,7 @@
       "file_type": "code",
       "norm_label": ".resize()",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L72"
+      "source_location": "L85"
     },
     {
       "id": "crates_anycode_terminal_src_lib_ptysession_spawn",
@@ -10822,7 +10779,7 @@
       "file_type": "code",
       "norm_label": ".write()",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L67"
+      "source_location": "L80"
     },
     {
       "id": "crates_anycode_terminal_src_lib_rs_box",
@@ -10911,6 +10868,17 @@
       "norm_label": "sync",
       "source_file": "",
       "source_location": ""
+    },
+    {
+      "id": "crates_anycode_terminal_src_lib_spawned_shell_reports_an_xterm_term",
+      "label": "spawned_shell_reports_an_xterm_term()",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "spawned_shell_reports_an_xterm_term()",
+      "source_file": "crates/anycode-terminal/src/lib.rs",
+      "source_location": "L110"
     },
     {
       "id": "crates_anycode_terminal_src_lib_terminalerror",
@@ -12474,6 +12442,17 @@
       "source_location": "L1"
     },
     {
+      "id": "crates_anycode_models_src_anthropic_anthropicprovider_manifest",
+      "label": ".manifest()",
+      "_origin": "ast",
+      "community": 89,
+      "community_name": "types.rs",
+      "file_type": "code",
+      "norm_label": ".manifest()",
+      "source_file": "crates/anycode-models/src/anthropic.rs",
+      "source_location": "L94"
+    },
+    {
       "id": "crates_anycode_models_src_lib",
       "label": "anycode-models/src/lib.rs",
       "_origin": "ast",
@@ -12494,17 +12473,6 @@
       "norm_label": ".manifest()",
       "source_file": "crates/anycode-models/src/ollama.rs",
       "source_location": "L90"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_openaiprovider_manifest",
-      "label": ".manifest()",
-      "_origin": "ast",
-      "community": 89,
-      "community_name": "types.rs",
-      "file_type": "code",
-      "norm_label": ".manifest()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L152"
     },
     {
       "id": "crates_anycode_models_src_provider",
@@ -12604,6 +12572,17 @@
       "norm_label": "usage",
       "source_file": "crates/anycode-models/src/types.rs",
       "source_location": "L134"
+    },
+    {
+      "id": "crates_anycode_models_tests_live_openai_read_file_tool",
+      "label": "read_file_tool()",
+      "_origin": "ast",
+      "community": 89,
+      "community_name": "types.rs",
+      "file_type": "code",
+      "norm_label": "read_file_tool()",
+      "source_file": "crates/anycode-models/tests/live_openai.rs",
+      "source_location": "L30"
     },
     {
       "id": "claude_skills_graphify_references_exports",
@@ -12714,125 +12693,15 @@
       "source_location": "L79"
     },
     {
-      "id": "crates_anycode_models_src_ollama",
-      "label": "ollama.rs",
+      "id": "monaco_editor_monaco_editor",
+      "label": "monaco-editor",
       "_origin": "ast",
       "community": 90,
-      "community_name": "ollama.rs",
+      "community_name": "monaco-editor",
+      "confidence": "EXTRACTED",
       "file_type": "code",
-      "norm_label": "ollama.rs",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L1"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_build_chat_request",
-      "label": "build_chat_request()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "build_chat_request()",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L48"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_ignores_blank_lines",
-      "label": "ignores_blank_lines()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "ignores_blank_lines()",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L184"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_parse_line",
-      "label": "parse_line()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "parse_line()",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L62"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_parses_a_content_line",
-      "label": "parses_a_content_line()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "parses_a_content_line()",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L164"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_parses_the_final_usage_line",
-      "label": "parses_the_final_usage_line()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "parses_the_final_usage_line()",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L170"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_role_str",
-      "label": "role_str()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "role_str()",
-      "source_file": "crates/anycode-models/src/ollama.rs",
-      "source_location": "L37"
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_rs_option",
-      "label": "Option",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "option",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_ollama_rs_value",
-      "label": "Value",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "value",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_role_str",
-      "label": "role_str()",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "role_str()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L32"
-    },
-    {
-      "id": "crates_anycode_models_src_types_role",
-      "label": "Role",
-      "_origin": "ast",
-      "community": 90,
-      "community_name": "ollama.rs",
-      "file_type": "code",
-      "norm_label": "role",
-      "source_file": "crates/anycode-models/src/types.rs",
-      "source_location": "L43"
+      "norm_label": "monaco-editor",
+      "source_file": "monaco-editor"
     },
     {
       "id": "crates_anycode_models_src_sse",
@@ -12978,6 +12847,28 @@
       "source_location": "L7"
     },
     {
+      "id": "crates_anycode_models_src_ollama_role_str",
+      "label": "role_str()",
+      "_origin": "ast",
+      "community": 92,
+      "community_name": "Message",
+      "file_type": "code",
+      "norm_label": "role_str()",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L37"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_role_str",
+      "label": "role_str()",
+      "_origin": "ast",
+      "community": 92,
+      "community_name": "Message",
+      "file_type": "code",
+      "norm_label": "role_str()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L32"
+    },
+    {
       "id": "crates_anycode_models_src_types_message",
       "label": "Message",
       "_origin": "ast",
@@ -13053,6 +12944,17 @@
       "norm_label": "requestmetadata",
       "source_file": "crates/anycode-models/src/types.rs",
       "source_location": "L111"
+    },
+    {
+      "id": "crates_anycode_models_src_types_role",
+      "label": "Role",
+      "_origin": "ast",
+      "community": 92,
+      "community_name": "Message",
+      "file_type": "code",
+      "norm_label": "role",
+      "source_file": "crates/anycode-models/src/types.rs",
+      "source_location": "L43"
     },
     {
       "id": "crates_anycode_models_src_types_rs_into",
@@ -13231,11 +13133,44 @@
       "source_location": "L20"
     },
     {
+      "id": "crates_anycode_models_src_ollama",
+      "label": "ollama.rs",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "ollama.rs",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "crates_anycode_models_src_ollama_build_chat_request",
+      "label": "build_chat_request()",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "build_chat_request()",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L48"
+    },
+    {
+      "id": "crates_anycode_models_src_ollama_ignores_blank_lines",
+      "label": "ignores_blank_lines()",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "ignores_blank_lines()",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L184"
+    },
+    {
       "id": "crates_anycode_models_src_ollama_ollamaprovider",
       "label": "OllamaProvider",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "ollamaprovider",
       "source_file": "crates/anycode-models/src/ollama.rs",
@@ -13246,7 +13181,7 @@
       "label": ".default()",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": ".default()",
       "source_file": "crates/anycode-models/src/ollama.rs",
@@ -13257,7 +13192,7 @@
       "label": ".models()",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": ".models()",
       "source_file": "crates/anycode-models/src/ollama.rs",
@@ -13268,7 +13203,7 @@
       "label": ".new()",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "crates/anycode-models/src/ollama.rs",
@@ -13279,18 +13214,51 @@
       "label": ".stream()",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": ".stream()",
       "source_file": "crates/anycode-models/src/ollama.rs",
       "source_location": "L126"
     },
     {
+      "id": "crates_anycode_models_src_ollama_parse_line",
+      "label": "parse_line()",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "parse_line()",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L62"
+    },
+    {
+      "id": "crates_anycode_models_src_ollama_parses_a_content_line",
+      "label": "parses_a_content_line()",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "parses_a_content_line()",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L164"
+    },
+    {
+      "id": "crates_anycode_models_src_ollama_parses_the_final_usage_line",
+      "label": "parses_the_final_usage_line()",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "parses_the_final_usage_line()",
+      "source_file": "crates/anycode-models/src/ollama.rs",
+      "source_location": "L170"
+    },
+    {
       "id": "crates_anycode_models_src_ollama_rs_client",
       "label": "Client",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "client",
       "source_file": "",
@@ -13301,7 +13269,7 @@
       "label": "ModelDefinition",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "modeldefinition",
       "source_file": "",
@@ -13312,9 +13280,20 @@
       "label": "ModelStream",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "modelstream",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_ollama_rs_option",
+      "label": "Option",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "option",
       "source_file": "",
       "source_location": ""
     },
@@ -13323,7 +13302,7 @@
       "label": "Result",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "result",
       "source_file": "",
@@ -13334,7 +13313,7 @@
       "label": "Self",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "self",
       "source_file": "",
@@ -13345,9 +13324,20 @@
       "label": "String",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
+      "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_ollama_rs_value",
+      "label": "Value",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "value",
       "source_file": "",
       "source_location": ""
     },
@@ -13356,171 +13346,6 @@
       "label": "Vec",
       "_origin": "ast",
       "community": 95,
-      "community_name": "OllamaProvider",
-      "file_type": "code",
-      "norm_label": "vec",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "default",
-      "label": "Default",
-      "_origin": "ast",
-      "community": 95,
-      "community_name": "OllamaProvider",
-      "file_type": "code",
-      "norm_label": "default",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_openaiprovider",
-      "label": "OpenAiProvider",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "openaiprovider",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L18"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_openaiprovider_models",
-      "label": ".models()",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": ".models()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L163"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_openaiprovider_new",
-      "label": ".new()",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": ".new()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L24"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_openaiprovider_stream",
-      "label": ".stream()",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": ".stream()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L189"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_parse_chunk",
-      "label": "parse_chunk()",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "parse_chunk()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L126"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_parses_a_text_delta",
-      "label": "parses_a_text_delta()",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "parses_a_text_delta()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L304"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_parses_final_usage_chunk",
-      "label": "parses_final_usage_chunk()",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "parses_final_usage_chunk()",
-      "source_file": "crates/anycode-models/src/openai.rs",
-      "source_location": "L310"
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_client",
-      "label": "Client",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "client",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_modeldefinition",
-      "label": "ModelDefinition",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "modeldefinition",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_modelstream",
-      "label": "ModelStream",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "modelstream",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_result",
-      "label": "Result",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "result",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_self",
-      "label": "Self",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "self",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_string",
-      "label": "String",
-      "_origin": "ast",
-      "community": 96,
-      "community_name": "ProviderError",
-      "file_type": "code",
-      "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_models_src_openai_rs_vec",
-      "label": "Vec",
-      "_origin": "ast",
-      "community": 96,
       "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "vec",
@@ -13531,7 +13356,7 @@
       "id": "crates_anycode_models_src_types_providererror",
       "label": "ProviderError",
       "_origin": "ast",
-      "community": 96,
+      "community": 95,
       "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "providererror",
@@ -13542,10 +13367,142 @@
       "id": "crates_anycode_models_src_types_rs_error",
       "label": "Error",
       "_origin": "ast",
-      "community": 96,
+      "community": 95,
       "community_name": "ProviderError",
       "file_type": "code",
       "norm_label": "error",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "default",
+      "label": "Default",
+      "_origin": "ast",
+      "community": 95,
+      "community_name": "ProviderError",
+      "file_type": "code",
+      "norm_label": "default",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_openai_openaiprovider",
+      "label": "OpenAiProvider",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "openaiprovider",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_openaiprovider_manifest",
+      "label": ".manifest()",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": ".manifest()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L152"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_openaiprovider_models",
+      "label": ".models()",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": ".models()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L163"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_openaiprovider_stream",
+      "label": ".stream()",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": ".stream()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L189"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_rs_client",
+      "label": "Client",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "client",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_openai_rs_modeldefinition",
+      "label": "ModelDefinition",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "modeldefinition",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_openai_rs_modelstream",
+      "label": "ModelStream",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "modelstream",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_openai_rs_result",
+      "label": "Result",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "result",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_provider_modelprovider",
+      "label": "ModelProvider",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "modelprovider",
+      "source_file": "crates/anycode-models/src/provider.rs",
+      "source_location": "L12"
+    },
+    {
+      "id": "crates_anycode_models_src_provider_rs_send",
+      "label": "Send",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "send",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_provider_rs_sync",
+      "label": "Sync",
+      "_origin": "ast",
+      "community": 96,
+      "community_name": "OpenAiProvider",
+      "file_type": "code",
+      "norm_label": "sync",
       "source_file": "",
       "source_location": ""
     },
@@ -13660,6 +13617,50 @@
       "source_location": "L41"
     },
     {
+      "id": "crates_anycode_models_src_openai_openaiprovider_new",
+      "label": ".new()",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": ".new()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L24"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_parse_chunk",
+      "label": "parse_chunk()",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": "parse_chunk()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L126"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_parses_a_text_delta",
+      "label": "parses_a_text_delta()",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": "parses_a_text_delta()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L304"
+    },
+    {
+      "id": "crates_anycode_models_src_openai_parses_final_usage_chunk",
+      "label": "parses_final_usage_chunk()",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": "parses_final_usage_chunk()",
+      "source_file": "crates/anycode-models/src/openai.rs",
+      "source_location": "L310"
+    },
+    {
       "id": "crates_anycode_models_src_openai_recognizes_the_tool_calls_finish_reason",
       "label": "recognizes_the_tool_calls_finish_reason()",
       "_origin": "ast",
@@ -13682,6 +13683,28 @@
       "source_location": ""
     },
     {
+      "id": "crates_anycode_models_src_openai_rs_self",
+      "label": "Self",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": "self",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_openai_rs_string",
+      "label": "String",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "crates_anycode_models_src_openai_rs_value",
       "label": "Value",
       "_origin": "ast",
@@ -13689,6 +13712,17 @@
       "community_name": "openai.rs",
       "file_type": "code",
       "norm_label": "value",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_models_src_openai_rs_vec",
+      "label": "Vec",
+      "_origin": "ast",
+      "community": 97,
+      "community_name": "openai.rs",
+      "file_type": "code",
+      "norm_label": "vec",
       "source_file": "",
       "source_location": ""
     },
@@ -13955,17 +13989,6 @@
       "norm_label": "model()",
       "source_file": "crates/anycode-models/tests/live_openai.rs",
       "source_location": "L25"
-    },
-    {
-      "id": "crates_anycode_models_tests_live_openai_read_file_tool",
-      "label": "read_file_tool()",
-      "_origin": "ast",
-      "community": 99,
-      "community_name": "live_openai.rs",
-      "file_type": "code",
-      "norm_label": "read_file_tool()",
-      "source_file": "crates/anycode-models/tests/live_openai.rs",
-      "source_location": "L30"
     },
     {
       "id": "crates_anycode_models_tests_live_openai_rs_string",
@@ -14277,7 +14300,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/desktop/src/components/TerminalPanel.tsx",
-      "source_location": "L51",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -15577,6 +15600,30 @@
       "weight": 1.0
     },
     {
+      "source": "crates_anycode_terminal_src_lib_spawned_shell_reports_an_xterm_term",
+      "target": "crates_anycode_terminal_src_lib_ptysession_spawn",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crates/anycode-terminal/src/lib.rs",
+      "source_location": "L112",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_anycode_terminal_src_lib_spawned_shell_reports_an_xterm_term",
+      "target": "crates_anycode_terminal_src_lib_ptysession_write",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crates/anycode-terminal/src/lib.rs",
+      "source_location": "L118",
+      "weight": 1.0
+    },
+    {
       "source": "crates_anycode_tools_src_filesystem_filesystemreadtool_risk",
       "target": "crates_anycode_tools_src_filesystem_filesystemwritetool_name",
       "relation": "calls",
@@ -16257,7 +16304,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L24",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -17769,7 +17816,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L85",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -17781,7 +17828,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L85",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -17793,7 +17840,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L78",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -17805,7 +17852,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L78",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -17817,7 +17864,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -17829,7 +17876,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -17841,7 +17888,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L71",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -17853,7 +17900,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L71",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -19077,7 +19124,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L82",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -19089,7 +19136,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L72",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -19161,7 +19208,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L67",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -21613,18 +21660,6 @@
       "weight": 1.0
     },
     {
-      "source": "apps_desktop_src_tauri_src_terminal_commands",
-      "target": "uuid",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L18",
-      "weight": 1.0
-    },
-    {
       "source": "apps_desktop_src_tauri_src_workspace",
       "target": "apps_desktop_src_tauri_src_workspace_rs_pathbuf",
       "relation": "imports_from",
@@ -22617,7 +22652,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L85",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -22629,7 +22664,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L78",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -22641,7 +22676,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -22653,7 +22688,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -22665,7 +22700,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L71",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -23673,7 +23708,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L85",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -23685,7 +23720,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L78",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -23697,7 +23732,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -23709,7 +23744,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L71",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -24561,7 +24596,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L82",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -24573,7 +24608,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L72",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -24597,7 +24632,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L67",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -25783,7 +25818,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L236",
+      "source_location": "L241",
       "weight": 1.0
     },
     {
@@ -25794,7 +25829,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L259",
+      "source_location": "L264",
       "weight": 1.0
     },
     {
@@ -26261,13 +26296,24 @@
     },
     {
       "source": "apps_desktop_src_lib_tauri",
+      "target": "apps_desktop_src_lib_tauri_taskapprovalrequest",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/desktop/src/lib/tauri.ts",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_desktop_src_lib_tauri",
       "target": "apps_desktop_src_lib_tauri_commandrecord",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L107",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -26278,7 +26324,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L116",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
@@ -26289,7 +26335,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L122",
+      "source_location": "L123",
       "weight": 1.0
     },
     {
@@ -26300,7 +26346,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L128",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -26311,7 +26357,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L134",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -26322,7 +26368,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -26388,7 +26434,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L52",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -26399,7 +26445,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L59",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -26410,7 +26456,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -26421,7 +26467,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0
     },
     {
@@ -26432,7 +26478,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L71",
+      "source_location": "L72",
       "weight": 1.0
     },
     {
@@ -26443,7 +26489,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L81",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -26454,7 +26500,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L84",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -26465,18 +26511,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L92",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_lib_tauri",
-      "target": "apps_desktop_src_lib_tauri_taskapprovalrequest",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L99",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -27229,57 +27264,13 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_ptydataevent",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L21",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_tauri_src_terminal_commands",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_ptyexitevent",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L28",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_tauri_src_terminal_commands",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L33",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_tauri_src_terminal_commands",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L71",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_tauri_src_terminal_commands",
       "target": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L78",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -27290,7 +27281,51 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L85",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_desktop_src_tauri_src_terminal_commands",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_ptydataevent",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_desktop_src_tauri_src_terminal_commands",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_ptyexitevent",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_desktop_src_tauri_src_terminal_commands",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_desktop_src_tauri_src_terminal_commands",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -30393,6 +30428,17 @@
       "confidence_score": 1.0,
       "source_file": "crates/anycode-terminal/src/lib.rs",
       "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_anycode_terminal_src_lib",
+      "target": "crates_anycode_terminal_src_lib_spawned_shell_reports_an_xterm_term",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/anycode-terminal/src/lib.rs",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -33576,24 +33622,24 @@
     },
     {
       "source": "review_qa_and_review_ledger",
-      "target": "review_open_qa_risks",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L206",
-      "weight": 1.0
-    },
-    {
-      "source": "review_qa_and_review_ledger",
       "target": "review_review_protocol",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L23",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "review_qa_and_review_ledger",
+      "target": "review_open_qa_risks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L267",
       "weight": 1.0
     },
     {
@@ -33604,7 +33650,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -33620,35 +33666,13 @@
     },
     {
       "source": "review_verification_history",
-      "target": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L115",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L141",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
       "target": "review_2026_08_23t00_41_22z_brand_integration_baseline",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L39",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -33659,7 +33683,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L64",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -33670,7 +33694,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L76",
+      "source_location": "L137",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_09_23_integrated_terminal_defect_hunt",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -34375,7 +34432,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L67",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -34386,7 +34443,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L72",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -34397,7 +34454,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L82",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -35174,7 +35231,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L39",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -35227,5 +35284,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "afd3b918e8f2e4cd13db2939ddbba09fd7a7cd26"
+  "built_at_commit": "ae80398ccb629b8edc11c9810f8b6ccaacf6e56a"
 }

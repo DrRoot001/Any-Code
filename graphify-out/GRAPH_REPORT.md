@@ -1,16 +1,16 @@
 # Graph Report - Any Code  (2026-09-23)
 
 ## Corpus Check
-- 125 files · ~225,356 words
+- 125 files · ~226,491 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1216 nodes · 1849 edges · 106 communities (89 shown, 17 thin omitted)
+- 1218 nodes · 1852 edges · 105 communities (88 shown, 17 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 11 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `afd3b918`
+- Built from commit: `ae80398c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -99,13 +99,12 @@
 - SettingsPanel.tsx
 - workbenchStore.ts
 - types.rs
-- ollama.rs
 - .push
 - Message
 - Explorer.tsx
 - entry
-- OllamaProvider
 - ProviderError
+- OpenAiProvider
 - openai.rs
 - anycode-security/src/lib.rs
 - live_openai.rs
@@ -142,7 +141,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (106 total, 17 thin omitted)
+## Communities (105 total, 17 thin omitted)
 
 ### Community 0 - "PRD.md"
 Cohesion: 0.02
@@ -169,8 +168,8 @@ Cohesion: 0.16
 Nodes (17): Connection, granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), AsRef, Error, Option, Path, Result (+9 more)
 
 ### Community 6 - "anthropic.rs"
-Cohesion: 0.12
-Nodes (18): AnthropicProvider, build_messages_request(), parse_event(), parses_content_block_delta(), parses_output_usage_from_message_delta(), Client, ModelDefinition, ModelStream (+10 more)
+Cohesion: 0.15
+Nodes (15): AnthropicProvider, build_messages_request(), parse_event(), parses_content_block_delta(), parses_output_usage_from_message_delta(), Client, ModelDefinition, ModelStream (+7 more)
 
 ### Community 7 - "98. Implementation Phases"
 Cohesion: 0.17
@@ -341,8 +340,8 @@ Cohesion: 0.25
 Nodes (7): Permissions, Reporting, Secrets, Security model, Shell risk classes, The one rule, Threat model
 
 ### Community 67 - "Verification history"
-Cohesion: 0.20
-Nodes (10): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:45:09Z — GitHub CI after branding and governance push, 2026-08-24 — Phase 1 workbench review and UX remediation, 2026-08-24 — Second-pass UI/UX and ledger audit, 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence, Current quality status, Open QA risks, QA and review ledger (+2 more)
+Cohesion: 0.18
+Nodes (11): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:45:09Z — GitHub CI after branding and governance push, 2026-08-24 — Phase 1 workbench review and UX remediation, 2026-08-24 — Second-pass UI/UX and ledger audit, 2026-09-23 — Integrated terminal defect hunt, 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence, Current quality status, Open QA risks (+3 more)
 
 ### Community 68 - "tauri.ts"
 Cohesion: 0.11
@@ -382,7 +381,7 @@ Nodes (20): build_provider(), ChatDeltaEvent, ChatDoneEvent, ChatErrorEvent, Cha
 
 ### Community 78 - "PtySession"
 Cohesion: 0.17
-Nodes (14): Child, default_shell(), PtySession, Box, Error, Path, Result, Self (+6 more)
+Nodes (15): Child, default_shell(), PtySession, Box, Error, Path, Result, Self (+7 more)
 
 ### Community 79 - "default.json"
 Cohesion: 0.22
@@ -409,20 +408,16 @@ Cohesion: 0.18
 Nodes (9): GitPanel(), STATUS_COLOR, STATUS_LABEL, GitFileStatus, WorkspaceInfo, BottomPanel, OpenTab, SidePanel (+1 more)
 
 ### Community 89 - "types.rs"
-Cohesion: 0.24
-Nodes (7): ModelDefinition, ProviderAuthMode, ProviderManifest, Value, StreamEvent, ToolDefinition, Usage
-
-### Community 90 - "ollama.rs"
 Cohesion: 0.22
-Nodes (9): build_chat_request(), parse_line(), parses_a_content_line(), parses_the_final_usage_line(), role_str(), Option, Value, role_str() (+1 more)
+Nodes (8): ModelDefinition, ProviderAuthMode, ProviderManifest, Value, StreamEvent, ToolDefinition, Usage, read_file_tool()
 
 ### Community 91 - ".push"
 Cohesion: 0.29
 Nodes (10): handles_multiple_events_in_one_chunk(), parses_a_single_data_only_event(), parses_named_events(), reassembles_an_event_split_across_two_chunks(), Option, Self, String, Vec (+2 more)
 
 ### Community 92 - "Message"
-Cohesion: 0.44
-Nodes (8): Message, ModelRequest, RequestMetadata, Into, Option, Self, String, Vec
+Cohesion: 0.31
+Nodes (11): role_str(), role_str(), Message, ModelRequest, RequestMetadata, Role, Into, Option (+3 more)
 
 ### Community 93 - "Explorer.tsx"
 Cohesion: 0.29
@@ -432,25 +427,25 @@ Nodes (3): Explorer(), FileRow(), FsEntry
 Cohesion: 0.42
 Nodes (9): delete_api_key(), entry(), get_api_key(), Error, Option, Result, String, SecretError (+1 more)
 
-### Community 95 - "OllamaProvider"
-Cohesion: 0.21
-Nodes (9): OllamaProvider, Client, ModelDefinition, ModelStream, Result, Self, String, Vec (+1 more)
+### Community 95 - "ProviderError"
+Cohesion: 0.13
+Nodes (17): build_chat_request(), OllamaProvider, parse_line(), parses_a_content_line(), parses_the_final_usage_line(), Client, ModelDefinition, ModelStream (+9 more)
 
-### Community 96 - "ProviderError"
-Cohesion: 0.17
-Nodes (13): OpenAiProvider, parse_chunk(), parses_a_text_delta(), parses_final_usage_chunk(), Client, ModelDefinition, ModelStream, Result (+5 more)
+### Community 96 - "OpenAiProvider"
+Cohesion: 0.20
+Nodes (8): OpenAiProvider, Client, ModelDefinition, ModelStream, Result, ModelProvider, Send, Sync
 
 ### Community 97 - "openai.rs"
-Cohesion: 0.23
-Nodes (12): accumulates_argument_fragments_across_chunks(), build_chat_request(), builds_a_streaming_chat_request(), extract_tool_call_fragments(), extracts_tool_call_fragments_by_index(), finish_reason(), includes_tool_definitions_when_present(), message_to_json() (+4 more)
+Cohesion: 0.16
+Nodes (18): accumulates_argument_fragments_across_chunks(), build_chat_request(), builds_a_streaming_chat_request(), extract_tool_call_fragments(), extracts_tool_call_fragments_by_index(), finish_reason(), includes_tool_definitions_when_present(), message_to_json() (+10 more)
 
 ### Community 98 - "anycode-security/src/lib.rs"
 Cohesion: 0.15
 Nodes (7): capability_risk(), classify_shell_command(), decide(), Decision, RiskLevel, StandingGrant, RiskLevel
 
 ### Community 99 - "live_openai.rs"
-Cohesion: 0.52
-Nodes (6): a_real_response_produces_a_tool_call(), a_real_response_reports_usage(), api_key(), model(), read_file_tool(), String
+Cohesion: 0.67
+Nodes (5): a_real_response_produces_a_tool_call(), a_real_response_reports_usage(), api_key(), model(), String
 
 ### Community 100 - "Tool"
 Cohesion: 0.40
@@ -473,7 +468,7 @@ Cohesion: 0.13
 Nodes (14): every_tool_produces_a_non_empty_spec(), Box, Drop, Path, PathBuf, Self, Value, Vec (+6 more)
 
 ## Knowledge Gaps
-- **479 isolated node(s):** `printWidth`, `trailingComma`, `name`, `description`, `homepage` (+474 more)
+- **480 isolated node(s):** `printWidth`, `trailingComma`, `name`, `description`, `homepage` (+475 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -481,13 +476,13 @@ Nodes (14): every_tool_produces_a_non_empty_spec(), Box, Drop, Path, PathBuf, Se
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `ToolCallRequest` connect `agent_commands.rs` to `types.rs`, `Message`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
-- **Why does `ToolDefinition` connect `types.rs` to `live_openai.rs`, `Message`?**
+  _High betweenness centrality (0.081) - this node is a cross-community bridge._
+- **Why does `ToolDefinition` connect `types.rs` to `Message`?**
   _High betweenness centrality (0.070) - this node is a cross-community bridge._
-- **Why does `read_file_tool()` connect `live_openai.rs` to `types.rs`?**
+- **Why does `read_file_tool()` connect `types.rs` to `live_openai.rs`?**
   _High betweenness centrality (0.070) - this node is a cross-community bridge._
 - **What connects `printWidth`, `trailingComma`, `name` to the rest of the system?**
-  _479 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _480 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**

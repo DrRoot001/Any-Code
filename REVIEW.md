@@ -8,7 +8,8 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 
 | Area | Last result | Evidence |
 |------|-------------|----------|
-| Rust workspace | Pass | 53 tests passed on 2026-09-23 |
+| Rust workspace | Pass | 54 tests passed on 2026-09-23 |
+| Integrated terminal | Fixed, not hand-verified | 4 defects fixed on 2026-09-23; no interactive run observed — see entry |
 | Rust lint | Pass | Clippy completed with warnings denied on 2026-08-24 |
 | TypeScript | Pass | Workspace typecheck passed on 2026-08-24 |
 | Web production build | Pass with warning | Vite production build completed on 2026-08-24; large Monaco chunks remain |
@@ -35,6 +36,71 @@ A failed test remains visible. Fixing it requires a new passing entry with a lin
 the earlier failure.
 
 ## Verification history
+
+### 2026-09-23 — Integrated terminal defect hunt
+
+- **Scope:** the report "terminal not working". `anycode-terminal`, `terminal_commands.rs`,
+  `TerminalPanel.tsx`, and the bottom panel's mounting in `App.tsx`.
+- **Source:** `ae80398` plus the uncommitted fixes under review.
+- **Environment:** macOS 12.6, Node 20.19.5, local Rust toolchain.
+
+**Reproduction evidence.** The PTY layer itself was exercised directly before any code
+changed, by spawning `/bin/zsh` and `/bin/sh` under a real pty and dumping the raw byte
+stream. The shell starts and reaches a prompt; the plumbing was never broken. The
+environment of the running app (`ps eww 43529`) showed **no `TERM` variable at all**,
+which is the condition under which a shell comes up with no line editor and no terminal
+capabilities.
+
+**Defects found and fixed (4):**
+
+1. **Subscribe race — the likely cause of the blank pane.** `terminal_spawn` minted the
+   session id and started the reader thread *before* returning it, so the frontend could
+   only call `listen()` afterwards. Tauri does not buffer events, so the shell's greeting
+   and first prompt were emitted to nobody. Fixed the same way as the agent loop: the
+   caller supplies the id and subscribes before spawning.
+2. **No `TERM`.** A GUI process inherits none, leaving the shell with no capabilities and
+   `clear`/`less`/`vim` failing. Now set explicitly to `xterm-256color`, which is what
+   xterm.js actually emulates.
+3. **Login shell.** An app opened from Finder inherits only
+   `/usr/bin:/bin:/usr/sbin:/sbin`, so nothing the user installed is on `PATH`. The PTY
+   now spawns a login shell (non-Windows), matching what the user's own terminal does.
+4. **Panel unmount killed the shell.** `TerminalPanel` was conditionally rendered, so
+   switching to Chat or closing the bottom panel unmounted it and its cleanup killed the
+   PTY — losing scrollback and any running process. Both panels are now kept mounted and
+   toggled with `hidden`. The terminal is mounted on first open rather than at startup, so
+   the app still does not spawn a shell before a workspace exists (which would fail).
+
+Also fixed in passing: `.terminal-body` subtracted a 36px header that is not inside the
+component (it lives in `App.tsx`), clipping the last row; dead sessions were never removed
+from `AppState.terminals`; and `fit()` could run against a 0×0 container once the panel
+became hideable.
+
+- **Pass:** new `anycode-terminal` test `spawned_shell_reports_an_xterm_term` — spawns a
+  real PTY and asserts the shell itself prints `TERM<xterm-256color>`. It fails against the
+  pre-fix code in this environment (the parent shell here has `TERM` empty).
+- **Pass:** `cargo test --workspace` — 54 passed, 0 failed.
+- **Pass:** `cargo clippy --all-targets --all-features -- -D warnings` on both workspaces.
+- **Pass:** `cargo fmt --all --check`.
+- **Pass:** `tsc -b --noEmit`.
+
+**Not run / unverified:**
+
+- **The fixed terminal has not been driven by hand in the running app.** macOS denies this
+  environment both permissions needed to do so: `screencapture -l <window>` returns "could
+  not create image from window" and a full-screen capture renders the desktop with every
+  application window omitted (Screen Recording), and System Events reports "osascript is
+  not allowed to send keystrokes. (1002)" (Accessibility). The rebuilt `.app` launches and
+  stays running, and spawns no shell before the panel is opened — which is the new lazy-mount
+  behaviour — but nobody has seen a prompt appear. Everything above is compile-, unit- and
+  byte-stream-level evidence, not a user-level observation. **The owner should open the
+  Terminal panel once and confirm a prompt appears.**
+- **`shell.execute` has the same `PATH` gap as defect 3 and is not fixed.** It runs
+  `sh -c`, not a login shell, so an agent's `npm test` will fail with "command not found"
+  when the app is launched from Finder. A login shell per command would cost seconds of
+  profile sourcing each time; the correct fix is to resolve the user's shell environment
+  once at startup. Not built.
+- Windows and Linux behaviour of the login-shell change (`-l` is skipped on Windows, but
+  nobody has run it there).
 
 ### 2026-08-23T00:41:22Z — Brand integration baseline
 
@@ -216,3 +282,7 @@ the earlier failure.
   provider boundary is unit-tested; the boundary itself is not.
 - Agent task history is in-memory only: closing the app loses the timeline, and a task
   orphaned by a crash cannot be resumed.
+- The app inherits its launcher's environment. The PTY terminal now works around this with
+  a login shell, but `shell.execute` — the path every agent command takes — does not, so
+  agent commands can fail with "command not found" when the app is opened from Finder
+  rather than from a shell.

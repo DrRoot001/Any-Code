@@ -48,6 +48,19 @@ impl PtySession {
         let mut cmd = CommandBuilder::new(default_shell());
         cmd.cwd(cwd);
 
+        // A GUI process inherits no TERM, which leaves the shell with no terminal
+        // capabilities: no line editor, no colour, and `clear`/`less`/`vim` failing
+        // outright. The frontend is xterm.js, so name what it actually emulates.
+        cmd.env("TERM", "xterm-256color");
+
+        // A GUI process also inherits the launcher's PATH, not the user's — an app
+        // opened from Finder sees only /usr/bin:/bin:/usr/sbin:/sbin, so nothing the
+        // user installed is on it. A login shell reads the profile that sets PATH,
+        // which is what their own terminal emulator does too.
+        if !cfg!(windows) {
+            cmd.arg("-l");
+        }
+
         let child = pair.slave.spawn_command(cmd)?;
         drop(pair.slave);
 
@@ -82,5 +95,45 @@ impl PtySession {
     pub fn kill(&mut self) -> Result<(), TerminalError> {
         self.child.kill()?;
         Ok(())
+    }
+}
+
+#[cfg(all(test, unix))]
+mod tests {
+    use super::*;
+    use std::time::{Duration, Instant};
+
+    /// The shell must come up able to drive an xterm-256color emulator. Without TERM a
+    /// GUI-spawned shell has no line editor and no colour, which looks to the user like
+    /// a dead terminal — so assert the value the shell itself reports, not our input.
+    #[test]
+    fn spawned_shell_reports_an_xterm_term() {
+        let (mut session, mut reader) =
+            PtySession::spawn(Path::new("/"), 80, 24).expect("shell should spawn");
+
+        // A login shell can take seconds to finish sourcing the user's profile, and it
+        // would swallow input typed before then, so send on a delay and read patiently.
+        let writer = std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_secs(2));
+            session.write(b"printf 'TERM<%s>\\n' \"$TERM\"\n").unwrap();
+            // Held open: dropping the session closes the PTY and ends the read below.
+            std::thread::sleep(Duration::from_secs(13));
+        });
+
+        let deadline = Instant::now() + Duration::from_secs(15);
+        let mut seen = String::new();
+        let mut buf = [0u8; 4096];
+        while Instant::now() < deadline {
+            match reader.read(&mut buf) {
+                Ok(0) => break,
+                Ok(n) => seen.push_str(&String::from_utf8_lossy(&buf[..n])),
+                Err(_) => break,
+            }
+            if seen.contains("TERM<xterm-256color>") {
+                return;
+            }
+        }
+        writer.join().ok();
+        panic!("shell never reported TERM=xterm-256color; saw: {seen:?}");
     }
 }
