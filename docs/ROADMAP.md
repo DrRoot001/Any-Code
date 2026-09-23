@@ -16,10 +16,10 @@ parallelism before Phase 3's approval system means shipping unbounded agents wit
 | **1 · Workbench** | Workspace selection, explorer, Monaco, tabs, terminal, git status, diff, command palette, settings | Usable as a lightweight coding environment without AI |
 | **2 · Provider layer** | Provider abstraction, OpenAI, Anthropic, Gemini, OpenRouter, Ollama, streaming, model selector, credential vault, usage events | Same task switches providers with no change outside the adapter |
 | **3 · Agent runtime** | Planner, task state machine, tool calls, filesystem/terminal/git tools, approvals, timeline, verification | Agent implements *and verifies* a simple repository task |
-| **4 · Code intelligence** | tree-sitter, ripgrep, LSP, symbol index, SQLite FTS, context builder, context inspector, memory | Agents retrieve targeted context instead of dumping files |
+| **4 · Code intelligence** | tree-sitter, ripgrep, LSP, symbol index, SQLite FTS, context builder, context inspector, memory, `.vsix` themes/grammars and extension-supplied language servers ([ADR 0003](adr/0003-extension-compatibility-and-registry.md)) | Agents retrieve targeted context instead of dumping files |
 | **5 · Multi-agent** | Task DAG, subagents, git worktrees, parallel execution, merge coordinator, agent dashboard | Two agents work concurrently without corrupting the workspace |
 | **6 · Browser verification** | Playwright, browser panel, screenshots, console, network, DOM, responsive checks | A frontend agent proves its work |
-| **7 · Capability platform** | MCP, connectors, skills, plugin host, capability permissions, install UX | All external capabilities flow through one registry |
+| **7 · Capability platform** | MCP, connectors, skills, plugin host, capability permissions, install UX, Open VSX extension browsing and install as one more package category | All external capabilities flow through one registry |
 | **8 · Subscription intelligence** | Usage dashboard, budgets, provider/model analytics, subscription ledger, routing policies | User can see where AI money goes and change it |
 | **9 · Cloud** | Identity, cloud API, PostgreSQL, sync, devices, remote sessions, web dashboard | A session continues on another authorised device |
 | **10 · Mobile** | iOS, Android, task management, diff review, approvals, usage, notifications | Real work supervised without a laptop |

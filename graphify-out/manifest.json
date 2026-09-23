@@ -361,8 +361,8 @@
   },
   "Cargo.toml": {
     "mtime": 1787443015.7690716,
-    "seen": 1790118984.6799512,
-    "ast_hash": "",
+    "seen": 1790141958.4442382,
+    "ast_hash": "f8a8d096772be2003724b1e497046162",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/Cargo.toml": {
@@ -396,9 +396,9 @@
     "semantic_hash": ""
   },
   "apps/desktop/src/App.tsx": {
-    "mtime": 1790139586.5830986,
-    "seen": 1790140652.5203788,
-    "ast_hash": "c9b582811970bf9e4766088ec22cc0e9",
+    "mtime": 1790140964.9164562,
+    "seen": 1790141958.444273,
+    "ast_hash": "c86c9b9b7a662cc99316d6e7b5491554",
     "semantic_hash": ""
   },
   "apps/desktop/src/main.tsx": {
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "REVIEW.md": {
-    "mtime": 1790140547.8374913,
-    "seen": 1790140652.573636,
-    "ast_hash": "5b1aeb63028db3a4d665d3d463e3e5a3",
+    "mtime": 1790141927.3884242,
+    "seen": 1790141958.4444768,
+    "ast_hash": "ca21416cbe0c08a59f2dd8d96220478c",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/capabilities/default.json": {

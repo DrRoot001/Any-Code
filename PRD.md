@@ -494,7 +494,10 @@ Any Code should not attempt to reproduce every feature of VS Code immediately.
 
 V1 does not require:
 
-1. Full VS Code extension compatibility
+1. Full VS Code extension compatibility — V1 runs a `.vsix`'s colour themes, TextMate grammars
+   and bundled language servers, and does **not** implement the `vscode` extension API or run an
+   extension's JavaScript. Packages come from Open VSX; Microsoft's Marketplace terms restrict it
+   to Microsoft's own products. See [ADR 0003](docs/adr/0003-extension-compatibility-and-registry.md).
 2. Every programming language debugger
 3. Arbitrary local plugin execution on iOS
 4. Full local development environments on iPhone
@@ -1926,7 +1929,13 @@ Plugins
 Workflows
 Themes
 Model Providers
+Extensions
 ```
+
+Extensions are VS Code packages sourced from Open VSX, installed through this same package page
+and permission model rather than a second store. Any Code applies their themes, grammars and
+language servers; it does not run their JavaScript. See
+[ADR 0003](docs/adr/0003-extension-compatibility-and-registry.md).
 
 Marketplace package page displays:
 

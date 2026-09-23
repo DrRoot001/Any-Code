@@ -43,19 +43,6 @@
       "source_location": "L135"
     },
     {
-      "id": "apps_desktop_src_lib_tauri_chatmessage",
-      "label": "ChatMessage",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "chatmessage",
-      "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L67"
-    },
-    {
       "id": "apps_desktop_src_lib_tauri_chatrole",
       "label": "ChatRole",
       "_callable": true,
@@ -106,32 +93,6 @@
       "norm_label": "gitstatusentry",
       "source_file": "apps/desktop/src/lib/tauri.ts",
       "source_location": "L19"
-    },
-    {
-      "id": "apps_desktop_src_lib_tauri_modeldefinition",
-      "label": "ModelDefinition",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "modeldefinition",
-      "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L60"
-    },
-    {
-      "id": "apps_desktop_src_lib_tauri_providerstatus",
-      "label": "ProviderStatus",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "providerstatus",
-      "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L53"
     },
     {
       "id": "apps_desktop_src_lib_tauri_risklevel",
@@ -231,7 +192,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "monaco",
       "source_file": "apps/desktop/src/lib/monaco.ts",
@@ -262,19 +223,6 @@
       "norm_label": "themename",
       "source_file": "packages/design-tokens/src/index.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "apps_desktop_src_lib_tauri_gitfilestatus",
-      "label": "GitFileStatus",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 88,
-      "community_name": "workbenchStore.ts",
-      "file_type": "code",
-      "norm_label": "gitfilestatus",
-      "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L16"
     },
     {
       "id": "apps_desktop_src_lib_tauri_workspaceinfo",
@@ -342,17 +290,69 @@
       "source_location": "L15"
     },
     {
+      "id": "apps_desktop_src_lib_tauri_chatmessage",
+      "label": "ChatMessage",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "chatmessage",
+      "source_file": "apps/desktop/src/lib/tauri.ts",
+      "source_location": "L67"
+    },
+    {
+      "id": "apps_desktop_src_lib_tauri_modeldefinition",
+      "label": "ModelDefinition",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "modeldefinition",
+      "source_file": "apps/desktop/src/lib/tauri.ts",
+      "source_location": "L60"
+    },
+    {
+      "id": "apps_desktop_src_lib_tauri_providerstatus",
+      "label": "ProviderStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "providerstatus",
+      "source_file": "apps/desktop/src/lib/tauri.ts",
+      "source_location": "L53"
+    },
+    {
       "id": "apps_desktop_src_lib_tauri_fsentry",
       "label": "FsEntry",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "fsentry",
       "source_file": "apps/desktop/src/lib/tauri.ts",
       "source_location": "L10"
+    },
+    {
+      "id": "apps_desktop_src_lib_tauri_gitfilestatus",
+      "label": "GitFileStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "gitfilestatus",
+      "source_file": "apps/desktop/src/lib/tauri.ts",
+      "source_location": "L16"
     },
     {
       "id": "apps_desktop_src_app_activity",
@@ -364,7 +364,7 @@
       "file_type": "code",
       "norm_label": "activity()",
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L241"
+      "source_location": "L248"
     },
     {
       "id": "apps_desktop_src_app_app",
@@ -388,7 +388,7 @@
       "file_type": "code",
       "norm_label": "notice()",
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L264"
+      "source_location": "L271"
     },
     {
       "id": "apps_desktop_src_components_icons_icon",
@@ -401,18 +401,6 @@
       "norm_label": "icon()",
       "source_file": "apps/desktop/src/components/Icons.tsx",
       "source_location": "L13"
-    },
-    {
-      "id": "apps_desktop_src_components_statusbar_statusbar",
-      "label": "StatusBar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 59,
-      "community_name": "App.tsx",
-      "file_type": "code",
-      "norm_label": "statusbar()",
-      "source_file": "apps/desktop/src/components/StatusBar.tsx",
-      "source_location": "L6"
     },
     {
       "id": "apps_desktop_src_components_terminalpanel_decodebase64",
@@ -535,48 +523,12 @@
       "source_location": "L12"
     },
     {
-      "id": "apps_desktop_src_components_chatpanel_chatpanel",
-      "label": "ChatPanel()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "chatpanel()",
-      "source_file": "apps/desktop/src/components/ChatPanel.tsx",
-      "source_location": "L14"
-    },
-    {
-      "id": "apps_desktop_src_components_modelpicker_modelpicker",
-      "label": "ModelPicker()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "modelpicker()",
-      "source_file": "apps/desktop/src/components/ModelPicker.tsx",
-      "source_location": "L4"
-    },
-    {
-      "id": "apps_desktop_src_hooks_useprovidermodel_useprovidermodel",
-      "label": "useProviderModel()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "useprovidermodel()",
-      "source_file": "apps/desktop/src/hooks/useProviderModel.ts",
-      "source_location": "L9"
-    },
-    {
       "id": "apps_desktop_src_components_diffpane_centered",
       "label": "Centered()",
       "_callable": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "centered()",
       "source_file": "apps/desktop/src/components/DiffPane.tsx",
@@ -588,7 +540,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "diffpane()",
       "source_file": "apps/desktop/src/components/DiffPane.tsx",
@@ -600,7 +552,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "editorarea()",
       "source_file": "apps/desktop/src/components/EditorArea.tsx",
@@ -612,7 +564,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "monacopane()",
       "source_file": "apps/desktop/src/components/EditorArea.tsx",
@@ -624,7 +576,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "languageforpath()",
       "source_file": "apps/desktop/src/lib/language.ts",
@@ -636,7 +588,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "loadmonaco()",
       "source_file": "apps/desktop/src/lib/monaco.ts",
@@ -653,18 +605,6 @@
       "norm_label": "commandpalette()",
       "source_file": "apps/desktop/src/components/CommandPalette.tsx",
       "source_location": "L11"
-    },
-    {
-      "id": "apps_desktop_src_components_providerssection_providerssection",
-      "label": "ProvidersSection()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 87,
-      "community_name": "SettingsPanel.tsx",
-      "file_type": "code",
-      "norm_label": "providerssection()",
-      "source_file": "apps/desktop/src/components/ProvidersSection.tsx",
-      "source_location": "L4"
     },
     {
       "id": "apps_desktop_src_components_settingspanel_settingspanel",
@@ -703,28 +643,52 @@
       "source_location": "L40"
     },
     {
-      "id": "apps_desktop_src_components_gitpanel_empty",
-      "label": "Empty()",
+      "id": "apps_desktop_src_components_chatpanel_chatpanel",
+      "label": "ChatPanel()",
       "_callable": true,
       "_origin": "ast",
-      "community": 88,
-      "community_name": "workbenchStore.ts",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
       "file_type": "code",
-      "norm_label": "empty()",
-      "source_file": "apps/desktop/src/components/GitPanel.tsx",
-      "source_location": "L80"
+      "norm_label": "chatpanel()",
+      "source_file": "apps/desktop/src/components/ChatPanel.tsx",
+      "source_location": "L14"
     },
     {
-      "id": "apps_desktop_src_components_gitpanel_gitpanel",
-      "label": "GitPanel()",
+      "id": "apps_desktop_src_components_modelpicker_modelpicker",
+      "label": "ModelPicker()",
       "_callable": true,
       "_origin": "ast",
-      "community": 88,
-      "community_name": "workbenchStore.ts",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
       "file_type": "code",
-      "norm_label": "gitpanel()",
-      "source_file": "apps/desktop/src/components/GitPanel.tsx",
-      "source_location": "L23"
+      "norm_label": "modelpicker()",
+      "source_file": "apps/desktop/src/components/ModelPicker.tsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "apps_desktop_src_components_providerssection_providerssection",
+      "label": "ProvidersSection()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "providerssection()",
+      "source_file": "apps/desktop/src/components/ProvidersSection.tsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "apps_desktop_src_hooks_useprovidermodel_useprovidermodel",
+      "label": "useProviderModel()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "useprovidermodel()",
+      "source_file": "apps/desktop/src/hooks/useProviderModel.ts",
+      "source_location": "L9"
     },
     {
       "id": "apps_desktop_src_components_explorer_dircontents",
@@ -732,7 +696,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "dircontents()",
       "source_file": "apps/desktop/src/components/Explorer.tsx",
@@ -744,7 +708,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "expandabledir()",
       "source_file": "apps/desktop/src/components/Explorer.tsx",
@@ -756,7 +720,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "explorer()",
       "source_file": "apps/desktop/src/components/Explorer.tsx",
@@ -768,7 +732,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "filerow()",
       "source_file": "apps/desktop/src/components/Explorer.tsx",
@@ -780,11 +744,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "row()",
       "source_file": "apps/desktop/src/components/Explorer.tsx",
       "source_location": "L81"
+    },
+    {
+      "id": "apps_desktop_src_components_gitpanel_empty",
+      "label": "Empty()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "empty()",
+      "source_file": "apps/desktop/src/components/GitPanel.tsx",
+      "source_location": "L80"
+    },
+    {
+      "id": "apps_desktop_src_components_gitpanel_gitpanel",
+      "label": "GitPanel()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "gitpanel()",
+      "source_file": "apps/desktop/src/components/GitPanel.tsx",
+      "source_location": "L23"
+    },
+    {
+      "id": "apps_desktop_src_components_statusbar_statusbar",
+      "label": "StatusBar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "statusbar()",
+      "source_file": "apps/desktop/src/components/StatusBar.tsx",
+      "source_location": "L6"
     },
     {
       "id": "prd",
@@ -2210,6 +2210,28 @@
       "source_location": "L99"
     },
     {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_apphandle",
+      "label": "AppHandle",
+      "_origin": "ast",
+      "community": 101,
+      "community_name": "AppHandle",
+      "file_type": "code",
+      "norm_label": "apphandle",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_state",
+      "label": "State",
+      "_origin": "ast",
+      "community": 102,
+      "community_name": "State",
+      "file_type": "code",
+      "norm_label": "state",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "crates_anycode_tools_src_filesystem",
       "label": "filesystem.rs",
       "_origin": "ast",
@@ -2782,6 +2804,17 @@
       "source_location": "L38"
     },
     {
+      "id": "crates_anycode_terminal_src_lib_rs_box",
+      "label": "Box",
+      "_origin": "ast",
+      "community": 106,
+      "community_name": "Box",
+      "file_type": "code",
+      "norm_label": "box",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "crates_anycode_tools_src_lib",
       "label": "anycode-tools/src/lib.rs",
       "_origin": "ast",
@@ -3024,6 +3057,28 @@
       "source_location": ""
     },
     {
+      "id": "crates_anycode_terminal_src_lib_rs_error",
+      "label": "Error",
+      "_origin": "ast",
+      "community": 108,
+      "community_name": "Error",
+      "file_type": "code",
+      "norm_label": "error",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_terminal_src_lib_rs_path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 109,
+      "community_name": "Path",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "docs_engineering_standards_commits_and_branches",
       "label": "Commits and branches",
       "_origin": "ast",
@@ -3118,6 +3173,39 @@
       "norm_label": "testing",
       "source_file": "docs/ENGINEERING-STANDARDS.md",
       "source_location": "L24"
+    },
+    {
+      "id": "crates_anycode_terminal_src_lib_rs_self",
+      "label": "Self",
+      "_origin": "ast",
+      "community": 110,
+      "community_name": "Self",
+      "file_type": "code",
+      "norm_label": "self",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_terminal_src_lib_rs_send",
+      "label": "Send",
+      "_origin": "ast",
+      "community": 111,
+      "community_name": "Send",
+      "file_type": "code",
+      "norm_label": "send",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_terminal_src_lib_rs_sync",
+      "label": "Sync",
+      "_origin": "ast",
+      "community": 112,
+      "community_name": "Sync",
+      "file_type": "code",
+      "norm_label": "sync",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "docs_project_rules_architecture_rules",
@@ -8759,7 +8847,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:41:22z \u2014 brand integration baseline",
       "source_file": "REVIEW.md",
-      "source_location": "L100"
+      "source_location": "L105"
     },
     {
       "id": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
@@ -8771,7 +8859,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:45:09z \u2014 github ci after branding and governance push",
       "source_file": "REVIEW.md",
-      "source_location": "L125"
+      "source_location": "L130"
     },
     {
       "id": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
@@ -8783,7 +8871,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 phase 1 workbench review and ux remediation",
       "source_file": "REVIEW.md",
-      "source_location": "L137"
+      "source_location": "L142"
     },
     {
       "id": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
@@ -8795,7 +8883,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 second-pass ui/ux and ledger audit",
       "source_file": "REVIEW.md",
-      "source_location": "L176"
+      "source_location": "L181"
     },
     {
       "id": "review_2026_09_23_integrated_terminal_defect_hunt",
@@ -8819,7 +8907,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 mvp: agent dock, approvals, cancellation, evidence",
       "source_file": "REVIEW.md",
-      "source_location": "L202"
+      "source_location": "L207"
     },
     {
       "id": "review_current_quality_status",
@@ -8843,7 +8931,7 @@
       "node_kind": "heading",
       "norm_label": "open qa risks",
       "source_file": "REVIEW.md",
-      "source_location": "L267"
+      "source_location": "L272"
     },
     {
       "id": "review_qa_and_review_ledger",
@@ -8915,39 +9003,6 @@
       "source_location": "L4"
     },
     {
-      "id": "apps_desktop_src_components_chatpanel",
-      "label": "ChatPanel.tsx",
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "chatpanel.tsx",
-      "source_file": "apps/desktop/src/components/ChatPanel.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "apps_desktop_src_components_modelpicker",
-      "label": "ModelPicker.tsx",
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "modelpicker.tsx",
-      "source_file": "apps/desktop/src/components/ModelPicker.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "apps_desktop_src_hooks_useprovidermodel",
-      "label": "useProviderModel.ts",
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "useprovidermodel.ts",
-      "source_file": "apps/desktop/src/hooks/useProviderModel.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "apps_desktop_src_lib_tauri",
       "label": "tauri.ts",
       "_origin": "ast",
@@ -8968,17 +9023,6 @@
       "norm_label": "agentcommands",
       "source_file": "apps/desktop/src/lib/tauri.ts",
       "source_location": "L137"
-    },
-    {
-      "id": "apps_desktop_src_lib_tauri_providercommands",
-      "label": "providerCommands",
-      "_origin": "ast",
-      "community": 68,
-      "community_name": "tauri.ts",
-      "file_type": "code",
-      "norm_label": "providercommands",
-      "source_file": "apps/desktop/src/lib/tauri.ts",
-      "source_location": "L72"
     },
     {
       "id": "claude_any_code_agent_operating_instructions",
@@ -9825,127 +9869,6 @@
       "source_location": "L46"
     },
     {
-      "id": "apps_desktop_src_tauri_src_terminal_commands",
-      "label": "terminal_commands.rs",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "terminal_commands.rs",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L1"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_ptydataevent",
-      "label": "PtyDataEvent",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "ptydataevent",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L20"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_ptyexitevent",
-      "label": "PtyExitEvent",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "ptyexitevent",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L27"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_apphandle",
-      "label": "AppHandle",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "apphandle",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_result",
-      "label": "Result",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "result",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_state",
-      "label": "State",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "state",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
-      "label": "String",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_kill",
-      "label": "terminal_kill()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "terminal_kill()",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L111"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
-      "label": "terminal_resize()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "terminal_resize()",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L104"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
-      "label": "terminal_spawn()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "terminal_spawn()",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L35"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
-      "label": "terminal_write()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "terminal_write()",
-      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
-      "source_location": "L97"
-    },
-    {
       "id": "apps_desktop_src_tauri_src_workspace",
       "label": "workspace.rs",
       "_origin": "ast",
@@ -10140,17 +10063,6 @@
       "community_name": "AppState",
       "file_type": "code",
       "norm_label": "mutexguard",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "read",
-      "label": "Read",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "read",
       "source_file": "",
       "source_location": ""
     },
@@ -10694,6 +10606,138 @@
       "source_location": "L77"
     },
     {
+      "id": "apphandle",
+      "label": "AppHandle",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "apphandle",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands",
+      "label": "terminal_commands.rs",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "terminal_commands.rs",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_ptydataevent",
+      "label": "PtyDataEvent",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "ptydataevent",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L20"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_ptyexitevent",
+      "label": "PtyExitEvent",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "ptyexitevent",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L27"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_result",
+      "label": "Result",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "result",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
+      "label": "String",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_kill",
+      "label": "terminal_kill()",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "terminal_kill()",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L111"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
+      "label": "terminal_resize()",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "terminal_resize()",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L104"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
+      "label": "terminal_spawn()",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "terminal_spawn()",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
+      "label": "terminal_write()",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "terminal_write()",
+      "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
+      "source_location": "L97"
+    },
+    {
+      "id": "appstate",
+      "label": "AppState",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "appstate",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "box",
+      "label": "Box",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "box",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "child",
       "label": "Child",
       "_origin": "ast",
@@ -10782,39 +10826,6 @@
       "source_location": "L80"
     },
     {
-      "id": "crates_anycode_terminal_src_lib_rs_box",
-      "label": "Box",
-      "_origin": "ast",
-      "community": 78,
-      "community_name": "PtySession",
-      "file_type": "code",
-      "norm_label": "box",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_terminal_src_lib_rs_error",
-      "label": "Error",
-      "_origin": "ast",
-      "community": 78,
-      "community_name": "PtySession",
-      "file_type": "code",
-      "norm_label": "error",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_terminal_src_lib_rs_path",
-      "label": "Path",
-      "_origin": "ast",
-      "community": 78,
-      "community_name": "PtySession",
-      "file_type": "code",
-      "norm_label": "path",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "crates_anycode_terminal_src_lib_rs_result",
       "label": "Result",
       "_origin": "ast",
@@ -10826,28 +10837,6 @@
       "source_location": ""
     },
     {
-      "id": "crates_anycode_terminal_src_lib_rs_self",
-      "label": "Self",
-      "_origin": "ast",
-      "community": 78,
-      "community_name": "PtySession",
-      "file_type": "code",
-      "norm_label": "self",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_terminal_src_lib_rs_send",
-      "label": "Send",
-      "_origin": "ast",
-      "community": 78,
-      "community_name": "PtySession",
-      "file_type": "code",
-      "norm_label": "send",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "crates_anycode_terminal_src_lib_rs_string",
       "label": "String",
       "_origin": "ast",
@@ -10855,17 +10844,6 @@
       "community_name": "PtySession",
       "file_type": "code",
       "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_terminal_src_lib_rs_sync",
-      "label": "Sync",
-      "_origin": "ast",
-      "community": 78,
-      "community_name": "PtySession",
-      "file_type": "code",
-      "norm_label": "sync",
       "source_file": "",
       "source_location": ""
     },
@@ -10892,6 +10870,17 @@
       "source_location": "L10"
     },
     {
+      "id": "error",
+      "label": "Error",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "error",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "masterpty",
       "label": "MasterPty",
       "_origin": "ast",
@@ -10899,6 +10888,72 @@
       "community_name": "PtySession",
       "file_type": "code",
       "norm_label": "masterpty",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "read",
+      "label": "Read",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "read",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "self",
+      "label": "Self",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "self",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "send",
+      "label": "Send",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "send",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "state",
+      "label": "State",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "state",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "sync",
+      "label": "Sync",
+      "_origin": "ast",
+      "community": 78,
+      "community_name": "PtySession",
+      "file_type": "code",
+      "norm_label": "sync",
       "source_file": "",
       "source_location": ""
     },
@@ -11498,66 +11553,11 @@
       "source_location": "L14"
     },
     {
-      "id": "css_worker_worker",
-      "label": "monaco-editor/esm/vs/language/css/css.worker?worker",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useWorkbenchStore",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "monaco-editor/esm/vs/language/css/css.worker?worker",
-      "source_file": "monaco-editor/esm/vs/language/css/css.worker?worker"
-    },
-    {
-      "id": "editor_worker_worker",
-      "label": "monaco-editor/esm/vs/editor/editor.worker?worker",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useWorkbenchStore",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "monaco-editor/esm/vs/editor/editor.worker?worker",
-      "source_file": "monaco-editor/esm/vs/editor/editor.worker?worker"
-    },
-    {
-      "id": "html_worker_worker",
-      "label": "monaco-editor/esm/vs/language/html/html.worker?worker",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useWorkbenchStore",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "monaco-editor/esm/vs/language/html/html.worker?worker",
-      "source_file": "monaco-editor/esm/vs/language/html/html.worker?worker"
-    },
-    {
-      "id": "json_worker_worker",
-      "label": "monaco-editor/esm/vs/language/json/json.worker?worker",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useWorkbenchStore",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "monaco-editor/esm/vs/language/json/json.worker?worker",
-      "source_file": "monaco-editor/esm/vs/language/json/json.worker?worker"
-    },
-    {
-      "id": "ts_worker_worker",
-      "label": "monaco-editor/esm/vs/language/typescript/ts.worker?worker",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useWorkbenchStore",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "monaco-editor/esm/vs/language/typescript/ts.worker?worker",
-      "source_file": "monaco-editor/esm/vs/language/typescript/ts.worker?worker"
-    },
-    {
       "id": "apps_desktop_src_components_diffpane",
       "label": "DiffPane.tsx",
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "diffpane.tsx",
       "source_file": "apps/desktop/src/components/DiffPane.tsx",
@@ -11568,7 +11568,7 @@
       "label": "EditorArea.tsx",
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "editorarea.tsx",
       "source_file": "apps/desktop/src/components/EditorArea.tsx",
@@ -11579,7 +11579,7 @@
       "label": "language.ts",
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "language.ts",
       "source_file": "apps/desktop/src/lib/language.ts",
@@ -11590,7 +11590,7 @@
       "label": "EXTENSION_LANGUAGE",
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "extension_language",
       "source_file": "apps/desktop/src/lib/language.ts",
@@ -11601,22 +11601,11 @@
       "label": "monaco.ts",
       "_origin": "ast",
       "community": 83,
-      "community_name": "useWorkbenchStore",
+      "community_name": "DiffPane.tsx",
       "file_type": "code",
       "norm_label": "monaco.ts",
       "source_file": "apps/desktop/src/lib/monaco.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "apps_desktop_src_state_workbenchstore_useworkbenchstore",
-      "label": "useWorkbenchStore",
-      "_origin": "ast",
-      "community": 83,
-      "community_name": "useWorkbenchStore",
-      "file_type": "code",
-      "norm_label": "useworkbenchstore",
-      "source_file": "apps/desktop/src/state/workbenchStore.ts",
-      "source_location": "L41"
     },
     {
       "id": "prettierrc",
@@ -12299,17 +12288,6 @@
       "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_components_providerssection",
-      "label": "ProvidersSection.tsx",
-      "_origin": "ast",
-      "community": 87,
-      "community_name": "SettingsPanel.tsx",
-      "file_type": "code",
-      "norm_label": "providerssection.tsx",
-      "source_file": "apps/desktop/src/components/ProvidersSection.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "apps_desktop_src_components_settingspanel",
       "label": "SettingsPanel.tsx",
       "_origin": "ast",
@@ -12396,39 +12374,6 @@
       "norm_label": "spacing",
       "source_file": "packages/design-tokens/src/index.ts",
       "source_location": "L8"
-    },
-    {
-      "id": "apps_desktop_src_components_gitpanel",
-      "label": "GitPanel.tsx",
-      "_origin": "ast",
-      "community": 88,
-      "community_name": "workbenchStore.ts",
-      "file_type": "code",
-      "norm_label": "gitpanel.tsx",
-      "source_file": "apps/desktop/src/components/GitPanel.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "apps_desktop_src_components_gitpanel_status_color",
-      "label": "STATUS_COLOR",
-      "_origin": "ast",
-      "community": 88,
-      "community_name": "workbenchStore.ts",
-      "file_type": "code",
-      "norm_label": "status_color",
-      "source_file": "apps/desktop/src/components/GitPanel.tsx",
-      "source_location": "L14"
-    },
-    {
-      "id": "apps_desktop_src_components_gitpanel_status_label",
-      "label": "STATUS_LABEL",
-      "_origin": "ast",
-      "community": 88,
-      "community_name": "workbenchStore.ts",
-      "file_type": "code",
-      "norm_label": "status_label",
-      "source_file": "apps/desktop/src/components/GitPanel.tsx",
-      "source_location": "L5"
     },
     {
       "id": "apps_desktop_src_state_workbenchstore",
@@ -12693,15 +12638,59 @@
       "source_location": "L79"
     },
     {
-      "id": "monaco_editor_monaco_editor",
-      "label": "monaco-editor",
+      "id": "apps_desktop_src_components_chatpanel",
+      "label": "ChatPanel.tsx",
       "_origin": "ast",
       "community": 90,
-      "community_name": "monaco-editor",
-      "confidence": "EXTRACTED",
+      "community_name": "ChatPanel.tsx",
       "file_type": "code",
-      "norm_label": "monaco-editor",
-      "source_file": "monaco-editor"
+      "norm_label": "chatpanel.tsx",
+      "source_file": "apps/desktop/src/components/ChatPanel.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_components_modelpicker",
+      "label": "ModelPicker.tsx",
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "modelpicker.tsx",
+      "source_file": "apps/desktop/src/components/ModelPicker.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_components_providerssection",
+      "label": "ProvidersSection.tsx",
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "providerssection.tsx",
+      "source_file": "apps/desktop/src/components/ProvidersSection.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_hooks_useprovidermodel",
+      "label": "useProviderModel.ts",
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "useprovidermodel.ts",
+      "source_file": "apps/desktop/src/hooks/useProviderModel.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_lib_tauri_providercommands",
+      "label": "providerCommands",
+      "_origin": "ast",
+      "community": 90,
+      "community_name": "ChatPanel.tsx",
+      "file_type": "code",
+      "norm_label": "providercommands",
+      "source_file": "apps/desktop/src/lib/tauri.ts",
+      "source_location": "L72"
     },
     {
       "id": "crates_anycode_models_src_sse",
@@ -13016,11 +13005,55 @@
       "label": "Explorer.tsx",
       "_origin": "ast",
       "community": 93,
-      "community_name": "Explorer.tsx",
+      "community_name": "useWorkbenchStore",
       "file_type": "code",
       "norm_label": "explorer.tsx",
       "source_file": "apps/desktop/src/components/Explorer.tsx",
       "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_components_gitpanel",
+      "label": "GitPanel.tsx",
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "gitpanel.tsx",
+      "source_file": "apps/desktop/src/components/GitPanel.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_components_gitpanel_status_color",
+      "label": "STATUS_COLOR",
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "status_color",
+      "source_file": "apps/desktop/src/components/GitPanel.tsx",
+      "source_location": "L14"
+    },
+    {
+      "id": "apps_desktop_src_components_gitpanel_status_label",
+      "label": "STATUS_LABEL",
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "status_label",
+      "source_file": "apps/desktop/src/components/GitPanel.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "apps_desktop_src_state_workbenchstore_useworkbenchstore",
+      "label": "useWorkbenchStore",
+      "_origin": "ast",
+      "community": 93,
+      "community_name": "useWorkbenchStore",
+      "file_type": "code",
+      "norm_label": "useworkbenchstore",
+      "source_file": "apps/desktop/src/state/workbenchStore.ts",
+      "source_location": "L41"
     },
     {
       "id": "crates_anycode_secrets_src_lib",
@@ -14024,7 +14057,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L44",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -16957,7 +16990,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib_ptysession",
-      "target": "crates_anycode_terminal_src_lib_rs_box",
+      "target": "box",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -16969,7 +17002,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib_terminalerror",
-      "target": "crates_anycode_terminal_src_lib_rs_error",
+      "target": "error",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17809,7 +17842,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_kill",
-      "target": "apps_desktop_src_tauri_src_lib_appstate",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17821,7 +17854,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_kill",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
+      "target": "appstate",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17833,7 +17866,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
-      "target": "apps_desktop_src_tauri_src_lib_appstate",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17845,7 +17878,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
+      "target": "appstate",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17857,7 +17890,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
-      "target": "apps_desktop_src_tauri_src_lib_appstate",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17869,7 +17902,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
+      "target": "appstate",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17881,7 +17914,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
-      "target": "apps_desktop_src_tauri_src_lib_appstate",
+      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -17893,7 +17926,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_string",
+      "target": "appstate",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -19093,7 +19126,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib_ptysession",
-      "target": "crates_anycode_terminal_src_lib_rs_send",
+      "target": "send",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -19105,7 +19138,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib_ptysession",
-      "target": "crates_anycode_terminal_src_lib_rs_sync",
+      "target": "sync",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -19141,31 +19174,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
-      "target": "crates_anycode_terminal_src_lib_rs_box",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "generic_arg",
-      "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L35",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
-      "target": "crates_anycode_terminal_src_lib_rs_self",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "generic_arg",
-      "source_file": "crates/anycode-terminal/src/lib.rs",
-      "source_location": "L35",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
-      "target": "crates_anycode_terminal_src_lib_rs_send",
+      "target": "box",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -19190,6 +19199,30 @@
     {
       "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
       "target": "read",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "generic_arg",
+      "source_file": "crates/anycode-terminal/src/lib.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
+      "target": "self",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "generic_arg",
+      "source_file": "crates/anycode-terminal/src/lib.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
+      "target": "send",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -19777,30 +19810,6 @@
     },
     {
       "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_explorer_explorer",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L10",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_gitpanel_gitpanel",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L11",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
       "target": "apps_desktop_src_components_icons_icon",
       "relation": "imports",
       "_origin": "ast",
@@ -19813,30 +19822,6 @@
     },
     {
       "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_settingspanel_settingspanel",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L13",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_statusbar_statusbar",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L14",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
       "target": "apps_desktop_src_components_terminalpanel_terminalpanel",
       "relation": "imports",
       "_origin": "ast",
@@ -19845,18 +19830,6 @@
       "context": "import",
       "source_file": "apps/desktop/src/App.tsx",
       "source_location": "L15",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_welcomescreen_welcomescreen",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -19909,30 +19882,6 @@
     },
     {
       "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_agentpanel_agentpanel",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L5",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_chatpanel_chatpanel",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L6",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
       "target": "apps_desktop_src_components_commandpalette_command",
       "relation": "imports",
       "_origin": "ast",
@@ -19941,42 +19890,6 @@
       "context": "import",
       "source_file": "apps/desktop/src/App.tsx",
       "source_location": "L7",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_commandpalette_commandpalette",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_diffpane_diffpane",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L8",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_app",
-      "target": "apps_desktop_src_components_editorarea_editorarea",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -21637,7 +21550,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands",
-      "target": "apps_desktop_src_tauri_src_lib_appstate",
+      "target": "appstate",
       "relation": "imports_from",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -21888,18 +21801,6 @@
       "weight": 1.0
     },
     {
-      "source": "crates_anycode_models_tests_live_openai",
-      "target": "json_worker_worker",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "crates/anycode-models/tests/live_openai.rs",
-      "source_location": "L19",
-      "weight": 1.0
-    },
-    {
       "source": "crates_anycode_secrets_src_lib",
       "target": "entry",
       "relation": "imports_from",
@@ -21949,7 +21850,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib",
-      "target": "crates_anycode_terminal_src_lib_rs_path",
+      "target": "path",
       "relation": "imports_from",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -22645,7 +22546,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_kill",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_state",
+      "target": "state",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -22657,7 +22558,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_resize",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_state",
+      "target": "state",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -22669,7 +22570,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_apphandle",
+      "target": "apphandle",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -22681,7 +22582,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_spawn",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_state",
+      "target": "state",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -22693,7 +22594,7 @@
     },
     {
       "source": "apps_desktop_src_tauri_src_terminal_commands_terminal_write",
-      "target": "apps_desktop_src_tauri_src_terminal_commands_rs_state",
+      "target": "state",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -23257,7 +23158,7 @@
     },
     {
       "source": "crates_anycode_terminal_src_lib_ptysession_spawn",
-      "target": "crates_anycode_terminal_src_lib_rs_path",
+      "target": "path",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -25818,7 +25719,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L241",
+      "source_location": "L248",
       "weight": 1.0
     },
     {
@@ -25829,7 +25730,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/desktop/src/App.tsx",
-      "source_location": "L264",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -33639,7 +33540,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L267",
+      "source_location": "L272",
       "weight": 1.0
     },
     {
@@ -33672,7 +33573,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L100",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -33683,7 +33584,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L125",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -33694,7 +33595,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L137",
+      "source_location": "L142",
       "weight": 1.0
     },
     {
@@ -33705,7 +33606,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L176",
+      "source_location": "L181",
       "weight": 1.0
     },
     {
@@ -33716,7 +33617,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L202",
+      "source_location": "L207",
       "weight": 1.0
     },
     {
@@ -33729,51 +33630,6 @@
       "source_file": "REVIEW.md",
       "source_location": "L40",
       "weight": 1.0
-    },
-    {
-      "source": "apps_desktop_src_lib_monaco",
-      "target": "css_worker_worker",
-      "relation": "dynamic_import",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src/lib/monaco.ts"
-    },
-    {
-      "source": "apps_desktop_src_lib_monaco",
-      "target": "editor_worker_worker",
-      "relation": "dynamic_import",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src/lib/monaco.ts"
-    },
-    {
-      "source": "apps_desktop_src_lib_monaco",
-      "target": "html_worker_worker",
-      "relation": "dynamic_import",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src/lib/monaco.ts"
-    },
-    {
-      "source": "apps_desktop_src_lib_monaco",
-      "target": "json_worker_worker",
-      "relation": "dynamic_import",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src/lib/monaco.ts"
-    },
-    {
-      "source": "apps_desktop_src_lib_monaco",
-      "target": "ts_worker_worker",
-      "relation": "dynamic_import",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "apps/desktop/src/lib/monaco.ts"
     },
     {
       "source": "crates_anycode_fs_src_lib_tempdir",
@@ -35284,5 +35140,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ae80398ccb629b8edc11c9810f8b6ccaacf6e56a"
+  "built_at_commit": "10aba304bf3765b14b8d79c627b724aaf8677866"
 }

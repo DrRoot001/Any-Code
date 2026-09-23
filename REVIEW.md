@@ -37,6 +37,19 @@ the earlier failure.
 
 ## Verification history
 
+### 2026-09-23 — Scope decision: extensions and the store (documents only)
+
+- **Scope:** ADR 0003, PRD §10 and §48, ROADMAP phases 4 and 7. No executable code changed, so
+  no build, lint or test result is claimed for this change.
+- **Decision:** rung B — Any Code applies a `.vsix`'s themes, TextMate grammars and bundled
+  language servers, and does not implement the `vscode` API or run extension JavaScript.
+  Packages come from Open VSX; Microsoft's Marketplace terms restrict it to Microsoft's own
+  products, and PROJECT-RULES.md ranks provider terms above the PRD.
+- **Placement:** rung B in Phase 4, the Extensions category in Phase 7. Nothing enters Phase 3.
+- **Unverified:** the Open VSX coverage assumption. The claim that themes, grammars and LSP
+  servers cover most real extension use is reasoning, not measurement — nobody has surveyed
+  what this user's own extension list would actually need.
+
 ### 2026-09-23 — Integrated terminal defect hunt
 
 - **Scope:** the report "terminal not working". `anycode-terminal`, `terminal_commands.rs`,
