@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1790183385.868051,
-    "seen": 1790183402.194866,
-    "ast_hash": "b583e2165daf85fc1ac4c02fd98f3845",
+    "mtime": 1790203772.672255,
+    "seen": 1790203815.734216,
+    "ast_hash": "84c92b2b5f1b59b0197d31ab4afb1cf6",
     "semantic_hash": ""
   },
   "docs/SECURITY.md": {
@@ -361,7 +361,7 @@
   },
   "Cargo.toml": {
     "mtime": 1787443015.7690716,
-    "seen": 1790141958.4442382,
+    "seen": 1790183428.342668,
     "ast_hash": "",
     "semantic_hash": ""
   },
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "REVIEW.md": {
-    "mtime": 1790183385.8638055,
-    "seen": 1790183402.193968,
-    "ast_hash": "81bd36aac0a7c35f8ec1ce1cf3dfc999",
+    "mtime": 1790203800.3843744,
+    "seen": 1790203815.733461,
+    "ast_hash": "8ead8813ca1b07ce5ee3dbc63cab7d81",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/capabilities/default.json": {
@@ -1125,6 +1125,12 @@
     "mtime": 1790177176.1860597,
     "seen": 1790183402.184747,
     "ast_hash": "b1feece382c47d62ce6f741fc2e88acd",
+    "semantic_hash": ""
+  },
+  "docs/AUDIT.md": {
+    "mtime": 1790203729.8690634,
+    "seen": 1790203815.733642,
+    "ast_hash": "a3f4bd9fe87e435e6bd515c07cdee155",
     "semantic_hash": ""
   }
 }

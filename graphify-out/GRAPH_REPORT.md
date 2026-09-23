@@ -1,16 +1,16 @@
-# Graph Report - Any Code  (2026-09-23)
+# Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 132 files · ~236,834 words
+- 133 files · ~239,905 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1348 nodes · 2183 edges · 110 communities (94 shown, 16 thin omitted)
+- 1366 nodes · 2206 edges · 110 communities (94 shown, 16 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b307642d`
+- Built from commit: `1f86131b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -20,7 +20,7 @@
 - What You Must Do When Invoked
 - What You Must Do When Invoked
 - What You Must Do When Invoked
-- Store
+- agent_live_test.rs
 - anthropic.rs
 - 98. Implementation Phases
 - graphify reference: extra exports and benchmark
@@ -91,11 +91,12 @@
 - provider_commands.rs
 - PtySession
 - default.json
-- trust.rs
-- AGENTS.md
+- Store
+- Project audit — 2026-09-24
 - useWorkbenchStore
 - .prettierrc.json
 - agent_commands.rs
+- PROJECT-RULES.md
 - SettingsPanel.tsx
 - workbenchStore.ts
 - types.rs
@@ -103,7 +104,7 @@
 - .push
 - Message
 - Explorer.tsx
-- entry
+- anycode-secrets/src/lib.rs
 - ollama.rs
 - ProviderError
 - openai.rs
@@ -112,11 +113,11 @@
 - filesystem.rs
 - anycode-tools/src/lib.rs
 - FilesystemEditTool
-- Tool
-- anycode-security/src/lib.rs
+- shell.rs
 - GitStatusTool
 - TempDir
 - 3. VS Code extension compatibility and the package registry
+- anycode-security/src/lib.rs
 - ToolContext
 
 ## God Nodes (most connected - your core abstractions)
@@ -168,9 +169,9 @@ Nodes (24): For /graphify add and --watch, For /graphify query, For the commit h
 Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
-### Community 5 - "Store"
-Cohesion: 0.07
-Nodes (41): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+33 more)
+### Community 5 - "agent_live_test.rs"
+Cohesion: 0.29
+Nodes (10): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+2 more)
 
 ### Community 6 - "anthropic.rs"
 Cohesion: 0.15
@@ -341,7 +342,7 @@ Cohesion: 0.25
 Nodes (11): anycode-agent, anycode-core, anycode-desktop, anycode-fs, anycode-git, anycode-models, anycode-secrets, anycode-security (+3 more)
 
 ### Community 65 - "Releasing the desktop app"
-Cohesion: 0.29
+Cohesion: 0.33
 Nodes (6): Auto-update signature (separate from code signing), macOS — code signing + notarization, Releasing the desktop app, Trigger it, What "just build it" gets you today, Windows — code signing
 
 ### Community 66 - "Security model"
@@ -349,8 +350,8 @@ Cohesion: 0.25
 Nodes (7): Permissions, Reporting, Secrets, Security model, Shell risk classes, The one rule, Threat model
 
 ### Community 67 - "Verification history"
-Cohesion: 0.15
-Nodes (13): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:45:09Z — GitHub CI after branding and governance push, 2026-08-24 — Phase 1 workbench review and UX remediation, 2026-08-24 — Second-pass UI/UX and ledger audit, 2026-09-23 — Integrated terminal defect hunt, 2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition, 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence, 2026-09-23 — Scope decision: extensions and the store (documents only) (+5 more)
+Cohesion: 0.14
+Nodes (14): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:45:09Z — GitHub CI after branding and governance push, 2026-08-24 — Phase 1 workbench review and UX remediation, 2026-08-24 — Second-pass UI/UX and ledger audit, 2026-09-23 — Integrated terminal defect hunt, 2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition, 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence, 2026-09-23 — Scope decision: extensions and the store (documents only) (+6 more)
 
 ### Community 68 - "tauri.ts"
 Cohesion: 0.11
@@ -373,8 +374,8 @@ Cohesion: 0.40
 Nodes (5): Installation for a new workstation, Installed integration, Repository knowledge graph, Required agent workflow, What the graph may contain
 
 ### Community 73 - "Roadmap"
-Cohesion: 0.29
-Nodes (7): Current phase: 3 · Agent runtime, Distribution gate, Phase 0 · Foundation, Phase 1 · Workbench, Phase 2 · Provider layer, Roadmap, V1 success criterion
+Cohesion: 0.20
+Nodes (10): Assigned by the 2026-09-24 audit, Current phase: 3 close-out, Distribution gate, Phase 0 · Foundation, Phase 1 · Workbench, Phase 2 · Provider layer, Phase 3 · Agent runtime, Phase 4 · Code intelligence (next) (+2 more)
 
 ### Community 75 - "AppState"
 Cohesion: 0.08
@@ -396,9 +397,13 @@ Nodes (19): Child, default_shell(), login_shell_path(), login_shell_path_is_the_
 Cohesion: 0.22
 Nodes (8): description, identifier, permissions, $schema, windows, core:default, dialog:default, main
 
-### Community 81 - "trust.rs"
-Cohesion: 0.18
-Nodes (10): Into, Self, String, Tagged, Tagged<String>, Tagged<T>, Trust, untrusted_content_cannot_close_its_own_envelope() (+2 more)
+### Community 81 - "Store"
+Cohesion: 0.06
+Nodes (41): Connection, Event, EventScope, omits_empty_scope_and_payload(), roundtrips_through_json(), Into, Option, Self (+33 more)
+
+### Community 82 - "Project audit — 2026-09-24"
+Cohesion: 0.15
+Nodes (13): 1. Phases 0–3: deliverables, 2. Architecture invariants, 3. V1 product contract (PRODUCT-SCOPE.md), 4. Security findings, 5. PRD scope that belongs to no phase, 6. Quality gaps, 7. What's next, Phase 0 · Foundation — exit: *launches on Windows and macOS* (+5 more)
 
 ### Community 83 - "useWorkbenchStore"
 Cohesion: 0.21
@@ -436,7 +441,7 @@ Nodes (11): role_str(), role_str(), Message, ModelRequest, RequestMetadata, Role
 Cohesion: 0.29
 Nodes (3): Explorer(), FileRow(), FsEntry
 
-### Community 94 - "entry"
+### Community 94 - "anycode-secrets/src/lib.rs"
 Cohesion: 0.42
 Nodes (9): delete_api_key(), entry(), get_api_key(), Error, Option, Result, String, SecretError (+1 more)
 
@@ -465,20 +470,16 @@ Cohesion: 0.36
 Nodes (11): context(), edit_cannot_escape_the_workspace_root(), edit_changes_only_the_named_span(), edit_refuses_text_that_is_absent_or_ambiguous(), read(), read_rejects_missing_path_argument(), String, TempDir (+3 more)
 
 ### Community 101 - "anycode-tools/src/lib.rs"
-Cohesion: 0.19
-Nodes (13): every_tool_name_survives_wire_encoding(), every_tool_produces_a_non_empty_spec(), missing_required(), missing_required_arguments_are_named(), Box, Option, Value, Vec (+5 more)
+Cohesion: 0.16
+Nodes (16): every_tool_name_survives_wire_encoding(), every_tool_produces_a_non_empty_spec(), missing_required(), missing_required_arguments_are_named(), Box, Option, Send, Sync (+8 more)
 
 ### Community 102 - "FilesystemEditTool"
 Cohesion: 0.36
 Nodes (3): capability_risk(), FilesystemEditTool, RiskLevel
 
-### Community 103 - "Tool"
+### Community 104 - "shell.rs"
 Cohesion: 0.18
-Nodes (5): FilesystemReadTool, FilesystemWriteTool, Send, Sync, Tool
-
-### Community 104 - "anycode-security/src/lib.rs"
-Cohesion: 0.09
-Nodes (14): classify_shell_command(), decide(), Decision, RiskLevel, StandingGrant, a_failing_command_is_a_result_not_an_error(), captures_stdout_and_exit_code(), context() (+6 more)
+Nodes (9): a_failing_command_is_a_result_not_an_error(), captures_stdout_and_exit_code(), context(), Result, RiskLevel, TempDir, Value, ShellExecuteTool (+1 more)
 
 ### Community 105 - "GitStatusTool"
 Cohesion: 0.24
@@ -492,12 +493,16 @@ Nodes (5): Drop, Path, PathBuf, Self, TempDir
 Cohesion: 0.33
 Nodes (5): 3. VS Code extension compatibility and the package registry, Consequences, Context, Decision, Scope change record
 
+### Community 108 - "anycode-security/src/lib.rs"
+Cohesion: 0.19
+Nodes (5): classify_shell_command(), decide(), Decision, RiskLevel, StandingGrant
+
 ### Community 113 - "ToolContext"
-Cohesion: 0.31
-Nodes (7): Result, Value, Result, Error, String, ToolContext, ToolError
+Cohesion: 0.16
+Nodes (9): FilesystemReadTool, FilesystemWriteTool, Result, Value, Result, Error, String, ToolContext (+1 more)
 
 ## Knowledge Gaps
-- **487 isolated node(s):** `printWidth`, `trailingComma`, `name`, `description`, `homepage` (+482 more)
+- **502 isolated node(s):** `printWidth`, `trailingComma`, `name`, `description`, `homepage` (+497 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -505,13 +510,13 @@ Nodes (7): Result, Value, Result, Error, String, ToolContext, ToolError
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `ToolDefinition` connect `types.rs` to `Message`, `agent_commands.rs`?**
-  _High betweenness centrality (0.086) - this node is a cross-community bridge._
+  _High betweenness centrality (0.083) - this node is a cross-community bridge._
 - **Why does `read_file_tool()` connect `types.rs` to `live_openai.rs`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
 - **Why does `AppState` connect `AppState` to `Store`, `anycode-tools/src/lib.rs`, `agent_commands.rs`, `PtySession`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
 - **What connects `printWidth`, `trailingComma`, `name` to the rest of the system?**
-  _487 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _502 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**

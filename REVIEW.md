@@ -11,15 +11,17 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | Rust workspace | Pass | 90 passed, 0 failed, 2 ignored (live) on 2026-09-23 |
 | Desktop runtime crate | Pass | fmt + clippy clean; 1 ignored live test; now gated in CI (new job) |
 | Integrated terminal | Fixed, not hand-verified | 4 defects fixed on 2026-09-23; no interactive run observed — see entry |
-| Rust lint | Pass | Clippy completed with warnings denied on 2026-08-24 |
-| TypeScript | Pass | Workspace typecheck passed on 2026-08-24 |
-| Web production build | Pass with warning | Vite production build completed on 2026-08-24; large Monaco chunks remain |
-| Rust formatting | Pass | `cargo fmt --all -- --check` on 2026-08-24 |
+| Rust lint | Pass | Clippy with warnings denied, both cargo workspaces, 2026-09-23 |
+| TypeScript | Pass | `tsc -b --noEmit` on 2026-09-23 |
+| Web production build | Pass with warning | `pnpm build` on 2026-09-23; large Monaco chunks remain |
+| Rust formatting | Pass | `cargo fmt --check`, both cargo workspaces, 2026-09-23 |
 | Native desktop compile | Pass | Release build completed and `Any Code.app` launched on 2026-09-23 |
 | macOS bundle | Pass | `.app` and unsigned `.dmg` produced locally on 2026-08-23 |
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
-| Windows installer | Not run locally | GitHub Actions release job is the canonical Windows environment |
-| GitHub CI | Pass | Run `32608603364` passed on Linux, macOS, and Windows |
+| Windows installer | **Never built** | The Desktop Release workflow has 0 runs; no Windows build has ever been produced or launched (audit 2026-09-24) |
+| GitHub CI | Pass | Run `35893787230`: all 7 jobs, including the new desktop-runtime job |
+| Security review | **3 open findings** | S1 secret paths read without a prompt, S2 over-broad standing grants, S3 no CSP — see docs/AUDIT.md |
+| Frontend tests | **None** | No component or end-to-end suite exists |
 | Agent runtime (live model) | **Pass, 1 of 6 runs** | Local qwen2.5:3b implemented and verified a task once; the runtime judged all 6 runs correctly — see 2026-09-23 Phase 3 entry |
 
 ## Review protocol
@@ -37,6 +39,31 @@ A failed test remains visible. Fixing it requires a new passing entry with a lin
 the earlier failure.
 
 ## Verification history
+
+### 2026-09-24 — Full project audit
+
+- **Scope:** everything built so far against PRD §98 (all phases), PRD §9–10 and every PRD
+  section, PRODUCT-SCOPE.md's V1 contract, and ARCHITECTURE.md's 12 invariants. Source at
+  `1f86131`; CI history via `gh run list`.
+- **Method:** every claim checked against code or CI — grep and graphify over the source,
+  reading the classifier and permission paths, the Tauri config, and the run history of both
+  workflows. No tests were added or changed; this entry records findings, not fixes.
+- **Result:** full report in [docs/AUDIT.md](docs/AUDIT.md); the plan that follows is in
+  [docs/ROADMAP.md](docs/ROADMAP.md) ("Phase 3 close-out", then Phase 4).
+- **Fail (security, open):** S1 — `filesystem.read.workspace` is Low risk for every path, so
+  `.env` and key files inside the workspace are read without a prompt and sent to the model.
+  S2 — standing grants are keyed on the tool name: "always allow" on one shell command allows
+  every Medium and High shell command in that workspace, `git push` included. S3 —
+  `"csp": null` in `tauri.conf.json`.
+- **Fail (exit conditions):** Phase 0 was never verified on Windows — the release workflow
+  has never run. Phase 2 was never demonstrated live; its "exit condition met" rested on unit
+  tests, and its Gemini and OpenRouter deliverables were never built.
+- **Deviation:** invariant #9 — usage is recorded at two call sites, not at the adapter.
+  Invariant #10 is partial — provider-key changes are not audited.
+- **Found:** 10 PRD sections with no phase, including V1 contract #7 (resume after restart),
+  §39 workspace rules, §91 Local Only mode and §93 auto-update; each now assigned.
+- **Corrected here:** this ledger's status table implied a Windows installer existed and
+  carried four rows dated 2026-08-24; ROADMAP.md marked Phase 2's exit met without a live run.
 
 ### 2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition
 

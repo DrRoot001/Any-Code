@@ -7,6 +7,10 @@ Release boundaries and rules for admitting work are defined in
 [PRODUCT-SCOPE.md](PRODUCT-SCOPE.md). V1 covers Phases 0–8; V1.5 begins with Phase 9; V2 begins
 with Phase 10. Only the current phase is active implementation scope.
 
+**Where we are (audited 2026-09-24, [AUDIT.md](AUDIT.md)):** Phases 0–3 are built. Before
+Phase 4 starts, the [Phase 3 close-out](#current-phase-3-close-out) fixes three security
+findings in shipped code and closes the earlier phases' unmet exit conditions.
+
 Phases are sequential for a reason: each one is the foundation the next assumes. Building Phase 5
 parallelism before Phase 3's approval system means shipping unbounded agents with no brakes.
 
@@ -35,6 +39,8 @@ parallelism before Phase 3's approval system means shipping unbounded agents wit
 - [x] SQLite local store and migrations
 - [ ] Signed builds for Windows and macOS — unsigned pipeline built (`.github/workflows/desktop-release.yml`);
       blocked on the user supplying Apple/Windows signing certificates, see [RELEASING.md](RELEASING.md)
+- [ ] **Exit condition on Windows** — the release workflow has never been run, so no Windows
+      build has been produced or launched. macOS: launched locally (close-out C4)
 
 ## Phase 1 · Workbench
 
@@ -42,7 +48,8 @@ parallelism before Phase 3's approval system means shipping unbounded agents wit
 - [x] File explorer (lazy-expanding tree, scoped to the workspace root — `anycode-fs`)
 - [x] Monaco editor (lazy-loaded, self-hosted workers, no CDN)
 - [x] Tabs (multi-file, dirty tracking, Cmd/Ctrl+S to save)
-- [x] Terminal (native PTY via `anycode-terminal`, streamed over Tauri events)
+- [x] Terminal (native PTY via `anycode-terminal`, streamed over Tauri events) — four
+      defects fixed 2026-09-23; not yet confirmed by hand (close-out C5)
 - [x] Git status (`anycode-git`, polled)
 - [x] Diff view (Monaco diff editor, HEAD vs working tree)
 - [x] Command palette (Cmd/Ctrl+Shift+P)
@@ -65,19 +72,17 @@ and minimap, multi-workspace switching.
 - [x] Model selector + Connections UI (Settings → Providers; Chat panel's provider/model
       dropdowns)
 
-Not built in Phase 2 (deferred, per PRD §9.1/§26 these belong to later phases): Gemini and
-OpenRouter adapters (the abstraction is proven with three; add the rest when a task needs
-them), automatic/cost-aware routing (Model Router, Phase 8), fallback chains (PRD §27),
-budget controls (Phase 8), the full Agent Dock (Phase 3) — the Chat panel is a thin proof
-of the exit condition, not the agent runtime's conversation surface.
+- [ ] Gemini adapter — a PRD Phase 2 deliverable, previously deferred without a home (close-out C7)
+- [ ] OpenRouter — OpenAI-compatible, so a configurable base URL on the OpenAI adapter
+      (also covers LM Studio and other compatible endpoints; close-out C7)
+- [ ] **Exit condition demonstrated live** — previously marked met on unit tests alone. The
+      Chat panel has no provider branch, but switching has never been observed across two
+      live providers (close-out C7)
 
-**Exit condition met:** the Chat panel's code has no branch on provider identity — only
-which two dropdown values are selected. Verified locally with the OpenAI/Anthropic
-request-building and response-parsing logic (27 unit tests); live network calls weren't
-exercised in the build environment (no API keys present there), but the code path from UI
-to Rust command to adapter is real, not mocked.
+Deferred to later phases: automatic/cost-aware routing (Phase 8), fallback chains (PRD §27),
+budget controls (Phase 8).
 
-## Current phase: 3 · Agent runtime
+## Phase 3 · Agent runtime
 
 PRD §3587 deliverables: planner, task state machine, tool calls, filesystem/terminal/git
 tools, approval system, event timeline, verification. Exit condition: *an agent can
@@ -126,6 +131,90 @@ from anything the model says. A task where no check ran is reported as *unverifi
 never as success. The model decides which commands are checks; it cannot make a failing
 check pass, and `anycode_agent::verdict` alone decides the outcome.
 
+## Current phase: 3 close-out
+
+Work that belongs to Phases 0–3 and is not finished. It comes before Phase 4 because Phase 4
+builds on all of it — and S1/S2 are security defects in code users can run today. Detail and
+evidence for every item: [AUDIT.md](AUDIT.md).
+
+**Security (first):**
+
+- [ ] **C1 · Secret-bearing paths are not low risk** (S1). Reading `.env*`, `*.pem`, `*.key`,
+      `id_rsa*`, `.git/config` and similar asks every time and is never covered by a standing
+      grant; private key material is denied. Test: reading `.env` in a workspace prompts.
+- [ ] **C2 · Standing grants cover what the user saw** (S2). Shell grants are keyed on the exact
+      command; High risk is never persisted. Test: granting `npm test` does not allow
+      `git push` or `npm install`.
+- [ ] **C3 · Content Security Policy** (S3). Replace `"csp": null` with a strict policy;
+      verify Monaco, workers and the app still load in the release build.
+
+**Earlier phases' exit conditions:**
+
+- [ ] **C4 · Phase 0 on Windows** — run the Desktop Release workflow; **owner** launches the
+      Windows installer.
+- [ ] **C5 · Terminal** — **owner** opens the Terminal panel once and confirms a prompt.
+- [ ] **C6 · Phase 3 on the final code** — one passing live run of `agent_live_test`.
+- [ ] **C7 · Phase 2** — configurable base URL (OpenRouter, LM Studio), Gemini adapter, then
+      the same chat task switched between two live providers (**owner**: keys).
+
+**Invariants:**
+
+- [ ] **C8 · Usage at the adapter boundary** (invariant #9) — one wrapper every provider goes
+      through, instead of a record call at each call site.
+- [ ] **C9 · Audit provider-key changes** (invariant #10, PRD §92) — `provider.connected` /
+      `provider.disconnected` events. Never the key itself.
+
+**Quality:**
+
+- [ ] **C10 · Tests** — `anycode-secrets` (currently 0); a first frontend test for the Agent
+      Dock's event handling, runnable in CI.
+
+## Phase 4 · Code intelligence (next)
+
+Exit condition: **agents retrieve targeted repository context instead of dumping files.**
+Specified by PRD §35–40 and [ADR 0003](adr/0003-extension-compatibility-and-registry.md).
+Crates, per PRD §94: `anycode-code-intelligence` (index, search, symbols, LSP) and
+`anycode-context` (context builder, memory). The planner's top-level directory listing is the
+stopgap this phase replaces.
+
+In build order — each step is usable, and tested, before the next starts:
+
+- [ ] **4.1 · Index foundation** — gitignore-aware walk; SQLite `files`, `symbols`,
+      `symbol_edges`, `imports`, `search_index` (FTS5); incremental re-index on filesystem
+      events, changed files only. Target (PRD §70): a changed file re-indexed in ≤ 1 s.
+- [ ] **4.2 · Lexical search** — ripgrep's library as the `code.search` tool (already Low risk
+      in the permission table).
+- [ ] **4.3 · Symbols** — tree-sitter for TypeScript/JavaScript, Rust and Python first;
+      `code.definition` and `code.references` tools (already in the permission table).
+- [ ] **4.4 · Context builder** — PRD §37 stages: intent → symbols → lexical → structural →
+      git → rerank → token budget, producing a context package where every item records why it
+      was included. Token counts are labelled estimates, never presented as exact.
+- [ ] **4.5 · Context Inspector** — for each task: which files the agent saw, why, what was
+      excluded, estimated tokens (PRD §37). Built on `Tagged.origin`, which exists for this.
+- [ ] **4.6 · Memory and workspace rules** — scopes: global, workspace, repository, session,
+      task; every memory visible, editable, deletable, exportable (PRD §38). `.anycode/`
+      rules (§39); protected paths and approval-required actions feed the permission engine.
+      Import CLAUDE.md, AGENTS.md and similar as repository memory, originals untouched (§40).
+- [ ] **4.7 · Session resume** — V1 contract #7: after a restart the dock shows past tasks,
+      read back from the `events` audit log.
+- [ ] **4.8 · LSP client** — spawn language servers found on the user's `PATH`; hover,
+      definition and diagnostics for Monaco and the agent. Then ADR 0003 rung B: `.vsix`
+      themes, TextMate grammars and bundled language servers from Open VSX.
+
+**Exit test:** on a real repository larger than the model's context window (this one), an
+agent task's context package contains the files the change needs and a small, measured
+fraction of the repository's tokens. The Context Inspector shows why each file was
+included. Measured and recorded in REVIEW.md, not asserted.
+
+## Assigned by the 2026-09-24 audit
+
+PRD sections that had no phase, now placed ([AUDIT.md §5](AUDIT.md#5-prd-scope-that-belongs-to-no-phase)):
+Gemini/OpenRouter → close-out C7 · session resume, §39 workspace rules, §40 instruction
+imports → Phase 4 · §58 changes review → Phase 5 · §91 privacy modes / Local Only, MCP config
+import → Phase 7 · §92 audit log viewer → Phase 8 · §93 auto-update, crash reporting,
+telemetry controls, §59/61–63 onboarding and home → Distribution gate · §69 accessibility and
+§70 performance targets → every phase's definition of done, measured at the Distribution gate.
+
 ## Distribution gate
 
 GitHub Actions is the canonical packaging path. A platform is not considered shipped until CI can
@@ -141,6 +230,10 @@ Expected formats as platform clients become available:
 | Linux | `.AppImage` and `.deb`; add `.rpm` when Linux support enters active scope |
 | Android | Signed `.apk` for testing and `.aab` for store distribution |
 | iOS | Signed archive/`.ipa` delivered through the approved Apple distribution workflow |
+
+Also required before V1 ships (assigned by the audit): auto-update (PRD §93), opt-in crash
+reporting and telemetry controls (§9.1), first-run onboarding and home screen (§61–63), and a
+measured pass against the performance targets in §70.
 
 Desktop packaging belongs to Phase 0. Android and iOS jobs must not be presented as supported
 release jobs before Phase 10 supplies real mobile application targets. CI may use unsigned
