@@ -139,14 +139,16 @@ evidence for every item: [AUDIT.md](AUDIT.md).
 
 **Security (first):**
 
-- [ ] **C1 · Secret-bearing paths are not low risk** (S1). Reading `.env*`, `*.pem`, `*.key`,
+- [x] **C1 · Secret-bearing paths are not low risk** (S1). Reading `.env*`, `*.pem`, `*.key`,
       `id_rsa*`, `.git/config` and similar asks every time and is never covered by a standing
       grant; private key material is denied. Test: reading `.env` in a workspace prompts.
-- [ ] **C2 · Standing grants cover what the user saw** (S2). Shell grants are keyed on the exact
+- [x] **C2 · Standing grants cover what the user saw** (S2). Shell grants are keyed on the exact
       command; High risk is never persisted. Test: granting `npm test` does not allow
       `git push` or `npm install`.
-- [ ] **C3 · Content Security Policy** (S3). Replace `"csp": null` with a strict policy;
-      verify Monaco, workers and the app still load in the release build.
+- [x] **C3 · Content Security Policy** (S3). Replace `"csp": null` with a strict policy;
+      verify Monaco, workers and the app still load in the release build. *Verified in a
+      browser against the production build under the identical policy: no violations,
+      Monaco renders and tokenises. Not yet observed inside the native WebView.*
 
 **Earlier phases' exit conditions:**
 
@@ -156,17 +158,28 @@ evidence for every item: [AUDIT.md](AUDIT.md).
 - [ ] **C6 · Phase 3 on the final code** — one passing live run of `agent_live_test`.
 - [ ] **C7 · Phase 2** — configurable base URL (OpenRouter, LM Studio), Gemini adapter, then
       the same chat task switched between two live providers (**owner**: keys).
+      *Built: Gemini (API key), OpenRouter, OpenAI-compatible endpoint. Open: the live
+      switch — `the_same_chat_task_switches_providers_live` is written and needs a local
+      Ollama; Gemini and OpenRouter need keys to verify.*
 
 **Invariants:**
 
-- [ ] **C8 · Usage at the adapter boundary** (invariant #9) — one wrapper every provider goes
+- [x] **C8 · Usage at the adapter boundary** (invariant #9) — one wrapper every provider goes
       through, instead of a record call at each call site.
-- [ ] **C9 · Audit provider-key changes** (invariant #10, PRD §92) — `provider.connected` /
+- [x] **C9 · Audit provider-key changes** (invariant #10, PRD §92) — `provider.connected` /
       `provider.disconnected` events. Never the key itself.
+
+**Found during the close-out, fixed:**
+
+- [x] **Credential vault never persisted a key** — `keyring` 3 fell back to its in-memory
+      mock, so every key saved in Settings was lost at once. Now the OS store per platform,
+      verified against the real macOS Keychain.
+- [x] **Chat subscribe race** — `send_chat` could emit an instant failure before the panel
+      listened, leaving the chat waiting forever.
 
 **Quality:**
 
-- [ ] **C10 · Tests** — `anycode-secrets` (currently 0); a first frontend test for the Agent
+- [x] **C10 · Tests** — `anycode-secrets` (currently 0); a first frontend test for the Agent
       Dock's event handling, runnable in CI.
 
 ## Phase 4 · Code intelligence (next)

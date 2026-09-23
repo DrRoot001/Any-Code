@@ -21,6 +21,11 @@ on:
 
 jobs:
   build:
+    # tauri-action creates (or updates) the draft release and uploads the installers to
+    # it. The repository's default token is read-only, so without this every platform
+    # built successfully and then failed at "create a release" — the first run did.
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
