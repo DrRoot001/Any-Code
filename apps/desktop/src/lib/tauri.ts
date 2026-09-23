@@ -108,6 +108,34 @@ export interface TaskApprovalRequest {
 export interface CommandRecord {
   command: string;
   exitCode: number | null;
+  /** The agent ran it to check its work (build/lint/test), not to look around. */
+  verification: boolean;
+}
+
+/**
+ * The runtime's judgement of whether the work passed, from each check's latest run
+ * (anycode_agent::verdict). Authoritative — the UI displays it, never recomputes it.
+ */
+export type TaskVerdict =
+  | { kind: "passed"; checks: string[] }
+  | { kind: "failed"; failing: CommandRecord[] }
+  | { kind: "unverified" };
+
+/** Mirrors anycode_agent::TaskState. */
+export type TaskState =
+  | "created"
+  | "planning"
+  | "running"
+  | "awaiting_approval"
+  | "verifying"
+  | "completed"
+  | "failed"
+  | "cancelled";
+
+/** Payload of `task:plan:{taskId}`. `steps` is empty when the reply held no list. */
+export interface TaskPlan {
+  steps: string[];
+  text: string;
 }
 
 /**
@@ -129,6 +157,7 @@ export interface TaskUsage {
 export interface TaskDone {
   text: string;
   evidence: TaskEvidence;
+  verdict: TaskVerdict;
   usage: TaskUsage;
 }
 

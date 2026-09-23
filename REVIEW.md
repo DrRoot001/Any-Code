@@ -8,7 +8,8 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 
 | Area | Last result | Evidence |
 |------|-------------|----------|
-| Rust workspace | Pass | 54 tests passed on 2026-09-23 |
+| Rust workspace | Pass | 90 passed, 0 failed, 2 ignored (live) on 2026-09-23 |
+| Desktop runtime crate | Pass | fmt + clippy clean; 1 ignored live test; now gated in CI (new job) |
 | Integrated terminal | Fixed, not hand-verified | 4 defects fixed on 2026-09-23; no interactive run observed — see entry |
 | Rust lint | Pass | Clippy completed with warnings denied on 2026-08-24 |
 | TypeScript | Pass | Workspace typecheck passed on 2026-08-24 |
@@ -19,7 +20,7 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
 | Windows installer | Not run locally | GitHub Actions release job is the canonical Windows environment |
 | GitHub CI | Pass | Run `32608603364` passed on Linux, macOS, and Windows |
-| Agent runtime (live model) | **Not run** | No provider key available in this environment; see 2026-09-23 entry |
+| Agent runtime (live model) | **Pass, 1 of 6 runs** | Local qwen2.5:3b implemented and verified a task once; the runtime judged all 6 runs correctly — see 2026-09-23 Phase 3 entry |
 
 ## Review protocol
 
@@ -36,6 +37,90 @@ A failed test remains visible. Fixing it requires a new passing entry with a lin
 the earlier failure.
 
 ## Verification history
+
+### 2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition
+
+- **Scope:** everything PRD §3587 lists for Phase 3 that did not exist — planner, task state
+  machine — plus defects found along the way, and a live run of the exit condition.
+- **Environment:** macOS 12.7.6, Intel i5-5250U (2 cores), 8 GB RAM; Ollama 0.34.3 run from
+  `~/.local/ollama` (not installed system-wide) with `qwen2.5:3b` and `qwen2.5-coder:3b`.
+  No OpenAI/Anthropic key exists here.
+
+**Built:** `anycode-agent` crate (state machine, verdict, plan parsing — 20 tests); planner
+turn; `events` audit table in the store; `<untrusted>` envelope for tool output
+(`anycode_core::Tagged::to_prompt_text`, including a test that hostile content cannot close
+its own envelope); Ollama tool-calling; `filesystem.edit.workspace`; bounded replan; login-
+shell `PATH` for agent commands; approval dialog shows the content being written.
+
+**Defects found and fixed:**
+
+1. **Every OpenAI agent request would have been rejected.** Tool names are dotted
+   (`filesystem.read.workspace`); OpenAI and Anthropic accept only `[a-zA-Z0-9_-]`. The
+   existing unit test asserted the dotted name *on the wire*, enshrining the bug. Adapters
+   now encode `.` ↔ `__`; the registry test asserts every name round-trips.
+2. **The verdict punished normal work.** "Any non-zero exit = failed" counted `grep` finding
+   nothing, and a test that failed-then-passed, as failure. The model now marks checks
+   (`verify: true`); the runtime judges each check by its latest run.
+3. **Whole-file write deleted code in a live run** (run 2: the model wrote only `multiply`,
+   removing `add`). Added an exact-match edit tool that refuses rather than truncates.
+4. **Approval dialog showed only the path for a write** — a user approved file contents they
+   never saw. It now shows the full content or the old/new text.
+5. **Audit misattribution:** an approval that timed out was recorded as `denied_by_user`.
+   Now `denied_unanswered`. Unknown-tool calls were not audited at all; now
+   `task.tool.rejected`.
+6. **Malformed calls reached the user for approval** (run 5: edit tool called without
+   `old_text`). Required arguments are now checked against the tool's schema first.
+7. **A model that never touched a tool ended `completed`** (run 4). The runtime now pushes
+   back once when no tool was used.
+8. **The final message rendered twice** in the dock (streamed, then repeated in `done`).
+9. **The desktop crate — which holds the whole agent loop — was never linted or
+   format-checked in CI.** Added a `Desktop runtime` job; rustfmt had to reformat four
+   files that had never been checked.
+
+**Live runs of the exit condition** (the production `run_task` under Tauri's mock runtime,
+real Ollama model, real git repo; the test approves every prompt as "Allow once" and prints
+each; after the verdict it re-runs the *originally committed* tests itself):
+
+| Run | Model | Code | Outcome | Runtime verdict | Correct? |
+|-----|-------|------|---------|-----------------|----------|
+| 1 | qwen2.5:3b | initial | Described the fix in prose, changed no file | failed | yes |
+| 2 | qwen2.5:3b | + guidance | Wrote only `multiply`, deleting `add` | failed | yes |
+| 3 | qwen2.5:3b | + edit tool | **Implemented `multiply`; suite exit 0; original tests pass** | **passed** | yes |
+| 4 | qwen2.5-coder:3b | + audit fix | Called no tool at all | unverified (completed) | yes — led to fix 7 |
+| 5 | qwen2.5:3b | + nudge | Put file content into `shell.execute`, then malformed edit | failed | yes |
+| 6 | qwen2.5-coder:3b | final | Called no tool despite two nudges | unverified (completed) | yes |
+
+- **Pass:** exit condition demonstrated (run 3): plan → read → write → check with
+  `verify: true` → `verifying` → `completed`, verdict `passed`, 23 audit events, and the
+  independent check against the original tests passed.
+- **Pass:** the runtime's verdict matched independent reality in **all six** runs. No run
+  that failed was reported as passing.
+- **Observed live:** the model sent `shell.execute` with a *fabricated successful result*
+  as its arguments (`{"exitCode":0,...}`); having no command, it was classified Critical and
+  denied. Run 3's own summary misdescribed the work; the measured evidence was right.
+- **Pass:** UI replay of runs 3 and 1 in the real frontend build (IPC stubbed, test-only):
+  plan, state line, approval dialog showing file content, verdict and `check` labels; 0
+  console errors during the checks (26 later errors were Vite's reload client after the dev
+  server was stopped).
+- **Pass:** `cargo test --workspace` 90 passed / 0 failed / 2 ignored; clippy with `-D
+  warnings` and `cargo fmt --check` clean in both workspaces; `tsc` and `pnpm build` clean.
+
+**Not run / limits:**
+
+- **Reliability is low with a 3B model: 1 of 4 runs of `qwen2.5:3b` passed**, and
+  `qwen2.5-coder:3b` never calls tools through Ollama. Run 3 passed on code from before
+  fixes 5–7; a confirmation run on the final code was started and **stopped by the owner
+  before it finished**, so the final code has not itself completed a passing live run. To
+  rerun: `~/.local/ollama/ollama serve`, then
+  `ANYCODE_LIVE_MODEL=qwen2.5:3b cargo test --lib agent_live -- --ignored --nocapture` in
+  `apps/desktop/src-tauri`.
+- Not driven through the GUI: macOS denies this environment Screen Recording and
+  Accessibility. The loop ran headless under the mock runtime; only the webview was absent.
+- OpenAI still not run live (no key); the wire-name fix means it can now work, unverified.
+- Ollama ran this model with a 4096-token context; a long task can overflow it.
+- Models see encoded tool names (`filesystem__edit__workspace`) while prompts use dotted
+  ones; a small model can be confused by the mismatch.
+- The audit log is written but nothing reads it back into the dock after a restart.
 
 ### 2026-09-23 — Scope decision: extensions and the store (documents only)
 

@@ -101,7 +101,12 @@ pub fn terminal_write(state: State<AppState>, id: String, data: String) -> Resul
 }
 
 #[tauri::command]
-pub fn terminal_resize(state: State<AppState>, id: String, cols: u16, rows: u16) -> Result<(), String> {
+pub fn terminal_resize(
+    state: State<AppState>,
+    id: String,
+    cols: u16,
+    rows: u16,
+) -> Result<(), String> {
     let terminals = state.terminals.lock().map_err(|e| e.to_string())?;
     let session = terminals.get(&id).ok_or("no such terminal session")?;
     session.resize(cols, rows).map_err(|e| e.to_string())

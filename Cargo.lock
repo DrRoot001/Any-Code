@@ -15,6 +15,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "anycode-agent"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "thiserror 2.0.20",
+]
+
+[[package]]
 name = "anycode-core"
 version = "0.1.0"
 dependencies = [
@@ -76,8 +85,10 @@ dependencies = [
 name = "anycode-store"
 version = "0.1.0"
 dependencies = [
+ "anycode-core",
  "rusqlite",
  "serde",
+ "serde_json",
  "thiserror 2.0.20",
  "time",
  "uuid",

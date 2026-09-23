@@ -744,6 +744,35 @@ input:focus-visible {
 .evidence-list li {
   margin-bottom: 2px;
 }
+/* A text label, not a colour: which commands the verdict was judged on. */
+.evidence-tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--ac-border);
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--ac-text-secondary);
+}
+.agent-plan {
+  padding: 8px 10px;
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-surface);
+}
+.agent-plan h4 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--ac-text-secondary);
+}
+.agent-plan ol {
+  margin: 0;
+  padding-left: 18px;
+}
+.agent-replan {
+  border-left: 3px solid var(--ac-border);
+  padding-left: 8px;
+}
 
 /* --- Approval dialog (PRD §50) ------------------------------------------ */
 .approval-overlay {
@@ -768,7 +797,9 @@ input:focus-visible {
 .approval-subject {
   margin: 6px 0 14px;
   padding: 10px 12px;
-  overflow-x: auto;
+  /* A whole-file write can be long; the buttons must stay on screen below it. */
+  max-height: 40vh;
+  overflow: auto;
   border: 1px solid var(--ac-border);
   border-radius: 6px;
   background: var(--ac-canvas);

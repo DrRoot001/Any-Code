@@ -54,6 +54,7 @@ mod tests {
         let ctx = ToolContext {
             fs_root,
             workspace_path: dir.path().to_path_buf(),
+            path_env: None,
         };
 
         let result = GitStatusTool.execute(json!({}), &ctx).await.unwrap();

@@ -23,6 +23,73 @@ fn default_shell() -> String {
     }
 }
 
+/// The `PATH` the user's own shell would have, resolved once per process.
+///
+/// An app opened from Finder or the Dock inherits launchd's `PATH` —
+/// `/usr/bin:/bin:/usr/sbin:/sbin` — so an agent's `npm test` fails with "command not
+/// found" even though it works in the user's terminal. This asks the user's shell,
+/// started as an interactive login shell so it reads the same profile and rc files
+/// their terminal does, and caches the answer.
+///
+/// `None` when that fails or takes too long (a profile that blocks, a shell that
+/// rejects the flags); callers then inherit this process's `PATH`. The first call can
+/// take seconds — a heavy rc file is sourced — so call it off the async runtime.
+pub fn login_shell_path() -> Option<String> {
+    static PATH: std::sync::OnceLock<Option<String>> = std::sync::OnceLock::new();
+    PATH.get_or_init(resolve_login_shell_path).clone()
+}
+
+fn resolve_login_shell_path() -> Option<String> {
+    use std::process::{Command, Stdio};
+    use std::time::{Duration, Instant};
+
+    if cfg!(windows) {
+        return None;
+    }
+    // rc files print banners and prompts; markers find the value among them.
+    const MARK: &str = "__ANYCODE_PATH__";
+    let mut child = Command::new(default_shell())
+        .args([
+            "-l",
+            "-i",
+            "-c",
+            &format!("printf '{MARK}%s{MARK}' \"$PATH\""),
+        ])
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .ok()?;
+
+    // Read on another thread: a chatty rc file could otherwise fill the pipe and stall
+    // the shell until the deadline.
+    let mut stdout = child.stdout.take()?;
+    let reader = std::thread::spawn(move || {
+        let mut out = String::new();
+        let _ = stdout.read_to_string(&mut out);
+        out
+    });
+
+    let deadline = Instant::now() + Duration::from_secs(10);
+    loop {
+        match child.try_wait() {
+            Ok(Some(_)) => break,
+            Ok(None) if Instant::now() < deadline => std::thread::sleep(Duration::from_millis(50)),
+            _ => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return None;
+            }
+        }
+    }
+
+    let out = reader.join().ok()?;
+    let start = out.find(MARK)? + MARK.len();
+    let end = start + out[start..].find(MARK)?;
+    let path = &out[start..end];
+    (!path.is_empty()).then(|| path.to_string())
+}
+
 pub struct PtySession {
     master: Box<dyn MasterPty + Send>,
     writer: Box<dyn Write + Send>,
@@ -102,6 +169,17 @@ impl PtySession {
 mod tests {
     use super::*;
     use std::time::{Duration, Instant};
+
+    /// The resolved PATH must be the shell's own, not an empty or garbled capture: it
+    /// contains the system directories every login shell has, and is a single line.
+    #[test]
+    fn login_shell_path_is_the_shells_own() {
+        let path = login_shell_path().expect("the login shell should report a PATH");
+        assert!(path.split(':').any(|dir| dir == "/usr/bin"), "{path}");
+        assert!(!path.contains('\n'), "captured more than PATH: {path:?}");
+        // Cached: a second call must not start another shell.
+        assert_eq!(login_shell_path().as_deref(), Some(path.as_str()));
+    }
 
     /// The shell must come up able to drive an xterm-256color emulator. Without TERM a
     /// GUI-spawned shell has no line editor and no colour, which looks to the user like

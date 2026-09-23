@@ -29,7 +29,11 @@ pub fn read_file(state: State<AppState>, relative: String) -> Result<String, Str
 }
 
 #[tauri::command]
-pub fn write_file(state: State<AppState>, relative: String, contents: String) -> Result<(), String> {
+pub fn write_file(
+    state: State<AppState>,
+    relative: String,
+    contents: String,
+) -> Result<(), String> {
     let guard = require_root(&state)?;
     anycode_fs::write_file(&guard.as_ref().unwrap().fs_root, &relative, &contents)
         .map_err(|e| e.to_string())

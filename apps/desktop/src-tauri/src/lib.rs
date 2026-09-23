@@ -4,6 +4,8 @@
 //! translates its result into something `invoke()` can carry across the IPC boundary.
 
 mod agent_commands;
+#[cfg(test)]
+mod agent_live_test;
 mod fs_commands;
 mod git_commands;
 mod provider_commands;
@@ -45,7 +47,9 @@ fn get_theme(state: State<AppState>) -> Result<String, String> {
 #[tauri::command]
 fn set_theme(state: State<AppState>, theme: String) -> Result<(), String> {
     let store = state.store.lock().map_err(|e| e.to_string())?;
-    store.set_setting(THEME_KEY, &theme).map_err(|e| e.to_string())
+    store
+        .set_setting(THEME_KEY, &theme)
+        .map_err(|e| e.to_string())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -64,6 +68,11 @@ pub fn run() {
                 tools: ToolRegistry::standard(),
                 pending_approvals: Mutex::new(HashMap::new()),
                 running_tasks: Mutex::new(HashMap::new()),
+            });
+            // Sourcing the user's shell profile can take seconds; do it now, off the UI,
+            // so an agent's first command doesn't wait for it.
+            std::thread::spawn(|| {
+                anycode_terminal::login_shell_path();
             });
             Ok(())
         })

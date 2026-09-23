@@ -28,7 +28,9 @@ impl Tool for ShellExecuteTool {
     }
 
     fn description(&self) -> &'static str {
-        "Run a shell command in the workspace root and capture its stdout, stderr, and exit code."
+        "Run a shell command in the workspace root and capture its stdout, stderr, and exit \
+         code. Set verify to true when the command checks that your work is correct (a \
+         build, lint, or test); leave it false for commands that only look around."
     }
 
     fn input_schema(&self) -> Value {
@@ -36,6 +38,12 @@ impl Tool for ShellExecuteTool {
             "type": "object",
             "properties": {
                 "command": { "type": "string", "description": "The command to run, e.g. \"npm test\"." },
+                // Read by the orchestration loop, not by this tool: it decides which exit
+                // codes count toward the task's verdict (anycode_agent::verdict).
+                "verify": {
+                    "type": "boolean",
+                    "description": "True if this command verifies the work (build, lint, test).",
+                },
             },
             "required": ["command"],
         })
@@ -51,11 +59,14 @@ impl Tool for ShellExecuteTool {
         } else {
             ("sh", "-c")
         };
-        let run = Command::new(shell)
-            .arg(flag)
-            .arg(command)
-            .current_dir(&ctx.workspace_path)
-            .output();
+        let mut cmd = Command::new(shell);
+        cmd.arg(flag).arg(command).current_dir(&ctx.workspace_path);
+        if let Some(path) = &ctx.path_env {
+            cmd.env("PATH", path);
+        }
+        // Dropping the future on timeout must not orphan the process.
+        cmd.kill_on_drop(true);
+        let run = cmd.output();
 
         let output = timeout(Duration::from_secs(DEFAULT_TIMEOUT_SECS), run)
             .await
@@ -79,6 +90,7 @@ mod tests {
         ToolContext {
             fs_root,
             workspace_path: dir.path().to_path_buf(),
+            path_env: None,
         }
     }
 
@@ -101,6 +113,28 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(result["exitCode"], 7);
+    }
+
+    #[tokio::test]
+    async fn the_callers_path_reaches_the_command() {
+        let dir = TempDir::new();
+        let ctx = ToolContext {
+            path_env: Some("/anycode-test-path:/usr/bin:/bin".into()),
+            ..context(&dir)
+        };
+        let command = if cfg!(windows) {
+            "echo %PATH%"
+        } else {
+            "echo $PATH"
+        };
+        let result = ShellExecuteTool
+            .execute(json!({ "command": command }), &ctx)
+            .await
+            .unwrap();
+        assert!(result["stdout"]
+            .as_str()
+            .unwrap()
+            .contains("/anycode-test-path"));
     }
 
     #[test]

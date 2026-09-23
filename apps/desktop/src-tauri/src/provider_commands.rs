@@ -61,8 +61,9 @@ pub fn list_providers() -> Result<Vec<ProviderStatus>, String> {
         has_key: true,
     }];
     for (id, name) in KEYED_PROVIDERS {
-        let has_key =
-            anycode_secrets::get_api_key(id).map_err(|e| e.to_string())?.is_some();
+        let has_key = anycode_secrets::get_api_key(id)
+            .map_err(|e| e.to_string())?
+            .is_some();
         statuses.push(ProviderStatus {
             id: id.to_string(),
             name: name.to_string(),
@@ -86,7 +87,10 @@ pub fn remove_provider_key(provider: String) -> Result<(), String> {
 #[tauri::command]
 pub async fn list_models(provider: String) -> Result<Vec<ModelDefinition>, String> {
     let adapter = build_provider(&provider)?;
-    adapter.models().await.map_err(|e| provider_error_message(&e))
+    adapter
+        .models()
+        .await
+        .map_err(|e| provider_error_message(&e))
 }
 
 #[derive(Clone, Serialize)]
@@ -135,7 +139,10 @@ pub fn send_chat(
             messages,
             temperature: None,
             tools: None,
-            metadata: RequestMetadata { session_id, task_id: None },
+            metadata: RequestMetadata {
+                session_id,
+                task_id: None,
+            },
         };
 
         let record = |input: Option<u32>, output: Option<u32>, status: UsageStatus| {
@@ -152,7 +159,9 @@ pub fn send_chat(
                 record(None, None, UsageStatus::Error);
                 let _ = app.emit(
                     &format!("chat:error:{emit_id}"),
-                    ChatErrorEvent { message: provider_error_message(&err) },
+                    ChatErrorEvent {
+                        message: provider_error_message(&err),
+                    },
                 );
                 return;
             }
@@ -169,14 +178,26 @@ pub fn send_chat(
                 // when required, executes through anycode-tools, and feeds the result
                 // back to the model is the next increment — not something to rush past
                 // the one thing this whole phase exists to get right.
-                Ok(StreamEvent::ToolCall { id, name, arguments }) => {
+                Ok(StreamEvent::ToolCall {
+                    id,
+                    name,
+                    arguments,
+                }) => {
                     let _ = app.emit(
                         &format!("chat:tool_call:{emit_id}"),
-                        ChatToolCallEvent { id, name, arguments },
+                        ChatToolCallEvent {
+                            id,
+                            name,
+                            arguments,
+                        },
                     );
                 }
                 Ok(StreamEvent::Done { usage }) => {
-                    record(usage.input_tokens, usage.output_tokens, UsageStatus::Success);
+                    record(
+                        usage.input_tokens,
+                        usage.output_tokens,
+                        UsageStatus::Success,
+                    );
                     let _ = app.emit(
                         &format!("chat:done:{emit_id}"),
                         ChatDoneEvent {
@@ -189,7 +210,9 @@ pub fn send_chat(
                     record(None, None, UsageStatus::Error);
                     let _ = app.emit(
                         &format!("chat:error:{emit_id}"),
-                        ChatErrorEvent { message: provider_error_message(&err) },
+                        ChatErrorEvent {
+                            message: provider_error_message(&err),
+                        },
                     );
                     break;
                 }

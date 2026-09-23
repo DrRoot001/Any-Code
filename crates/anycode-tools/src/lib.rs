@@ -19,7 +19,7 @@ use async_trait::async_trait;
 use serde_json::Value;
 use std::path::PathBuf;
 
-pub use filesystem::{FilesystemReadTool, FilesystemWriteTool};
+pub use filesystem::{FilesystemEditTool, FilesystemReadTool, FilesystemWriteTool};
 pub use git::GitStatusTool;
 pub use shell::ShellExecuteTool;
 
@@ -42,6 +42,10 @@ pub enum ToolError {
 pub struct ToolContext {
     pub fs_root: anycode_fs::WorkspaceRoot,
     pub workspace_path: PathBuf,
+    /// `PATH` for commands a tool spawns, when the caller resolved the user's own (see
+    /// `anycode_terminal::login_shell_path`). `None` inherits this process's, which for
+    /// an app opened from Finder is only the system directories.
+    pub path_env: Option<String>,
 }
 
 #[async_trait]
@@ -90,6 +94,7 @@ impl ToolRegistry {
             tools: vec![
                 Box::new(FilesystemReadTool),
                 Box::new(FilesystemWriteTool),
+                Box::new(FilesystemEditTool),
                 Box::new(GitStatusTool),
                 Box::new(ShellExecuteTool),
             ],
@@ -119,6 +124,20 @@ impl ToolRegistry {
             })
             .collect()
     }
+}
+
+/// Required arguments `input` lacks, according to `schema`'s `required` list. Checked
+/// before a call reaches the permission gate: a malformed call can never run, so asking
+/// a person to approve it wastes their attention on a decision that doesn't exist.
+pub fn missing_required(schema: &Value, input: &Value) -> Vec<String> {
+    schema["required"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_str)
+        .filter(|name| input.get(*name).is_none_or(Value::is_null))
+        .map(String::from)
+        .collect()
 }
 
 /// Zero-dependency temp dir shared by every tool's tests, matching the pattern
@@ -162,13 +181,46 @@ mod tests {
         let names: Vec<_> = registry.names().collect();
         assert!(names.contains(&"filesystem.read.workspace"));
         assert!(names.contains(&"filesystem.write.workspace"));
+        assert!(names.contains(&"filesystem.edit.workspace"));
         assert!(names.contains(&"git.status"));
         assert!(names.contains(&"shell.execute"));
     }
 
     #[test]
+    fn missing_required_arguments_are_named() {
+        let registry = ToolRegistry::standard();
+        let edit = registry
+            .get("filesystem.edit.workspace")
+            .unwrap()
+            .input_schema();
+        // The shape a live model actually sent: write-style arguments to the edit tool.
+        let sent = serde_json::json!({ "path": "calc.py", "content": "def f(): pass" });
+        assert_eq!(missing_required(&edit, &sent), ["old_text", "new_text"]);
+        let null_counts_as_missing =
+            serde_json::json!({ "path": null, "old_text": "a", "new_text": "b" });
+        assert_eq!(missing_required(&edit, &null_counts_as_missing), ["path"]);
+        let complete = serde_json::json!({ "path": "a", "old_text": "b", "new_text": "" });
+        assert!(missing_required(&edit, &complete).is_empty());
+    }
+
+    #[test]
     fn unknown_tool_name_is_not_found() {
         assert!(ToolRegistry::standard().get("database.drop").is_none());
+    }
+
+    /// Model adapters encode `.` as `__` for function-calling APIs that reject dots, and
+    /// decode it back. That only round-trips if no name already contains `__`, and only
+    /// passes validation if every other character is one those APIs accept.
+    #[test]
+    fn every_tool_name_survives_wire_encoding() {
+        for name in ToolRegistry::standard().names() {
+            assert!(!name.contains("__"), "{name} would not round-trip");
+            assert!(
+                name.chars()
+                    .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '_' || c == '-'),
+                "{name} contains a character function-calling APIs reject"
+            );
+        }
     }
 
     #[test]

@@ -3,8 +3,11 @@
 //! asked for yet. Tables so far: `app_settings` (Phase 0), `usage_events` (Phase 2 —
 //! every model request emits telemetry, docs/ARCHITECTURE.md invariant #9), and
 //! `permission_grants` (Phase 3 — standing "always allow" decisions, scoped to one
-//! workspace; anycode-security decides policy, this only remembers past answers).
+//! workspace; anycode-security decides policy, this only remembers past answers), and
+//! `events` (Phase 3 — the append-only audit log of every agent task's state changes,
+//! tool calls, approval decisions and results; docs/ARCHITECTURE.md invariant #10).
 
+use anycode_core::Event;
 use rusqlite::{params, Connection};
 use serde::Serialize;
 use std::path::Path;
@@ -15,6 +18,8 @@ use uuid::Uuid;
 pub enum StoreError {
     #[error(transparent)]
     Sqlite(#[from] rusqlite::Error),
+    #[error(transparent)]
+    Json(#[from] serde_json::Error),
 }
 
 pub struct Store {
@@ -41,6 +46,18 @@ const MIGRATIONS: &str = "
         granted_at     TEXT NOT NULL,
         PRIMARY KEY (capability, workspace_path)
     );
+    -- Append-only: nothing in this crate updates or deletes a row. The whole event is
+    -- kept as JSON so a newer build's kinds and fields survive (ADR 0002); the scope
+    -- columns exist only so a task's history can be found without scanning payloads.
+    CREATE TABLE IF NOT EXISTS events (
+        id          TEXT PRIMARY KEY,
+        timestamp   TEXT NOT NULL,
+        kind        TEXT NOT NULL,
+        session_id  TEXT NOT NULL,
+        task_id     TEXT,
+        body        TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS events_by_task ON events (task_id, timestamp);
 ";
 
 impl Store {
@@ -163,6 +180,42 @@ impl Store {
         Ok(())
     }
 
+    /// Appends one event to the audit log. There is deliberately no update or delete.
+    pub fn append_event(&self, event: &Event) -> Result<(), StoreError> {
+        self.conn.execute(
+            "INSERT INTO events (id, timestamp, kind, session_id, task_id, body)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
+            params![
+                event.id.to_string(),
+                event
+                    .timestamp
+                    .format(&time::format_description::well_known::Rfc3339)
+                    .unwrap(),
+                event.kind,
+                event.scope.session_id.to_string(),
+                event.scope.task_id.map(|id| id.to_string()),
+                serde_json::to_string(event)?,
+            ],
+        )?;
+        Ok(())
+    }
+
+    /// One task's events, oldest first. A row this build can't parse is skipped, not
+    /// fatal — the same forward-compatibility rule the log's format exists for.
+    pub fn task_events(&self, task_id: Uuid) -> Result<Vec<Event>, StoreError> {
+        let mut stmt = self
+            .conn
+            .prepare("SELECT body FROM events WHERE task_id = ?1 ORDER BY timestamp, rowid")?;
+        let rows = stmt.query_map(params![task_id.to_string()], |row| row.get::<_, String>(0))?;
+        let mut events = Vec::new();
+        for body in rows {
+            if let Ok(event) = serde_json::from_str::<Event>(&body?) {
+                events.push(event);
+            }
+        }
+        Ok(events)
+    }
+
     pub fn has_permission_grant(
         &self,
         capability: &str,
@@ -212,6 +265,42 @@ pub struct UsageRecord {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use anycode_core::EventScope;
+
+    #[test]
+    fn a_tasks_events_come_back_in_order_and_only_for_that_task() {
+        let store = Store::open_in_memory().unwrap();
+        let session_id = Uuid::new_v4();
+        let task = Uuid::new_v4();
+        let other = Uuid::new_v4();
+        let scope = |task_id| EventScope {
+            session_id,
+            task_id: Some(task_id),
+            ..Default::default()
+        };
+
+        for kind in ["task.state", "task.tool.call", "task.tool.result"] {
+            store
+                .append_event(&Event::new(
+                    kind,
+                    scope(task),
+                    serde_json::json!({ "k": kind }),
+                ))
+                .unwrap();
+        }
+        store
+            .append_event(&Event::new(
+                "task.state",
+                scope(other),
+                serde_json::Value::Null,
+            ))
+            .unwrap();
+
+        let events = store.task_events(task).unwrap();
+        let kinds: Vec<_> = events.iter().map(|e| e.kind.as_str()).collect();
+        assert_eq!(kinds, ["task.state", "task.tool.call", "task.tool.result"]);
+        assert_eq!(events[1].payload["k"], "task.tool.call");
+    }
 
     #[test]
     fn setting_survives_get_after_set() {

@@ -65,9 +65,12 @@ pub fn capability_risk(capability: &str) -> RiskLevel {
         | "git.diff"
         | "git.branch" => RiskLevel::Low,
 
-        "filesystem.write.workspace" | "git.commit" | "build.run" | "lint.run" | "test.run" => {
-            RiskLevel::Medium
-        }
+        "filesystem.write.workspace"
+        | "filesystem.edit.workspace"
+        | "git.commit"
+        | "build.run"
+        | "lint.run"
+        | "test.run" => RiskLevel::Medium,
 
         "git.push" | "deployment.staging" => RiskLevel::High,
 

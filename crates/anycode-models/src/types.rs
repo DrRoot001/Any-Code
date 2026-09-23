@@ -106,6 +106,20 @@ pub struct ToolDefinition {
     pub input_schema: Value,
 }
 
+/// Capability names are dotted (`filesystem.read.workspace`), but function-calling APIs
+/// only accept `[a-zA-Z0-9_-]` — OpenAI and Anthropic reject a dotted name outright. This
+/// is a wire-format detail, so adapters translate at the boundary and nothing above them
+/// ever sees the encoded form. Registry names never contain `__` (anycode-tools asserts
+/// it), which is what makes the mapping reversible.
+pub fn tool_name_to_wire(name: &str) -> String {
+    name.replace('.', "__")
+}
+
+/// Inverse of [`tool_name_to_wire`].
+pub fn tool_name_from_wire(name: &str) -> String {
+    name.replace("__", ".")
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct RequestMetadata {

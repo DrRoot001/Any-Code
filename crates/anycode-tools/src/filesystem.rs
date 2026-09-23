@@ -51,7 +51,9 @@ impl Tool for FilesystemWriteTool {
     }
 
     fn description(&self) -> &'static str {
-        "Write (creating or overwriting) a text file in the open workspace."
+        "Create a new text file, or replace an existing file's entire contents. To change \
+         part of an existing file, use filesystem.edit.workspace instead — this discards \
+         everything not in `content`."
     }
 
     fn input_schema(&self) -> Value {
@@ -77,6 +79,75 @@ impl Tool for FilesystemWriteTool {
     }
 }
 
+/// Replaces one exact span of a file. Exists because whole-file writes are the wrong
+/// primitive for changing code: a live run showed a model "implementing" one function by
+/// writing a file that contained only that function, silently deleting the rest. An
+/// exact-match edit either changes precisely what was named or refuses — it cannot
+/// truncate a file by accident.
+pub struct FilesystemEditTool;
+
+#[async_trait]
+impl Tool for FilesystemEditTool {
+    fn name(&self) -> &'static str {
+        "filesystem.edit.workspace"
+    }
+
+    fn risk(&self, _input: &Value) -> RiskLevel {
+        capability_risk(self.name())
+    }
+
+    fn description(&self) -> &'static str {
+        "Change part of an existing text file: replace old_text, which must appear exactly \
+         once in the file, with new_text. The rest of the file is kept as it is. Copy \
+         old_text exactly from the file, including enough surrounding lines to be unique."
+    }
+
+    fn input_schema(&self) -> Value {
+        json!({
+            "type": "object",
+            "properties": {
+                "path": { "type": "string", "description": "Path relative to the workspace root." },
+                "old_text": { "type": "string", "description": "Exact text to replace; must occur once." },
+                "new_text": { "type": "string", "description": "Text to put in its place." },
+            },
+            "required": ["path", "old_text", "new_text"],
+        })
+    }
+
+    async fn execute(&self, input: Value, ctx: &ToolContext) -> Result<Value, ToolError> {
+        let field = |name: &str| {
+            input[name]
+                .as_str()
+                .ok_or_else(|| ToolError::InvalidInput(format!("missing \"{name}\"")))
+        };
+        let (path, old_text, new_text) = (field("path")?, field("old_text")?, field("new_text")?);
+        if old_text.is_empty() {
+            return Err(ToolError::InvalidInput(
+                "old_text is empty; to create a file use filesystem.write.workspace".into(),
+            ));
+        }
+
+        let content = anycode_fs::read_file(&ctx.fs_root, path)?;
+        // The error text is what the model reads, so it says how to recover.
+        match content.matches(old_text).count() {
+            1 => {}
+            0 => {
+                return Err(ToolError::InvalidInput(format!(
+                    "old_text was not found in {path}; read the file and copy the text exactly"
+                )))
+            }
+            n => {
+                return Err(ToolError::InvalidInput(format!(
+                    "old_text occurs {n} times in {path}; include more surrounding text so it \
+                     matches exactly once"
+                )))
+            }
+        }
+        anycode_fs::write_file(&ctx.fs_root, path, &content.replacen(old_text, new_text, 1))?;
+        Ok(json!({ "replaced": 1 }))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -92,6 +163,7 @@ mod tests {
             ToolContext {
                 fs_root,
                 workspace_path,
+                path_env: None,
             },
         )
     }
@@ -129,5 +201,78 @@ mod tests {
             .unwrap_err();
         assert!(matches!(err, ToolError::Fs(_)));
         assert!(!Path::new("/tmp/escape.txt").exists());
+    }
+    async fn write(ctx: &ToolContext, content: &str) {
+        FilesystemWriteTool
+            .execute(json!({ "path": "calc.py", "content": content }), ctx)
+            .await
+            .unwrap();
+    }
+
+    async fn read(ctx: &ToolContext) -> String {
+        FilesystemReadTool
+            .execute(json!({ "path": "calc.py" }), ctx)
+            .await
+            .unwrap()["content"]
+            .as_str()
+            .unwrap()
+            .to_string()
+    }
+
+    #[tokio::test]
+    async fn edit_changes_only_the_named_span() {
+        let (_dir, ctx) = context();
+        write(
+            &ctx,
+            "def add(a, b):\n    return a + b\n\ndef mul(a, b):\n    raise NotImplementedError\n",
+        )
+        .await;
+        FilesystemEditTool
+            .execute(
+                json!({ "path": "calc.py", "old_text": "    raise NotImplementedError", "new_text": "    return a * b" }),
+                &ctx,
+            )
+            .await
+            .unwrap();
+        // The function the edit didn't name is still there — the failure a whole-file
+        // write produced in a live run.
+        assert_eq!(
+            read(&ctx).await,
+            "def add(a, b):\n    return a + b\n\ndef mul(a, b):\n    return a * b\n"
+        );
+    }
+
+    #[tokio::test]
+    async fn edit_refuses_text_that_is_absent_or_ambiguous() {
+        let (_dir, ctx) = context();
+        write(&ctx, "x = 1\nx = 1\n").await;
+        for (old_text, expected) in [("y = 2", "not found"), ("x = 1", "occurs 2 times")] {
+            let err = FilesystemEditTool
+                .execute(
+                    json!({ "path": "calc.py", "old_text": old_text, "new_text": "z" }),
+                    &ctx,
+                )
+                .await
+                .unwrap_err();
+            assert!(err.to_string().contains(expected), "{err}");
+        }
+        assert_eq!(
+            read(&ctx).await,
+            "x = 1\nx = 1\n",
+            "a refused edit must change nothing"
+        );
+    }
+
+    #[tokio::test]
+    async fn edit_cannot_escape_the_workspace_root() {
+        let (_dir, ctx) = context();
+        let err = FilesystemEditTool
+            .execute(
+                json!({ "path": "../calc.py", "old_text": "a", "new_text": "b" }),
+                &ctx,
+            )
+            .await
+            .unwrap_err();
+        assert!(matches!(err, ToolError::Fs(_)));
     }
 }

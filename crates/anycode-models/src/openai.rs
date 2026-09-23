@@ -4,8 +4,8 @@
 use crate::provider::{ModelProvider, ModelStream};
 use crate::sse::SseDecoder;
 use crate::types::{
-    ModelDefinition, ModelRequest, ProviderAuthMode, ProviderError, ProviderManifest, Role,
-    StreamEvent, Usage,
+    tool_name_from_wire, tool_name_to_wire, ModelDefinition, ModelRequest, ProviderAuthMode,
+    ProviderError, ProviderManifest, Role, StreamEvent, Usage,
 };
 use async_stream::try_stream;
 use async_trait::async_trait;
@@ -46,7 +46,7 @@ fn message_to_json(m: &crate::types::Message) -> Value {
             .map(|tc| json!({
                 "id": tc.id,
                 "type": "function",
-                "function": { "name": tc.name, "arguments": tc.arguments.to_string() },
+                "function": { "name": tool_name_to_wire(&tc.name), "arguments": tc.arguments.to_string() },
             }))
             .collect::<Vec<_>>());
     }
@@ -73,7 +73,7 @@ fn build_chat_request(request: &ModelRequest) -> Value {
             .map(|t| json!({
                 "type": "function",
                 "function": {
-                    "name": t.name,
+                    "name": tool_name_to_wire(&t.name),
                     "description": t.description,
                     "parameters": t.input_schema,
                 },
@@ -232,7 +232,7 @@ impl ModelProvider for OpenAiProvider {
                             let arguments = serde_json::from_str(&raw).unwrap_or(Value::Null);
                             yield StreamEvent::ToolCall {
                                 id: call.id.unwrap_or_default(),
-                                name: call.name.unwrap_or_default(),
+                                name: tool_name_from_wire(&call.name.unwrap_or_default()),
                                 arguments,
                             };
                         }
@@ -284,7 +284,34 @@ mod tests {
         };
         let body = build_chat_request(&request);
         assert_eq!(body["tools"][0]["type"], "function");
-        assert_eq!(body["tools"][0]["function"]["name"], "git.status");
+        // OpenAI rejects any function name outside [a-zA-Z0-9_-] with a 400, so the dotted
+        // capability name must never reach the wire as-is.
+        let wire = body["tools"][0]["function"]["name"].as_str().unwrap();
+        assert!(
+            wire.chars()
+                .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-'),
+            "{wire} is not a valid OpenAI function name"
+        );
+        assert_eq!(tool_name_from_wire(wire), "git.status");
+    }
+
+    #[test]
+    fn history_tool_calls_use_the_wire_name() {
+        let message = crate::types::Message {
+            role: Role::Assistant,
+            content: String::new(),
+            tool_calls: Some(vec![crate::types::ToolCallRequest {
+                id: "call_1".into(),
+                name: "filesystem.read.workspace".into(),
+                arguments: json!({ "path": "a.txt" }),
+            }]),
+            tool_call_id: None,
+        };
+        let json = message_to_json(&message);
+        assert_eq!(
+            json["tool_calls"][0]["function"]["name"],
+            "filesystem__read__workspace"
+        );
     }
 
     #[test]

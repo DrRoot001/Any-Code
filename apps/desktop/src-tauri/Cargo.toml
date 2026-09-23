@@ -29,6 +29,12 @@ anycode-models = { path = "../../../crates/anycode-models" }
 anycode-secrets = { path = "../../../crates/anycode-secrets" }
 anycode-security = { path = "../../../crates/anycode-security" }
 anycode-tools = { path = "../../../crates/anycode-tools" }
+anycode-agent = { path = "../../../crates/anycode-agent" }
+anycode-core = { path = "../../../crates/anycode-core" }
+
+[dev-dependencies]
+# The mock runtime drives the real agent loop without a webview (src/agent_live_test.rs).
+tauri = { version = "2", features = ["test"] }
 
 # Standalone workspace: this crate is driven by the pnpm/Tauri toolchain, not `cargo test
 # --workspace` at the repo root, so it does not join crates/*'s workspace.

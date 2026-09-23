@@ -79,31 +79,52 @@ to Rust command to adapter is real, not mocked.
 
 ## Current phase: 3 · Agent runtime
 
+PRD §3587 deliverables: planner, task state machine, tool calls, filesystem/terminal/git
+tools, approval system, event timeline, verification. Exit condition: *an agent can
+implement and verify a simple repository task.*
+
 - [x] Permission engine (`anycode-security`) — risk levels, allow/ask/deny, Critical
       never overridable, unknown capabilities default to Medium
 - [x] Capability registry (`anycode-tools`) — the only path from a model-originated
       request to the filesystem, git, or a shell
 - [x] Tool-calling in the OpenAI adapter (streaming fragments reassembled by index)
+- [x] Tool-calling in the Ollama adapter — local, no credential
+- [x] Tool names encoded for the wire (`.` → `__`) — function-calling APIs reject dotted
+      names, so before this every OpenAI agent request would have been refused
+- [x] Planner — a tool-less planning turn before any action; the plan is shown and then
+      followed, and authorises nothing
+- [x] Task state machine (`anycode-agent`) — `created → planning → running ⇄
+      awaiting_approval → verifying → completed | failed | cancelled`; nothing reaches
+      `completed` without passing through `verifying`. PRD §30's `waiting`/`blocked`
+      describe inter-task dependencies and arrive with Phase 5's scheduler
 - [x] Orchestration loop — every tool call gated before execution; results, including
-      denials, fed back to the model
+      denials, fed back to the model inside an `<untrusted>` envelope
 - [x] Approval UI — exact command/path, risk level, workspace scope; no global allow
-- [x] Task timeline — streamed text, tool calls, results, failures
+- [x] Task timeline — state, plan, streamed text, tool calls, results, replans, failures
+- [x] Audit log — every state change, tool call, approval decision and result appended to
+      the store's `events` table (architecture invariant #10)
 - [x] Cancellation (`cancel_task`) — architecture invariant #11
-- [x] Evidence on completion — measured `git status` delta and real command exit codes,
-      plus token totals
-- [ ] Exit condition demonstrated against a live provider — the loop is built and
-      unit-tested, but an end-to-end run needs an API key (see REVIEW.md)
+- [x] Verification — the model marks which commands are checks; the runtime judges each
+      check by its *latest* exit code; a task that stops with checks failing, or with
+      edits never checked, is sent back a bounded number of times, then fails
+- [x] Agent commands run with the user's login-shell `PATH`, so an app opened from
+      Finder still finds `npm`, `cargo`, `python3`
+- [x] Exit condition demonstrated end to end — a local model implemented and verified a
+      task through the production loop (1 of 6 live runs; the runtime judged all 6
+      correctly). Not yet re-confirmed on the final code, and reliability with a 3B model
+      is low — see REVIEW.md
 
 Deferred past Phase 3 (not needed for the exit condition): a task DAG and parallel
-subagents (Phase 5), tool-calling for Anthropic and Ollama (the abstraction is proven
-with one adapter; the others still honestly declare no tool support), and durable task
-history across restarts.
+subagents (Phase 5), tool-calling for Anthropic (it still honestly declares no tool
+support, and `run_task` refuses it rather than running a tool-less "agent"), and
+restoring task history across restarts — the audit log is durable, but nothing reads it
+back into the dock yet.
 
 **On verification:** the runtime records what it observed — which files `git status`
 reports as newly dirty, and what exit code each `shell.execute` returned — separately
-from anything the model says. A task where no command ran is reported as *unverified*,
-never as success. The model is instructed to verify its own work, but that instruction
-cannot set the flag; only real exit codes can.
+from anything the model says. A task where no check ran is reported as *unverified*,
+never as success. The model decides which commands are checks; it cannot make a failing
+check pass, and `anycode_agent::verdict` alone decides the outcome.
 
 ## Distribution gate
 

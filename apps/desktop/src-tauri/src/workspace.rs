@@ -45,7 +45,9 @@ fn to_info(root: &anycode_fs::WorkspaceRoot) -> WorkspaceInfo {
 pub fn get_last_workspace(state: State<AppState>) -> Result<Option<WorkspaceInfo>, String> {
     let path = {
         let store = state.store.lock().map_err(|e| e.to_string())?;
-        store.get_setting(LAST_WORKSPACE_KEY).map_err(|e| e.to_string())?
+        store
+            .get_setting(LAST_WORKSPACE_KEY)
+            .map_err(|e| e.to_string())?
     };
     let Some(path) = path else { return Ok(None) };
     open_workspace_at(&state, &path).map(Some)
@@ -55,13 +57,15 @@ pub fn get_last_workspace(state: State<AppState>) -> Result<Option<WorkspaceInfo
 pub fn open_workspace(state: State<AppState>, path: String) -> Result<WorkspaceInfo, String> {
     let info = open_workspace_at(&state, &path)?;
     let store = state.store.lock().map_err(|e| e.to_string())?;
-    store.set_setting(LAST_WORKSPACE_KEY, &info.path).map_err(|e| e.to_string())?;
+    store
+        .set_setting(LAST_WORKSPACE_KEY, &info.path)
+        .map_err(|e| e.to_string())?;
     Ok(info)
 }
 
 fn open_workspace_at(state: &State<AppState>, path: &str) -> Result<WorkspaceInfo, String> {
-    let fs_root = anycode_fs::WorkspaceRoot::new(path)
-        .map_err(|e| format!("cannot open '{path}': {e}"))?;
+    let fs_root =
+        anycode_fs::WorkspaceRoot::new(path).map_err(|e| format!("cannot open '{path}': {e}"))?;
     let info = to_info(&fs_root);
     let mut workspace = state.workspace.lock().map_err(|e| e.to_string())?;
     *workspace = Some(WorkspaceState { fs_root });

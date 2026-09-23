@@ -54,6 +54,36 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace --all-features
 
+  desktop-runtime:
+    name: Desktop runtime (format, lint, test)
+    # The agent loop and permission gate live in apps/desktop/src-tauri, which is its own
+    # cargo workspace — nothing in the jobs above reaches it. macOS needs no extra system
+    # packages to compile Tauri.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # tauri::generate_context! embeds the built frontend, so it must exist to compile.
+      - run: pnpm --filter @anycode/desktop build
+      - working-directory: apps/desktop/src-tauri
+        run: cargo fmt --check
+      - working-directory: apps/desktop/src-tauri
+        run: cargo clippy --all-targets --all-features
+      # The live agent test is #[ignore]d: it needs a local model, which CI does not have.
+      - working-directory: apps/desktop/src-tauri
+        run: cargo test --lib
+
   desktop-frontend:
     name: Desktop frontend (build)
     runs-on: ubuntu-latest

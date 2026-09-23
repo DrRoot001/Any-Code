@@ -9,9 +9,12 @@ import {
   type TaskApprovalRequest,
   type TaskDone,
   type TaskEvidence,
+  type TaskPlan,
+  type TaskState,
   type TaskToolCall,
   type TaskToolResult,
   type TaskUsage,
+  type TaskVerdict,
 } from "../lib/tauri";
 import { useWorkbenchStore } from "../state/workbenchStore";
 import ApprovalDialog from "./ApprovalDialog";
@@ -20,10 +23,18 @@ import ModelPicker from "./ModelPicker";
 
 type Entry =
   | { kind: "instruction"; text: string }
+  /** Streams in as `text`; `steps` arrives once the plan is complete (empty = no list). */
+  | { kind: "plan"; text: string; steps: string[] | null }
+  | { kind: "replan"; reason: string }
   | { kind: "text"; text: string }
   | { kind: "tool_call"; id: string; name: string; risk: RiskLevel; summary: string }
   | { kind: "tool_result"; id: string; name: string; ok: boolean; detail: string }
-  | { kind: "done"; text: string; evidence: TaskEvidence; usage: TaskUsage }
+  | {
+      kind: "done";
+      evidence: TaskEvidence;
+      verdict: TaskVerdict;
+      usage: TaskUsage;
+    }
   | { kind: "error"; message: string }
   | { kind: "cancelled" };
 
@@ -60,6 +71,18 @@ function resultSummary(result: Record<string, unknown>): { ok: boolean; detail: 
   return { ok: true, detail: "" };
 }
 
+/** What the task is doing right now, in words — never just a colour or a spinner. */
+const STATE_LABEL: Record<TaskState, string> = {
+  created: "Starting…",
+  planning: "Planning…",
+  running: "Working…",
+  awaiting_approval: "Waiting for your approval",
+  verifying: "Checking the evidence…",
+  completed: "Completed",
+  failed: "Failed",
+  cancelled: "Stopped",
+};
+
 /**
  * The Agent Dock (PRD §55): an engineering task interface, not a chat sidebar. It shows
  * what the agent asked to do, what the runtime allowed, and — when the task finishes —
@@ -73,6 +96,7 @@ export default function AgentPanel() {
   const [taskId, setTaskId] = useState<string | null>(null);
   const [startError, setStartError] = useState<string | null>(null);
   const [approval, setApproval] = useState<TaskApprovalRequest | null>(null);
+  const [taskState, setTaskState] = useState<TaskState | null>(null);
   const sessionId = useMemo(() => crypto.randomUUID(), []);
   const scrollRef = useRef<HTMLDivElement>(null);
   const unlistenRef = useRef<UnlistenFn[]>([]);
@@ -106,6 +130,22 @@ export default function AgentPanel() {
       return [...current, { kind: "text", text }];
     });
 
+  const appendPlanText = (text: string) =>
+    setEntries((current) => {
+      const last = current[current.length - 1];
+      if (last?.kind === "plan" && last.steps === null) {
+        return [...current.slice(0, -1), { ...last, text: last.text + text }];
+      }
+      return [...current, { kind: "plan", text, steps: null }];
+    });
+
+  const completePlan = (plan: TaskPlan) =>
+    setEntries((current) => {
+      const last = current[current.length - 1];
+      const done: Entry = { kind: "plan", text: plan.text, steps: plan.steps };
+      return last?.kind === "plan" ? [...current.slice(0, -1), done] : [...current, done];
+    });
+
   const finish = useCallback(
     (entry: Entry) => {
       setEntries((current) => [...current, entry]);
@@ -132,6 +172,12 @@ export default function AgentPanel() {
     // Subscribe before starting: a task that fails immediately must not emit its
     // terminal event into a channel nobody is listening on yet.
     const offs = await Promise.all([
+      listen<{ state: TaskState }>(`task:state:${id}`, (e) => setTaskState(e.payload.state)),
+      listen<{ text: string }>(`task:plan_delta:${id}`, (e) => appendPlanText(e.payload.text)),
+      listen<TaskPlan>(`task:plan:${id}`, (e) => completePlan(e.payload)),
+      listen<{ reason: string }>(`task:replan:${id}`, (e) =>
+        setEntries((current) => [...current, { kind: "replan", reason: e.payload.reason }]),
+      ),
       listen<{ text: string }>(`task:delta:${id}`, (e) => appendText(e.payload.text)),
       listen<TaskToolCall>(`task:tool_call:${id}`, (e) =>
         setEntries((current) => [
@@ -156,8 +202,8 @@ export default function AgentPanel() {
       listen<TaskDone>(`task:done:${id}`, (e) =>
         finish({
           kind: "done",
-          text: e.payload.text,
           evidence: e.payload.evidence,
+          verdict: e.payload.verdict,
           usage: e.payload.usage,
         }),
       ),
@@ -167,6 +213,7 @@ export default function AgentPanel() {
       listen(`task:cancelled:${id}`, () => finish({ kind: "cancelled" })),
     ]);
     unlistenRef.current = offs;
+    setTaskState("created");
     setTaskId(id);
 
     try {
@@ -241,7 +288,11 @@ export default function AgentPanel() {
         {entries.map((entry, i) => (
           <TimelineEntry key={i} entry={entry} />
         ))}
-        {taskId && !approval && <p className="muted agent-working">Working…</p>}
+        {taskId && taskState && (
+          <p className="muted agent-working" role="status">
+            {STATE_LABEL[taskState]}
+          </p>
+        )}
       </div>
 
       {startError && (
@@ -300,6 +351,28 @@ function TimelineEntry({ entry }: { entry: Entry }) {
           <p>{entry.text}</p>
         </div>
       );
+    case "plan":
+      return (
+        <div className="agent-entry agent-plan">
+          <h4>Plan</h4>
+          {entry.steps && entry.steps.length > 0 ? (
+            <ol>
+              {entry.steps.map((step, i) => (
+                <li key={i}>{step}</li>
+              ))}
+            </ol>
+          ) : (
+            <p>{entry.text}</p>
+          )}
+        </div>
+      );
+    case "replan":
+      return (
+        <div className="agent-entry agent-replan" role="status">
+          <span className="chat-role">runtime</span>
+          <p>{entry.reason}</p>
+        </div>
+      );
     case "text":
       return (
         <div className="agent-entry">
@@ -324,10 +397,11 @@ function TimelineEntry({ entry }: { entry: Entry }) {
         </div>
       );
     case "done":
+      // The final message already streamed in as text entries; rendering `entry.text`
+      // again here would show it twice.
       return (
         <div className="agent-entry">
-          {entry.text && <p>{entry.text}</p>}
-          <Evidence evidence={entry.evidence} usage={entry.usage} />
+          <Evidence evidence={entry.evidence} verdict={entry.verdict} usage={entry.usage} />
         </div>
       );
     case "error":
@@ -342,36 +416,49 @@ function TimelineEntry({ entry }: { entry: Entry }) {
 }
 
 /**
- * What the runtime measured. The verdict is computed from real exit codes — a task
- * where nothing ran is reported as unverified, never as success (PRD §8.6).
+ * What the runtime measured. The verdict is the runtime's (anycode_agent::verdict),
+ * judged from each check's latest exit code — displayed here, never recomputed, so the
+ * UI cannot disagree with the audit log. Nothing verified is said plainly (PRD §8.6).
  */
-function Evidence({ evidence, usage }: { evidence: TaskEvidence; usage: TaskUsage }) {
+function Evidence({
+  evidence,
+  verdict,
+  usage,
+}: {
+  evidence: TaskEvidence;
+  verdict: TaskVerdict;
+  usage: TaskUsage;
+}) {
   const { filesChanged, commands } = evidence;
-  const failed = commands.filter((c) => c.exitCode !== 0);
 
   return (
     <section className="evidence" aria-label="Evidence">
       <h4>Evidence</h4>
 
-      {commands.length === 0 ? (
+      {verdict.kind === "unverified" ? (
         <p className="evidence-verdict evidence-verdict--unverified">
-          Nothing was verified — the agent ran no commands.
+          Not verified — the agent ran no checks.
         </p>
-      ) : failed.length > 0 ? (
+      ) : verdict.kind === "failed" ? (
         <p className="evidence-verdict evidence-verdict--failed" role="alert">
-          Verification failed — {failed.length} of {commands.length} command
-          {commands.length === 1 ? "" : "s"} exited non-zero.
+          Verification failed —{" "}
+          {verdict.failing
+            .map((c) => `${c.command} ${c.exitCode === null ? "was killed" : `exited ${c.exitCode}`}`)
+            .join("; ")}
+          .
         </p>
       ) : (
         <p className="evidence-verdict evidence-verdict--passed">
-          {commands.length} command{commands.length === 1 ? "" : "s"} ran, all exited 0.
+          Verified — {verdict.checks.length} check{verdict.checks.length === 1 ? "" : "s"} passed
+          on {verdict.checks.length === 1 ? "its" : "their"} latest run.
         </p>
       )}
 
       {commands.length > 0 && (
         <ul className="evidence-list">
           {commands.map((c, i) => (
-            <li key={i} className={c.exitCode === 0 ? "" : "danger"}>
+            <li key={i} className={c.exitCode === 0 ? "" : c.verification ? "danger" : "muted"}>
+              {c.verification && <span className="evidence-tag">check</span>}
               <code>{c.command}</code>
               <span className="muted"> exit {c.exitCode ?? "—"}</span>
             </li>
