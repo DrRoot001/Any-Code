@@ -59,6 +59,20 @@ pub trait Tool: Send + Sync {
     /// exception — its risk depends on the command text, not the tool identity.
     fn risk(&self, input: &Value) -> RiskLevel;
 
+    /// Why this call is riskier than the tool usually is, for the approval prompt — e.g.
+    /// "environment file — usually holds secrets". `None` when the tool's ordinary risk
+    /// explains itself.
+    fn risk_reason(&self, _input: &Value) -> Option<String> {
+        None
+    }
+
+    /// What an "always allow" granted on this call covers — the key the standing grant is
+    /// stored under. By default the whole capability; a tool whose calls differ in kind
+    /// (a shell runs anything) narrows it to what the user actually saw.
+    fn grant_scope(&self, _input: &Value) -> String {
+        self.name().to_string()
+    }
+
     /// One-line description for a model deciding whether to call this tool.
     fn description(&self) -> &'static str;
 

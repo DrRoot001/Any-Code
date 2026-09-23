@@ -35,6 +35,8 @@ anycode-core = { path = "../../../crates/anycode-core" }
 [dev-dependencies]
 # The mock runtime drives the real agent loop without a webview (src/agent_live_test.rs).
 tauri = { version = "2", features = ["test"] }
+# Swaps the OS keychain for an in-memory store in tests (provider_commands.rs).
+keyring = "3"
 
 # Standalone workspace: this crate is driven by the pnpm/Tauri toolchain, not `cargo test
 # --workspace` at the repo root, so it does not join crates/*'s workspace.

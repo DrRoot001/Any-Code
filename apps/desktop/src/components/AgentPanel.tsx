@@ -5,7 +5,6 @@ import { useProviderModel } from "../hooks/useProviderModel";
 import {
   agentCommands,
   type ApprovalResponse,
-  type RiskLevel,
   type TaskApprovalRequest,
   type TaskDone,
   type TaskEvidence,
@@ -16,60 +15,18 @@ import {
   type TaskUsage,
   type TaskVerdict,
 } from "../lib/tauri";
+import {
+  appendPlanText,
+  appendText,
+  argumentSummary,
+  completePlan,
+  resultSummary,
+  type Entry,
+} from "../lib/timeline";
 import { useWorkbenchStore } from "../state/workbenchStore";
 import ApprovalDialog from "./ApprovalDialog";
 import { Icon } from "./Icons";
 import ModelPicker from "./ModelPicker";
-
-type Entry =
-  | { kind: "instruction"; text: string }
-  /** Streams in as `text`; `steps` arrives once the plan is complete (empty = no list). */
-  | { kind: "plan"; text: string; steps: string[] | null }
-  | { kind: "replan"; reason: string }
-  | { kind: "text"; text: string }
-  | { kind: "tool_call"; id: string; name: string; risk: RiskLevel; summary: string }
-  | { kind: "tool_result"; id: string; name: string; ok: boolean; detail: string }
-  | {
-      kind: "done";
-      evidence: TaskEvidence;
-      verdict: TaskVerdict;
-      usage: TaskUsage;
-    }
-  | { kind: "error"; message: string }
-  | { kind: "cancelled" };
-
-function argumentSummary(args: Record<string, unknown>): string {
-  if (typeof args?.command === "string") return args.command;
-  if (typeof args?.path === "string") return args.path;
-  const json = JSON.stringify(args ?? {});
-  return json === "{}" ? "" : json;
-}
-
-/**
- * A tool result is a success only when the runtime said so — never assumed. A shell
- * result with no exit code (killed by a signal) is a failure, not an unknown we round up.
- */
-function resultSummary(result: Record<string, unknown>): { ok: boolean; detail: string } {
-  if (typeof result?.error === "string") return { ok: false, detail: result.error };
-
-  const isShellResult = "exitCode" in (result ?? {});
-  if (isShellResult) {
-    const exitCode = typeof result.exitCode === "number" ? result.exitCode : null;
-    const stderr = typeof result.stderr === "string" ? result.stderr.trim() : "";
-    const stdout = typeof result.stdout === "string" ? result.stdout.trim() : "";
-    const output = stderr || stdout;
-    const tail = output ? ` · ${output.split("\n").slice(-3).join("\n")}` : "";
-    return {
-      ok: exitCode === 0,
-      detail: `exit ${exitCode ?? "—"}${tail}`,
-    };
-  }
-
-  if (typeof result?.content === "string") {
-    return { ok: true, detail: `${result.content.length} chars` };
-  }
-  return { ok: true, detail: "" };
-}
 
 /** What the task is doing right now, in words — never just a colour or a spinner. */
 const STATE_LABEL: Record<TaskState, string> = {
@@ -121,31 +78,6 @@ export default function AgentPanel() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [entries]);
 
-  const appendText = (text: string) =>
-    setEntries((current) => {
-      const last = current[current.length - 1];
-      if (last?.kind === "text") {
-        return [...current.slice(0, -1), { kind: "text", text: last.text + text }];
-      }
-      return [...current, { kind: "text", text }];
-    });
-
-  const appendPlanText = (text: string) =>
-    setEntries((current) => {
-      const last = current[current.length - 1];
-      if (last?.kind === "plan" && last.steps === null) {
-        return [...current.slice(0, -1), { ...last, text: last.text + text }];
-      }
-      return [...current, { kind: "plan", text, steps: null }];
-    });
-
-  const completePlan = (plan: TaskPlan) =>
-    setEntries((current) => {
-      const last = current[current.length - 1];
-      const done: Entry = { kind: "plan", text: plan.text, steps: plan.steps };
-      return last?.kind === "plan" ? [...current.slice(0, -1), done] : [...current, done];
-    });
-
   const finish = useCallback(
     (entry: Entry) => {
       setEntries((current) => [...current, entry]);
@@ -173,12 +105,12 @@ export default function AgentPanel() {
     // terminal event into a channel nobody is listening on yet.
     const offs = await Promise.all([
       listen<{ state: TaskState }>(`task:state:${id}`, (e) => setTaskState(e.payload.state)),
-      listen<{ text: string }>(`task:plan_delta:${id}`, (e) => appendPlanText(e.payload.text)),
-      listen<TaskPlan>(`task:plan:${id}`, (e) => completePlan(e.payload)),
+      listen<{ text: string }>(`task:plan_delta:${id}`, (e) => setEntries((c) => appendPlanText(c, e.payload.text))),
+      listen<TaskPlan>(`task:plan:${id}`, (e) => setEntries((c) => completePlan(c, e.payload))),
       listen<{ reason: string }>(`task:replan:${id}`, (e) =>
         setEntries((current) => [...current, { kind: "replan", reason: e.payload.reason }]),
       ),
-      listen<{ text: string }>(`task:delta:${id}`, (e) => appendText(e.payload.text)),
+      listen<{ text: string }>(`task:delta:${id}`, (e) => setEntries((c) => appendText(c, e.payload.text))),
       listen<TaskToolCall>(`task:tool_call:${id}`, (e) =>
         setEntries((current) => [
           ...current,
@@ -188,6 +120,7 @@ export default function AgentPanel() {
             name: e.payload.name,
             risk: e.payload.risk,
             summary: argumentSummary(e.payload.arguments),
+            reason: e.payload.reason,
           },
         ]),
       ),
@@ -259,7 +192,7 @@ export default function AgentPanel() {
       <div className="empty-state">
         <div>
           <strong>No provider connected</strong>
-          Add an API key in Settings → Providers, or run Ollama locally.
+          Add an API key or an endpoint in Settings → Providers, or run Ollama locally.
         </div>
       </div>
     );
@@ -385,6 +318,7 @@ function TimelineEntry({ entry }: { entry: Entry }) {
           <span className={`risk risk--${entry.risk}`}>{entry.risk}</span>
           <code>{entry.name}</code>
           {entry.summary && <span className="agent-step-detail">{entry.summary}</span>}
+          {entry.reason && <span className="agent-step-reason">{entry.reason}</span>}
         </div>
       );
     case "tool_result":

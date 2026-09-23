@@ -1,5 +1,5 @@
 use crate::{Tool, ToolContext, ToolError};
-use anycode_security::{classify_shell_command, RiskLevel};
+use anycode_security::{classify_shell_command, shell_risk_reason, RiskLevel};
 use async_trait::async_trait;
 use serde_json::{json, Value};
 use std::time::Duration;
@@ -25,6 +25,20 @@ impl Tool for ShellExecuteTool {
             // Malformed input has no command text to classify — refuse to guess low.
             None => RiskLevel::Critical,
         }
+    }
+
+    fn risk_reason(&self, input: &Value) -> Option<String> {
+        shell_risk_reason(input["command"].as_str()?).map(|(_, reason)| reason.to_string())
+    }
+
+    /// Audit S2: a grant used to cover the whole tool, so "always allow" on `npm test`
+    /// allowed every shell command. It now covers exactly the command the user approved.
+    fn grant_scope(&self, input: &Value) -> String {
+        format!(
+            "{}:{}",
+            self.name(),
+            input["command"].as_str().unwrap_or_default().trim()
+        )
     }
 
     fn description(&self) -> &'static str {
@@ -135,6 +149,15 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("/anycode-test-path"));
+    }
+
+    #[test]
+    fn a_grant_covers_only_the_command_it_was_given_for() {
+        let scope = |c: &str| ShellExecuteTool.grant_scope(&json!({ "command": c }));
+        assert_eq!(scope("npm test"), "shell.execute:npm test");
+        assert_eq!(scope("  npm test "), scope("npm test"));
+        assert_ne!(scope("npm test"), scope("npm install"));
+        assert_ne!(scope("npm test"), scope("git push"));
     }
 
     #[test]

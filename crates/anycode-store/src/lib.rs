@@ -58,6 +58,11 @@ const MIGRATIONS: &str = "
         body        TEXT NOT NULL
     );
     CREATE INDEX IF NOT EXISTS events_by_task ON events (task_id, timestamp);
+    -- Audit S2: shell grants used to be stored for the whole tool, so one 'always allow'
+    -- covered every shell command. Grants are now per command (`shell.execute:<command>`);
+    -- a surviving tool-wide row would still be honoured by nothing, but it records
+    -- consent the user never gave, so it is removed.
+    DELETE FROM permission_grants WHERE capability = 'shell.execute';
 ";
 
 impl Store {
@@ -87,6 +92,12 @@ impl Store {
                 rusqlite::Error::QueryReturnedNoRows => Ok(None),
                 other => Err(other.into()),
             })
+    }
+
+    pub fn delete_setting(&self, key: &str) -> Result<(), StoreError> {
+        self.conn
+            .execute("DELETE FROM app_settings WHERE key = ?1", params![key])?;
+        Ok(())
     }
 
     pub fn set_setting(&self, key: &str, value: &str) -> Result<(), StoreError> {
@@ -216,6 +227,24 @@ impl Store {
         Ok(events)
     }
 
+    /// A session's events, oldest first — app-level ones included, which carry no task.
+    /// Unparseable rows are skipped, as in [`Store::task_events`].
+    pub fn session_events(&self, session_id: Uuid) -> Result<Vec<Event>, StoreError> {
+        let mut stmt = self
+            .conn
+            .prepare("SELECT body FROM events WHERE session_id = ?1 ORDER BY timestamp, rowid")?;
+        let rows = stmt.query_map(params![session_id.to_string()], |row| {
+            row.get::<_, String>(0)
+        })?;
+        let mut events = Vec::new();
+        for body in rows {
+            if let Ok(event) = serde_json::from_str::<Event>(&body?) {
+                events.push(event);
+            }
+        }
+        Ok(events)
+    }
+
     pub fn has_permission_grant(
         &self,
         capability: &str,
@@ -239,6 +268,8 @@ impl Store {
 pub enum UsageStatus {
     Success,
     Error,
+    /// Abandoned before the provider finished; tokens were likely consumed but unreported.
+    Cancelled,
 }
 
 impl UsageStatus {
@@ -246,6 +277,7 @@ impl UsageStatus {
         match self {
             UsageStatus::Success => "success",
             UsageStatus::Error => "error",
+            UsageStatus::Cancelled => "cancelled",
         }
     }
 }
@@ -300,6 +332,27 @@ mod tests {
         let kinds: Vec<_> = events.iter().map(|e| e.kind.as_str()).collect();
         assert_eq!(kinds, ["task.state", "task.tool.call", "task.tool.result"]);
         assert_eq!(events[1].payload["k"], "task.tool.call");
+    }
+
+    #[test]
+    fn tool_wide_shell_grants_do_not_survive_reopening() {
+        let path = std::env::temp_dir().join(format!("anycode-store-{}.db", Uuid::new_v4()));
+        {
+            let store = Store::open(&path).unwrap();
+            store.grant_permission("shell.execute", "/ws").unwrap();
+            store
+                .grant_permission("shell.execute:npm test", "/ws")
+                .unwrap();
+        }
+        let store = Store::open(&path).unwrap();
+        assert!(!store.has_permission_grant("shell.execute", "/ws").unwrap());
+        assert!(store
+            .has_permission_grant("shell.execute:npm test", "/ws")
+            .unwrap());
+        drop(store);
+        for suffix in ["", "-wal", "-shm"] {
+            let _ = std::fs::remove_file(format!("{}{suffix}", path.display()));
+        }
     }
 
     #[test]

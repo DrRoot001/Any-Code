@@ -1,5 +1,10 @@
 //! OpenAI adapter — Chat Completions API. BYOK only (PRD §18): official ChatGPT sign-in
 //! isn't something a third-party app can embed, so this speaks the plain API-key path.
+//!
+//! The same wire protocol is spoken by OpenRouter, Google's Gemini API (through its
+//! official OpenAI-compatible endpoint), LM Studio, vLLM, llama.cpp and Ollama's `/v1`, so
+//! one tested implementation serves them all (PRD §21 "OpenAI compatible: base URL + API
+//! key"). Each keeps its own identity, so usage and errors are attributed correctly.
 
 use crate::provider::{ModelProvider, ModelStream};
 use crate::sse::SseDecoder;
@@ -13,19 +18,72 @@ use futures_util::StreamExt;
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 
-const BASE_URL: &str = "https://api.openai.com/v1";
+const OPENAI_BASE_URL: &str = "https://api.openai.com/v1";
 
 pub struct OpenAiProvider {
-    api_key: String,
+    id: &'static str,
+    name: &'static str,
+    base_url: String,
+    /// `None` for a local endpoint that takes no credential.
+    api_key: Option<String>,
     client: reqwest::Client,
 }
 
 impl OpenAiProvider {
     pub fn new(api_key: String) -> Self {
+        Self::compatible("openai", "OpenAI", OPENAI_BASE_URL, Some(api_key))
+    }
+
+    /// Any endpoint that speaks the Chat Completions protocol. `base_url` is the part
+    /// before `/chat/completions`, e.g. `https://openrouter.ai/api/v1`.
+    pub fn compatible(
+        id: &'static str,
+        name: &'static str,
+        base_url: impl Into<String>,
+        api_key: Option<String>,
+    ) -> Self {
         Self {
+            id,
+            name,
+            base_url: base_url.into().trim_end_matches('/').to_string(),
             api_key,
             client: reqwest::Client::new(),
         }
+    }
+
+    fn get(&self, path: &str) -> reqwest::RequestBuilder {
+        self.authorised(self.client.get(format!("{}{path}", self.base_url)))
+    }
+
+    fn post(&self, path: &str) -> reqwest::RequestBuilder {
+        self.authorised(self.client.post(format!("{}{path}", self.base_url)))
+    }
+
+    fn authorised(&self, request: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
+        match &self.api_key {
+            Some(key) => request.bearer_auth(key),
+            None => request,
+        }
+    }
+}
+
+/// Where a user-supplied endpoint may point. HTTPS anywhere; plain HTTP only to this
+/// machine, since anything else would send the prompt — repository code — and any key in
+/// cleartext across a network.
+pub fn validate_compatible_base_url(url: &str) -> Result<String, String> {
+    let url = url.trim().trim_end_matches('/');
+    let parsed = reqwest::Url::parse(url).map_err(|e| format!("not a valid URL: {e}"))?;
+    let loopback = matches!(
+        parsed.host_str(),
+        Some("localhost" | "127.0.0.1" | "[::1]" | "::1")
+    );
+    match parsed.scheme() {
+        "https" => Ok(url.to_string()),
+        "http" if loopback => Ok(url.to_string()),
+        "http" => Err("plain http is only allowed to this machine (localhost); use https".into()),
+        other => Err(format!(
+            "unsupported scheme {other}: use https, or http to localhost"
+        )),
     }
 }
 
@@ -151,22 +209,24 @@ fn parse_chunk(data: &str) -> Result<Vec<StreamEvent>, ProviderError> {
 impl ModelProvider for OpenAiProvider {
     fn manifest(&self) -> ProviderManifest {
         ProviderManifest {
-            id: "openai",
-            name: "OpenAI",
-            auth_modes: &[ProviderAuthMode::ApiKey],
+            id: self.id,
+            name: self.name,
+            auth_modes: if self.api_key.is_some() {
+                &[ProviderAuthMode::ApiKey]
+            } else {
+                &[ProviderAuthMode::Local]
+            },
             supports_streaming: true,
+            // Whether a given model honours tools is the endpoint's call; one that doesn't
+            // returns an error, which surfaces as a task error rather than silence.
             supports_tools: true,
-            supports_vision: true,
+            // Only claimed where it has been built against; unknown for other endpoints.
+            supports_vision: self.id == "openai",
         }
     }
 
     async fn models(&self) -> Result<Vec<ModelDefinition>, ProviderError> {
-        let response = self
-            .client
-            .get(format!("{BASE_URL}/models"))
-            .bearer_auth(&self.api_key)
-            .send()
-            .await?;
+        let response = self.get("/models").send().await?;
         if !response.status().is_success() {
             return Err(ProviderError::Api(
                 response.text().await.unwrap_or_default(),
@@ -188,13 +248,7 @@ impl ModelProvider for OpenAiProvider {
 
     async fn stream(&self, request: ModelRequest) -> Result<ModelStream, ProviderError> {
         let body = build_chat_request(&request);
-        let response = self
-            .client
-            .post(format!("{BASE_URL}/chat/completions"))
-            .bearer_auth(&self.api_key)
-            .json(&body)
-            .send()
-            .await?;
+        let response = self.post("/chat/completions").json(&body).send().await?;
 
         if !response.status().is_success() {
             return Err(ProviderError::Api(
@@ -252,6 +306,32 @@ impl ModelProvider for OpenAiProvider {
 mod tests {
     use super::*;
     use crate::types::{Message, RequestMetadata, ToolDefinition};
+
+    #[test]
+    fn compatible_endpoints_must_not_send_code_in_cleartext_across_a_network() {
+        assert!(validate_compatible_base_url("https://openrouter.ai/api/v1").is_ok());
+        assert!(validate_compatible_base_url("http://localhost:1234/v1").is_ok());
+        assert!(validate_compatible_base_url("http://127.0.0.1:11434/v1/").is_ok());
+        assert_eq!(
+            validate_compatible_base_url("http://localhost:1234/v1/").unwrap(),
+            "http://localhost:1234/v1"
+        );
+        assert!(validate_compatible_base_url("http://10.0.0.5:8000/v1").is_err());
+        assert!(validate_compatible_base_url("http://gateway.example.com/v1").is_err());
+        assert!(validate_compatible_base_url("ftp://localhost/v1").is_err());
+        assert!(validate_compatible_base_url("not a url").is_err());
+    }
+
+    #[test]
+    fn a_compatible_provider_keeps_its_own_identity() {
+        let local =
+            OpenAiProvider::compatible("lmstudio", "LM Studio", "http://localhost:1234/v1/", None);
+        assert_eq!(local.manifest().id, "lmstudio");
+        assert_eq!(local.manifest().auth_modes, &[ProviderAuthMode::Local]);
+        assert_eq!(local.base_url, "http://localhost:1234/v1");
+        assert!(!local.manifest().supports_vision);
+        assert_eq!(OpenAiProvider::new("sk".into()).manifest().id, "openai");
+    }
 
     #[test]
     fn builds_a_streaming_chat_request() {

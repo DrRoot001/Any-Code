@@ -656,6 +656,7 @@ input:focus-visible {
 }
 .agent-step {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 7px;
   font-size: 12px;
@@ -669,6 +670,11 @@ input:focus-visible {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--ac-text-muted);
+}
+.agent-step-reason {
+  flex-basis: 100%;
+  color: var(--ac-text-secondary);
+  font-size: 12px;
 }
 .agent-working {
   font-size: 12px;
@@ -807,6 +813,12 @@ input:focus-visible {
   font-size: 12px;
   white-space: pre-wrap;
   word-break: break-word;
+}
+/* The specific reason a call is risky — text, not colour. */
+.approval-reason {
+  margin: 4px 0 0;
+  color: var(--ac-text-primary);
+  font-weight: 600;
 }
 .approval-facts {
   display: grid;

@@ -16,6 +16,10 @@
 //! ```sh
 //! ANYCODE_LIVE_MODEL=qwen2.5:3b cargo test --lib agent_live -- --ignored --nocapture
 //! ```
+//!
+//! `ANYCODE_LIVE_PROVIDER=openai_compatible` drives the same task through the OpenAI
+//! adapter, pointed at Ollama's OpenAI-compatible API — exercising its streamed tool-call
+//! reassembly against a real server.
 
 use crate::agent_commands::{respond_to_approval, run_task, ApprovalResponse};
 use crate::workspace::WorkspaceState;
@@ -146,6 +150,7 @@ fn one_line(value: &Value, max: usize) -> String {
 #[ignore = "needs a local Ollama with a tool-capable model; slow on CPU"]
 fn an_agent_implements_and_verifies_a_repository_task() {
     let model = std::env::var("ANYCODE_LIVE_MODEL").unwrap_or_else(|_| "qwen2.5:3b".into());
+    let provider = std::env::var("ANYCODE_LIVE_PROVIDER").unwrap_or_else(|_| "ollama".into());
     let repo = make_repo();
     assert!(
         !suite_passes(&repo),
@@ -156,7 +161,7 @@ fn an_agent_implements_and_verifies_a_repository_task() {
         "precondition: the original tests must fail before the task"
     );
     println!("repository: {}", repo.display());
-    println!("model:      ollama/{model}\n");
+    println!("model:      {provider}/{model}\n");
 
     let app = tauri::test::mock_builder()
         .build(tauri::test::mock_context(tauri::test::noop_assets()))
@@ -170,7 +175,20 @@ fn an_agent_implements_and_verifies_a_repository_task() {
         tools: ToolRegistry::standard(),
         pending_approvals: Mutex::new(HashMap::new()),
         running_tasks: Mutex::new(HashMap::new()),
+        session_id: Uuid::new_v4(),
     });
+    if provider == "openai_compatible" {
+        let state = app.state::<AppState>();
+        state
+            .store
+            .lock()
+            .unwrap()
+            .set_setting(
+                "provider.openai_compatible.base_url",
+                "http://localhost:11434/v1",
+            )
+            .unwrap();
+    }
     let handle = app.handle().clone();
 
     let task_uuid = Uuid::new_v4();
@@ -188,7 +206,7 @@ fn an_agent_implements_and_verifies_a_repository_task() {
     run_task(
         handle.clone(),
         task_id.clone(),
-        "ollama".into(),
+        provider,
         model,
         Uuid::new_v4().to_string(),
         INSTRUCTION.into(),

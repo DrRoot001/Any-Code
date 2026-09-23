@@ -55,6 +55,11 @@ export interface ProviderStatus {
   name: string;
   requiresKey: boolean;
   hasKey: boolean;
+  /** Configured by base URL (an OpenAI-compatible endpoint); a key is optional. */
+  needsEndpoint: boolean;
+  endpoint: string | null;
+  /** Everything it needs is configured. Not a claim that it is reachable. */
+  ready: boolean;
 }
 
 export interface ModelDefinition {
@@ -74,9 +79,18 @@ export const providerCommands = {
   setProviderKey: (provider: string, key: string) =>
     invoke<void>("set_provider_key", { provider, key }),
   removeProviderKey: (provider: string) => invoke<void>("remove_provider_key", { provider }),
+  /** `null` clears it. Validated in Rust: https anywhere, plain http only to localhost. */
+  setProviderEndpoint: (provider: string, baseUrl: string | null) =>
+    invoke<void>("set_provider_endpoint", { provider, baseUrl }),
   listModels: (provider: string) => invoke<ModelDefinition[]>("list_models", { provider }),
-  sendChat: (provider: string, model: string, sessionId: string, messages: ChatMessage[]) =>
-    invoke<string>("send_chat", { provider, model, sessionId, messages }),
+  /** `requestId` is the caller's, so it can subscribe before the stream starts. */
+  sendChat: (
+    requestId: string,
+    provider: string,
+    model: string,
+    sessionId: string,
+    messages: ChatMessage[],
+  ) => invoke<void>("send_chat", { requestId, provider, model, sessionId, messages }),
 };
 
 export type RiskLevel = "low" | "medium" | "high" | "critical";
@@ -87,6 +101,8 @@ export interface TaskToolCall {
   name: string;
   arguments: Record<string, unknown>;
   risk: RiskLevel;
+  /** Why this call is riskier than the tool usually is, e.g. a secret-bearing path. */
+  reason: string | null;
 }
 
 /** Payload of `task:tool_result:{taskId}`. */
@@ -102,6 +118,11 @@ export interface TaskApprovalRequest {
   name: string;
   arguments: Record<string, unknown>;
   risk: RiskLevel;
+  reason: string | null;
+  /** Whether "always allow" may be offered. The runtime enforces this regardless. */
+  grantable: boolean;
+  /** What an "always allow" covers, e.g. `shell.execute:npm test`. */
+  grantScope: string;
 }
 
 /** One command the agent actually ran, with the exit code the process returned. */

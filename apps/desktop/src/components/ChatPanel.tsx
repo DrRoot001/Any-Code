@@ -1,4 +1,4 @@
-import { listen } from "@tauri-apps/api/event";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useProviderModel } from "../hooks/useProviderModel";
 import { providerCommands, type ChatMessage } from "../lib/tauri";
@@ -32,38 +32,45 @@ export default function ChatPanel() {
     setDraft("");
     setSendError(null);
 
-    let requestId: string;
-    try {
-      requestId = await providerCommands.sendChat(provider, model, sessionId, next);
-    } catch (error) {
-      setSendError(String(error));
-      return;
-    }
+    const requestId = crypto.randomUUID();
     setPending(requestId);
     setMessages([...next, { role: "assistant", content: "" }]);
 
-    const unlistenDelta = await listen<{ text: string }>(`chat:delta:${requestId}`, (event) => {
-      setMessages((current) => {
-        const updated = [...current];
-        const last = updated[updated.length - 1];
-        if (last?.role === "assistant") {
-          updated[updated.length - 1] = { ...last, content: last.content + event.payload.text };
-        }
-        return updated;
-      });
-    });
-    const unlistenDone = await listen(`chat:done:${requestId}`, () => {
+    // Subscribe before sending: a request that fails at once (a local server that isn't
+    // running) must not report its error into a channel nobody is listening on yet.
+    const offs: UnlistenFn[] = [];
+    const detach = () => offs.splice(0).forEach((off) => off());
+    offs.push(
+      await listen<{ text: string }>(`chat:delta:${requestId}`, (event) => {
+        setMessages((current) => {
+          const updated = [...current];
+          const last = updated[updated.length - 1];
+          if (last?.role === "assistant") {
+            updated[updated.length - 1] = { ...last, content: last.content + event.payload.text };
+          }
+          return updated;
+        });
+      }),
+      await listen(`chat:done:${requestId}`, () => {
+        setPending(null);
+        detach();
+      }),
+      await listen<{ message: string }>(`chat:error:${requestId}`, (event) => {
+        setSendError(event.payload.message);
+        setPending(null);
+        detach();
+      }),
+    );
+
+    try {
+      await providerCommands.sendChat(requestId, provider, model, sessionId, next);
+    } catch (error) {
+      // Never started, so no terminal event is coming.
+      setSendError(String(error));
       setPending(null);
-      unlistenDelta();
-      unlistenDone();
-    });
-    const unlistenError = await listen<{ message: string }>(`chat:error:${requestId}`, (event) => {
-      setSendError(event.payload.message);
-      setPending(null);
-      unlistenDelta();
-      unlistenDone();
-      unlistenError();
-    });
+      setMessages(next);
+      detach();
+    }
   }, [provider, model, draft, pending, messages, sessionId]);
 
   if (picker.providersError) {
@@ -85,7 +92,7 @@ export default function ChatPanel() {
       <div className="empty-state">
         <div>
           <strong>No provider connected</strong>
-          Add an API key in Settings → Providers, or install Ollama for a local model.
+          Add an API key or an endpoint in Settings → Providers, or install Ollama for a local model.
         </div>
       </div>
     );

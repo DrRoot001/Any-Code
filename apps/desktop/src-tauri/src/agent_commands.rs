@@ -28,7 +28,6 @@ use anycode_models::{
     ToolDefinition,
 };
 use anycode_security::{decide, Decision, StandingGrant};
-use anycode_store::UsageStatus;
 use anycode_tools::ToolContext;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
@@ -101,6 +100,7 @@ struct TaskToolCallEvent {
     name: String,
     arguments: Value,
     risk: &'static str,
+    reason: Option<String>,
 }
 #[derive(Clone, Serialize)]
 struct TaskToolResultEvent {
@@ -109,11 +109,26 @@ struct TaskToolResultEvent {
     result: Value,
 }
 #[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 struct TaskApprovalRequestedEvent {
     id: String,
     name: String,
     arguments: Value,
     risk: &'static str,
+    /// Why this call is riskier than the tool usually is, if it is.
+    reason: Option<String>,
+    /// Whether "always allow" may be offered. False for High: asked every time.
+    grantable: bool,
+    /// What an "always allow" would cover, so the button can say it.
+    grant_scope: String,
+}
+
+/// Everything the prompt shows about the risk of one call.
+struct ApprovalContext {
+    risk: anycode_security::RiskLevel,
+    reason: Option<String>,
+    grantable: bool,
+    grant_scope: String,
 }
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -278,7 +293,7 @@ pub fn run_task<R: Runtime>(
     if task_is_running(&app, &task_id) {
         return Err("a task with that id is already running".to_string());
     }
-    let adapter = build_provider(&provider)?;
+    let adapter = build_provider(&app, &provider)?;
     let manifest = adapter.manifest();
     if !manifest.supports_tools {
         // Honest refusal: without tool calls the "agent" could only talk about the task.
@@ -552,13 +567,12 @@ impl<R: Runtime> TaskRun<R> {
                 task_id: Some(self.id.clone()),
             },
         };
-        let mut stream = match adapter.stream(request).await {
-            Ok(stream) => stream,
-            Err(err) => {
-                self.record_usage(None, None, UsageStatus::Error);
-                return Err(Stop::Failed(err.to_string()));
-            }
-        };
+        // Usage is recorded by the Metered wrapper build_provider puts around every
+        // adapter; this loop only totals it for the task's evidence.
+        let mut stream = adapter
+            .stream(request)
+            .await
+            .map_err(|err| Stop::Failed(err.to_string()))?;
 
         let mut turn = Turn::default();
         while let Some(event) = stream.next().await {
@@ -580,16 +594,8 @@ impl<R: Runtime> TaskRun<R> {
                 Ok(StreamEvent::Done { usage }) => {
                     self.usage.input_tokens += usage.input_tokens.unwrap_or(0);
                     self.usage.output_tokens += usage.output_tokens.unwrap_or(0);
-                    self.record_usage(
-                        usage.input_tokens,
-                        usage.output_tokens,
-                        UsageStatus::Success,
-                    );
                 }
-                Err(err) => {
-                    self.record_usage(None, None, UsageStatus::Error);
-                    return Err(Stop::Failed(err.to_string()));
-                }
+                Err(err) => return Err(Stop::Failed(err.to_string())),
             }
         }
         Ok(turn)
@@ -605,8 +611,12 @@ impl<R: Runtime> TaskRun<R> {
         fs_root: &anycode_fs::WorkspaceRoot,
         call: &ToolCallRequest,
     ) -> Result<(Value, bool), Stop> {
-        let risk = match tool_risk(&self.app, call) {
-            Ok(risk) => risk,
+        let GateFacts {
+            risk,
+            reason,
+            grant_scope,
+        } = match tool_risk(&self.app, call) {
+            Ok(facts) => facts,
             Err(reason) => {
                 // Nothing to gate, since it can't run — but the attempt is still a record,
                 // and the reason goes back to the model so it can correct the call.
@@ -624,7 +634,10 @@ impl<R: Runtime> TaskRun<R> {
         };
 
         let workspace_key = workspace_path.to_string_lossy().to_string();
-        let has_standing_grant = has_grant(&self.app, &call.name, &workspace_key);
+        let has_standing_grant = has_grant(&self.app, &grant_scope, &workspace_key);
+        // Offered only where the policy lets a grant apply; enforced below regardless of
+        // what the renderer sends back.
+        let grantable = anycode_security::standing_grant_permitted(risk);
         let grant = if has_standing_grant {
             StandingGrant::WorkspaceAllowed
         } else {
@@ -638,6 +651,7 @@ impl<R: Runtime> TaskRun<R> {
                 "name": call.name,
                 "arguments": for_audit(&call.arguments),
                 "risk": risk_label(risk),
+                "reason": reason,
             }),
         );
         self.emit(
@@ -647,6 +661,7 @@ impl<R: Runtime> TaskRun<R> {
                 name: call.name.clone(),
                 arguments: call.arguments.clone(),
                 risk: risk_label(risk),
+                reason: reason.clone(),
             },
         );
 
@@ -671,7 +686,18 @@ impl<R: Runtime> TaskRun<R> {
             }
             Decision::Ask => {
                 self.enter(TaskState::AwaitingApproval)?;
-                let answer = request_approval(&self.app, &self.id, call, risk).await;
+                let answer = request_approval(
+                    &self.app,
+                    &self.id,
+                    call,
+                    ApprovalContext {
+                        risk,
+                        reason,
+                        grantable,
+                        grant_scope: grant_scope.clone(),
+                    },
+                )
+                .await;
                 // Cancelling releases the prompt; that is a cancel, not an answer.
                 self.check_cancelled()?;
                 // The audit log must never attribute a decision the user didn't make: a
@@ -688,8 +714,14 @@ impl<R: Runtime> TaskRun<R> {
                 self.enter(TaskState::Running)?;
                 match answer {
                     Some(ApprovalResponse::AllowOnce) => true,
+                    Some(ApprovalResponse::AllowWorkspace) if grantable => {
+                        grant_permission(&self.app, &grant_scope, &workspace_key);
+                        true
+                    }
+                    // The renderer offered no such button for this risk; a request for a
+                    // standing grant anyway is honoured as a one-time approval only.
                     Some(ApprovalResponse::AllowWorkspace) => {
-                        grant_permission(&self.app, &call.name, &workspace_key);
+                        self.audit_decision(call, "standing_grant_refused_for_risk");
                         true
                     }
                     Some(ApprovalResponse::Deny) | None => false,
@@ -758,15 +790,6 @@ impl<R: Runtime> TaskRun<R> {
             json!({ "id": call.id, "name": call.name, "decision": decision }),
         );
     }
-
-    fn record_usage(&self, input: Option<u32>, output: Option<u32>, status: UsageStatus) {
-        if let Some(state) = self.app.try_state::<AppState>() {
-            if let Ok(store) = state.store.lock() {
-                let _ =
-                    store.record_usage_event(&self.provider, &self.model, input, output, status);
-            }
-        }
-    }
 }
 
 fn tool_definitions<R: Runtime>(app: &AppHandle<R>) -> Vec<ToolDefinition> {
@@ -787,10 +810,16 @@ fn tool_definitions<R: Runtime>(app: &AppHandle<R>) -> Vec<ToolDefinition> {
 /// `MutexGuard` it produces are released at return, rather than living across an await.
 /// The call's risk, or why it can't be run at all: an unknown tool, or a required
 /// argument missing. Either way nobody is asked to approve it.
-fn tool_risk<R: Runtime>(
-    app: &AppHandle<R>,
-    call: &ToolCallRequest,
-) -> Result<anycode_security::RiskLevel, String> {
+/// What the gate needs to know about one call, all computed by the tool that owns it.
+struct GateFacts {
+    risk: anycode_security::RiskLevel,
+    /// Why this call is riskier than the tool usually is, shown in the prompt.
+    reason: Option<String>,
+    /// The key a standing grant for this call is stored under.
+    grant_scope: String,
+}
+
+fn tool_risk<R: Runtime>(app: &AppHandle<R>, call: &ToolCallRequest) -> Result<GateFacts, String> {
     let state = app.state::<AppState>();
     let tool = state
         .tools
@@ -804,7 +833,11 @@ fn tool_risk<R: Runtime>(
             missing.join(", ")
         ));
     }
-    Ok(tool.risk(&call.arguments))
+    Ok(GateFacts {
+        risk: tool.risk(&call.arguments),
+        reason: tool.risk_reason(&call.arguments),
+        grant_scope: tool.grant_scope(&call.arguments),
+    })
 }
 
 fn has_grant<R: Runtime>(app: &AppHandle<R>, capability: &str, workspace_key: &str) -> bool {
@@ -854,7 +887,7 @@ async fn request_approval<R: Runtime>(
     app: &AppHandle<R>,
     task_id: &str,
     call: &ToolCallRequest,
-    risk: anycode_security::RiskLevel,
+    context: ApprovalContext,
 ) -> Option<ApprovalResponse> {
     let (tx, rx) = oneshot::channel();
     insert_pending_approval(app, call.id.clone(), task_id.to_string(), tx);
@@ -865,7 +898,10 @@ async fn request_approval<R: Runtime>(
             id: call.id.clone(),
             name: call.name.clone(),
             arguments: call.arguments.clone(),
-            risk: risk_label(risk),
+            risk: risk_label(context.risk),
+            reason: context.reason,
+            grantable: context.grantable,
+            grant_scope: context.grant_scope,
         },
     );
 

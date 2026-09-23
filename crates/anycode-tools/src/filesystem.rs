@@ -1,5 +1,20 @@
 use crate::{Tool, ToolContext, ToolError};
-use anycode_security::{capability_risk, RiskLevel};
+use anycode_security::{capability_risk, path_risk, RiskLevel};
+
+/// A filesystem call is at least as risky as the path it names: reading `.env` is not the
+/// same act as reading `README.md`, whatever the tool (audit S1).
+fn risk_for_path(capability: &str, input: &Value) -> RiskLevel {
+    let base = capability_risk(capability);
+    match input["path"].as_str().and_then(path_risk) {
+        Some((risk, _)) => base.max(risk),
+        None => base,
+    }
+}
+
+fn reason_for_path(input: &Value) -> Option<String> {
+    let path = input["path"].as_str()?;
+    path_risk(path).map(|(_, reason)| format!("{path}: {reason}"))
+}
 use async_trait::async_trait;
 use serde_json::{json, Value};
 
@@ -11,8 +26,12 @@ impl Tool for FilesystemReadTool {
         "filesystem.read.workspace"
     }
 
-    fn risk(&self, _input: &Value) -> RiskLevel {
-        capability_risk(self.name())
+    fn risk(&self, input: &Value) -> RiskLevel {
+        risk_for_path(self.name(), input)
+    }
+
+    fn risk_reason(&self, input: &Value) -> Option<String> {
+        reason_for_path(input)
     }
 
     fn description(&self) -> &'static str {
@@ -46,8 +65,12 @@ impl Tool for FilesystemWriteTool {
         "filesystem.write.workspace"
     }
 
-    fn risk(&self, _input: &Value) -> RiskLevel {
-        capability_risk(self.name())
+    fn risk(&self, input: &Value) -> RiskLevel {
+        risk_for_path(self.name(), input)
+    }
+
+    fn risk_reason(&self, input: &Value) -> Option<String> {
+        reason_for_path(input)
     }
 
     fn description(&self) -> &'static str {
@@ -92,8 +115,12 @@ impl Tool for FilesystemEditTool {
         "filesystem.edit.workspace"
     }
 
-    fn risk(&self, _input: &Value) -> RiskLevel {
-        capability_risk(self.name())
+    fn risk(&self, input: &Value) -> RiskLevel {
+        risk_for_path(self.name(), input)
+    }
+
+    fn risk_reason(&self, input: &Value) -> Option<String> {
+        reason_for_path(input)
     }
 
     fn description(&self) -> &'static str {
@@ -166,6 +193,24 @@ mod tests {
                 path_env: None,
             },
         )
+    }
+
+    #[test]
+    fn secret_paths_raise_every_filesystem_tool() {
+        let env = json!({ "path": ".env.production" });
+        let key = json!({ "path": "deploy/id_ed25519" });
+        let plain = json!({ "path": "src/lib.rs" });
+        // Audit S1: reading .env used to be Low — auto-allowed, sent to the model.
+        assert_eq!(FilesystemReadTool.risk(&env), RiskLevel::High);
+        assert_eq!(FilesystemReadTool.risk(&key), RiskLevel::Critical);
+        assert_eq!(FilesystemReadTool.risk(&plain), RiskLevel::Low);
+        assert_eq!(FilesystemWriteTool.risk(&env), RiskLevel::High);
+        assert_eq!(FilesystemEditTool.risk(&plain), RiskLevel::Medium);
+        assert!(FilesystemReadTool
+            .risk_reason(&env)
+            .unwrap()
+            .contains("environment file"));
+        assert_eq!(FilesystemReadTool.risk_reason(&plain), None);
     }
 
     #[tokio::test]

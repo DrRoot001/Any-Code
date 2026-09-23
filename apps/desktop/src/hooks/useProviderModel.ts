@@ -20,7 +20,7 @@ export function useProviderModel() {
       .then((list) => {
         setProviders(list);
         setProvidersError(null);
-        setProvider((current) => current ?? list.find((p) => p.hasKey)?.id ?? null);
+        setProvider((current) => current ?? list.find((p) => p.ready)?.id ?? null);
       })
       .catch((error) => setProvidersError(String(error)));
   }, []);
@@ -43,8 +43,8 @@ export function useProviderModel() {
       .catch((error) => setModelsError(String(error)));
   }, [provider]);
 
-  /** Only providers that can actually be used right now. */
-  const connected = providers?.filter((p) => p.hasKey) ?? [];
+  /** Only providers that are configured. Whether one answers shows in its model list. */
+  const connected = providers?.filter((p) => p.ready) ?? [];
 
   return {
     providers,

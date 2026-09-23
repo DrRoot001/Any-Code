@@ -20,14 +20,34 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": {
+        "default-src": "'self'",
+        "script-src": "'self'",
+        "style-src": "'self' 'unsafe-inline'",
+        "img-src": "'self' data: blob:",
+        "font-src": "'self' data:",
+        "worker-src": "'self' blob:",
+        "connect-src": "'self' ipc: http://ipc.localhost",
+        "object-src": "'none'",
+        "base-uri": "'self'",
+        "form-action": "'none'",
+        "frame-ancestors": "'none'"
+      },
+      "devCsp": null
     }
   },
   "bundle": {
     "active": true,
-    "targets": ["app", "dmg", "msi", "nsis", "appimage", "deb"],
+    "targets": [
+      "app",
+      "dmg",
+      "msi",
+      "nsis",
+      "appimage",
+      "deb"
+    ],
     "publisher": "Heptagram AI",
-    "copyright": "Copyright © 2026 Heptagram AI",
+    "copyright": "Copyright \u00a9 2026 Heptagram AI",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

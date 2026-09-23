@@ -29,6 +29,31 @@ pub(crate) struct AppState {
     pending_approvals: Mutex<HashMap<String, PendingApproval>>,
     /// Cancellation flag per running agent task, keyed by task id.
     running_tasks: Mutex<HashMap<String, Arc<AtomicBool>>>,
+    /// Scopes audit events that belong to the app rather than to one agent task, such as
+    /// a provider being connected. One per launch.
+    session_id: uuid::Uuid,
+}
+
+impl AppState {
+    /// Appends an app-level event to the audit log (docs/ARCHITECTURE.md invariant #10).
+    /// A write failure is reported, never allowed to fail the action being audited.
+    fn audit(&self, kind: &str, payload: serde_json::Value) {
+        let event = anycode_core::Event::new(
+            kind,
+            anycode_core::EventScope {
+                session_id: self.session_id,
+                ..Default::default()
+            },
+            payload,
+        );
+        let written = match self.store.lock() {
+            Ok(store) => store.append_event(&event).map_err(|e| e.to_string()),
+            Err(e) => Err(e.to_string()),
+        };
+        if let Err(err) = written {
+            eprintln!("audit log write failed for {kind}: {err}");
+        }
+    }
 }
 
 const THEME_KEY: &str = "theme";
@@ -68,6 +93,7 @@ pub fn run() {
                 tools: ToolRegistry::standard(),
                 pending_approvals: Mutex::new(HashMap::new()),
                 running_tasks: Mutex::new(HashMap::new()),
+                session_id: uuid::Uuid::new_v4(),
             });
             // Sourcing the user's shell profile can take seconds; do it now, off the UI,
             // so an agent's first command doesn't wait for it.
@@ -105,6 +131,7 @@ pub fn run() {
             provider_commands::list_providers,
             provider_commands::set_provider_key,
             provider_commands::remove_provider_key,
+            provider_commands::set_provider_endpoint,
             provider_commands::list_models,
             provider_commands::send_chat,
             agent_commands::run_task,
