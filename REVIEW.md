@@ -8,7 +8,7 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 
 | Area | Last result | Evidence |
 |------|-------------|----------|
-| Rust workspace | Pass | 90 passed, 0 failed, 2 ignored (live) on 2026-09-23 |
+| Rust workspace | Pass | 104 passed, 0 failed, 3 ignored (live/keychain) on 2026-09-24 |
 | Desktop runtime crate | Pass | fmt + clippy clean; 1 ignored live test; now gated in CI (new job) |
 | Integrated terminal | Fixed, not hand-verified | 4 defects fixed on 2026-09-23; no interactive run observed — see entry |
 | Rust lint | Pass | Clippy with warnings denied, both cargo workspaces, 2026-09-23 |
@@ -19,9 +19,10 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | macOS bundle | Pass | `.app` and unsigned `.dmg` produced locally on 2026-08-23 |
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
 | Windows installer | **Never built** | The Desktop Release workflow has 0 runs; no Windows build has ever been produced or launched (audit 2026-09-24) |
-| GitHub CI | Pass | Run `35893787230`: all 7 jobs, including the new desktop-runtime job |
-| Security review | **3 open findings** | S1 secret paths read without a prompt, S2 over-broad standing grants, S3 no CSP — see docs/AUDIT.md |
-| Frontend tests | **None** | No component or end-to-end suite exists |
+| GitHub CI | Pass | Run `35934057203`: all 7 jobs |
+| Credential vault | Pass | Real macOS Keychain round trip, 2026-09-24. **Before that date it never persisted a key** (in-memory mock) |
+| Security review | Pass — S1–S3 fixed | Fixed and tested 2026-09-24; CSP checked in a browser, not yet in the native WebView |
+| Frontend tests | Pass | 15 Vitest tests (timeline, approval), in CI since 2026-09-24; no component or end-to-end suite yet |
 | Agent runtime (live model) | **Pass, 1 of 6 runs** | Local qwen2.5:3b implemented and verified a task once; the runtime judged all 6 runs correctly — see 2026-09-23 Phase 3 entry |
 
 ## Review protocol
@@ -39,6 +40,64 @@ A failed test remains visible. Fixing it requires a new passing entry with a lin
 the earlier failure.
 
 ## Verification history
+
+### 2026-09-24 — Phase 3 close-out (C1–C10)
+
+- **Scope:** the close-out list in docs/ROADMAP.md, which follows from the 2026-09-24 audit.
+  Source `2597c00` (code) and `80d6392` (release workflow permission).
+- **Pass — security:**
+  - **S1:** filesystem tools take the risk of the path they name. `.env*`, credential files
+    and `.git/config` are High; private keys are Critical. Shell commands naming those paths,
+    or printing the environment, are raised the same way.
+  - **S2:** `decide()` no longer lets a standing grant cover High. The old test asserting that
+    it did was rewritten. Shell grants are keyed on the exact command; the runtime refuses a
+    grant for anything but Medium, whatever the renderer sends. Tool-wide shell grants are
+    migrated away.
+  - **S3:** a strict CSP replaces `"csp": null`.
+  - Each has tests that fail without the fix.
+- **Pass — CSP in practice:** the production build, served in a browser under the identical
+  policy. No CSP violations; every Monaco worker loaded; a file opened and rendered 7 lines
+  with 21 syntax tokens; the `.env.production` prompt showed High, the reason, and no
+  "always allow" button. *Not* observed in the native WebView; this environment cannot see
+  the app window.
+- **Fail found, fixed — the credential vault never stored a key.** `keyring` 3 has no default
+  store and, with no platform feature enabled, silently uses an in-memory mock. Every API
+  key saved in Settings since Phase 2 was lost the moment it was written, so OpenAI and
+  Anthropic were never usable in the app. Found by the first real-keychain test (it returned
+  `None` straight after a successful write). Now Keychain, Credential Manager or Secret
+  Service; the round trip passes against the real macOS Keychain and leaves no entry.
+- **Fail found, fixed — `send_chat` subscribe race.** This is the third instance, after
+  `run_task` and `terminal_spawn`: an instant failure was emitted before the panel listened,
+  and the chat waited forever. The error listener also leaked.
+- **Pass — invariants:**
+  - **#9:** usage is recorded by one `Metered` wrapper around every adapter, including
+    cancelled requests, which were previously not recorded at all. 4 tests.
+  - **#10:** provider connect and disconnect are audited. A test confirms the key never
+    appears, whole or in part.
+- **Pass — Phase 2 carry-over (code):**
+  - Gemini: API-key mode, through Google's OpenAI-compatible endpoint.
+  - OpenRouter.
+  - A generic OpenAI-compatible endpoint: https anywhere, plain http only to localhost,
+    validated in Rust. Tested.
+  - Settings no longer says "Connected" for a local server it has never reached.
+- **Pass — tests:** 104 Rust (was 90), 3 ignored live; first frontend suite, 15 Vitest tests,
+  now in CI. CI run `35934057203` passed all 7 jobs, including Linux against the real Secret
+  Service and Windows against Credential Manager.
+- **Fail found, fixed — release workflow:** its first ever run (`35934070914`) built all
+  three platforms, then failed at "create a release" because the token was read-only.
+  `contents: write` was added; the rerun is `35935062802`.
+
+**Not run / open:**
+
+- **C6 and the live half of C7 are blocked:** the local model runtime and its models were
+  removed from this machine after the previous session. Both tests are written and ready:
+  - `agent_live_test` (either adapter, via `ANYCODE_LIVE_PROVIDER`);
+  - `the_same_chat_task_switches_providers_live`.
+  Running them needs Ollama plus a ~2 GB model, or API keys.
+- **Gemini and OpenRouter have never been called live.** Unverified without keys:
+  - Whether Gemini's compatible endpoint accepts `stream_options`.
+  - The format of the model IDs it returns.
+- **C4 Windows launch and C5 terminal need the owner.**
 
 ### 2026-09-24 — Full project audit
 

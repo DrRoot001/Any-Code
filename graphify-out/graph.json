@@ -10994,7 +10994,7 @@
       "node_kind": "heading",
       "norm_label": "assigned by the 2026-09-24 audit",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L209"
+      "source_location": "L222"
     },
     {
       "id": "docs_roadmap_current_phase_3_close_out",
@@ -11018,7 +11018,7 @@
       "node_kind": "heading",
       "norm_label": "distribution gate",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L218"
+      "source_location": "L231"
     },
     {
       "id": "docs_roadmap_phase_0_foundation",
@@ -11078,7 +11078,7 @@
       "node_kind": "heading",
       "norm_label": "phase 4 \u00b7 code intelligence (next)",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L172"
+      "source_location": "L185"
     },
     {
       "id": "docs_roadmap_roadmap",
@@ -11102,7 +11102,7 @@
       "node_kind": "heading",
       "norm_label": "v1 success criterion",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L243"
+      "source_location": "L256"
     },
     {
       "id": "crates_anycode_git_build",
@@ -41522,7 +41522,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L172",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -41533,7 +41533,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L209",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -41544,7 +41544,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L218",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -41555,7 +41555,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L243",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -46132,5 +46132,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2597c005c05f1415ea6134c7dd7661c6074b0cc1"
+  "built_at_commit": "80d6392d536c714698be7670b368ce70a52d692f"
 }

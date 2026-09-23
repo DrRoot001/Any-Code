@@ -1,7 +1,7 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~245,254 words
+- 138 files · ~245,409 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2597c005`
+- Built from commit: `80d6392d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -138,25 +138,25 @@
 1. `AppState` - 41 edges
 2. `useWorkbenchStore` - 20 edges
 3. `Store` - 18 edges
-4. `Metered` - 15 edges
+4. `compilerOptions` - 15 edges
 5. `StoreError` - 15 edges
-6. `compilerOptions` - 15 edges
+6. `Metered` - 15 edges
 7. `ToolContext` - 14 edges
 8. `OpenAiProvider` - 13 edges
-9. `request_approval()` - 12 edges
-10. `build_provider()` - 12 edges
+9. `ToolRegistry` - 12 edges
+10. `csp` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Store` --references--> `Connection`  [EXTRACTED]
   crates/anycode-store/src/lib.rs → apps/desktop/src-tauri/src/provider_commands.rs
+- `App()` --calls--> `applyTheme()`  [EXTRACTED]
+  apps/desktop/src/App.tsx → packages/design-tokens/src/index.ts
+- `AppState` --references--> `ToolRegistry`  [EXTRACTED]
+  apps/desktop/src-tauri/src/lib.rs → crates/anycode-tools/src/lib.rs
+- `git_status()` --references--> `StatusEntry`  [EXTRACTED]
+  apps/desktop/src-tauri/src/git_commands.rs → crates/anycode-git/src/lib.rs
 - `anycode-desktop` --depends_on--> `anycode-agent`  [EXTRACTED]
   apps/desktop/src-tauri/Cargo.toml → crates/anycode-agent/Cargo.toml
-- `anycode-desktop` --depends_on--> `anycode-core`  [EXTRACTED]
-  apps/desktop/src-tauri/Cargo.toml → crates/anycode-core/Cargo.toml
-- `anycode-desktop` --depends_on--> `anycode-fs`  [EXTRACTED]
-  apps/desktop/src-tauri/Cargo.toml → crates/anycode-fs/Cargo.toml
-- `anycode-desktop` --depends_on--> `anycode-git`  [EXTRACTED]
-  apps/desktop/src-tauri/Cargo.toml → crates/anycode-git/Cargo.toml
 
 ## Import Cycles
 - 2-file cycle: `apps/desktop/src-tauri/src/agent_commands.rs -> apps/desktop/src-tauri/src/lib.rs -> apps/desktop/src-tauri/src/agent_commands.rs`
@@ -521,7 +521,7 @@ Cohesion: 0.20
 Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 
 ## Knowledge Gaps
-- **515 isolated node(s):** `name`, `description`, `homepage`, `private`, `version` (+510 more)
+- **515 isolated node(s):** `Phase 0 · Foundation`, `Phase 1 · Workbench`, `Phase 2 · Provider layer`, `Phase 3 · Agent runtime`, `Current phase: 3 close-out` (+510 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **29 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -529,12 +529,12 @@ Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `AppState` connect `AppState` to `Store`, `anycode-tools/src/lib.rs`, `provider_commands.rs`, `agent_commands.rs`?**
-  _High betweenness centrality (0.123) - this node is a cross-community bridge._
+  _High betweenness centrality (0.100) - this node is a cross-community bridge._
 - **Why does `ToolRegistry` connect `anycode-tools/src/lib.rs` to `AppState`, `provider_commands.rs`?**
-  _High betweenness centrality (0.051) - this node is a cross-community bridge._
-- **Why does `Tool` connect `anycode-tools/src/lib.rs` to `anycode-security/src/lib.rs`, `ToolError`, `shell.rs`, `Value`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
-- **What connects `name`, `description`, `homepage` to the rest of the system?**
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+- **Why does `replan_prompt()` connect `verdict.rs` to `agent_commands.rs`?**
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
+- **What connects `Phase 0 · Foundation`, `Phase 1 · Workbench`, `Phase 2 · Provider layer` to the rest of the system?**
   _515 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._

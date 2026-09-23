@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1790203772.672255,
-    "seen": 1790203815.734216,
-    "ast_hash": "84c92b2b5f1b59b0197d31ab4afb1cf6",
+    "mtime": 1790206462.2405262,
+    "seen": 1790207056.915334,
+    "ast_hash": "c2aa05d0f35336e39d6c84314ec7eed6",
     "semantic_hash": ""
   },
   "docs/SECURITY.md": {
@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/desktop-release.yml": {
-    "mtime": 1790205255.6299727,
-    "seen": 1790206306.9865322,
-    "ast_hash": "d1901496e17b875ec1007e910f1a8ad3",
+    "mtime": 1790207047.7477577,
+    "seen": 1790207056.915296,
+    "ast_hash": "ef225bdf389503fd9d1ed371e5e9ceea",
     "semantic_hash": ""
   },
   "docs/RELEASING.md": {
