@@ -7,6 +7,10 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-git2 = "0.19"
+# Local repository access only (status, diff, branch). The default features add HTTPS and
+# SSH transports — libssh2 and OpenSSL — that nothing here uses, and OpenSSL is what broke
+# cross-compiling the universal macOS build. Network git operations, when they arrive, go
+# through the approval gate as shell commands.
+git2 = { version = "0.19", default-features = false }
 serde = { workspace = true }
 thiserror = { workspace = true }
