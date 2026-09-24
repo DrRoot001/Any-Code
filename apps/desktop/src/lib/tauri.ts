@@ -201,3 +201,54 @@ export const agentCommands = {
     invoke<void>("respond_to_approval", { id, response }),
   cancelTask: (taskId: string) => invoke<void>("cancel_task", { taskId }),
 };
+
+export type MemoryScope = "global" | "workspace";
+
+/** A memory is the user's own words (PRD §38); `source` is set when it was adopted from a file. */
+export interface Memory {
+  id: string;
+  scope: MemoryScope;
+  workspace: string | null;
+  content: string;
+  source: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** An instruction file found in the repository. Untrusted until the user adopts it. */
+export interface InstructionFile {
+  path: string;
+  bytes: number;
+  adopted: boolean;
+}
+
+/** A past task, from the audit log. `outcome` is null when it never finished. */
+export interface TaskSummary {
+  taskId: string;
+  sessionId: string;
+  instruction: string;
+  provider: string;
+  model: string;
+  workspace: string;
+  startedAt: string;
+  outcome: "completed" | "failed" | "cancelled" | null;
+}
+
+export const memoryCommands = {
+  listMemories: () => invoke<Memory[]>("list_memories"),
+  addMemory: (scope: MemoryScope, content: string) =>
+    invoke<Memory>("add_memory", { scope, content }),
+  updateMemory: (id: string, content: string) => invoke<void>("update_memory", { id, content }),
+  deleteMemory: (id: string) => invoke<void>("delete_memory", { id }),
+  /** `path` comes from the native save dialog. */
+  exportMemories: (path: string) => invoke<void>("export_memories", { path }),
+  repositoryInstructions: () => invoke<InstructionFile[]>("repository_instructions"),
+  adoptInstruction: (path: string) => invoke<Memory>("adopt_instruction", { path }),
+};
+
+export const historyCommands = {
+  listTasks: () => invoke<TaskSummary[]>("list_tasks"),
+  /** Raw audit events; turn them into a timeline with `eventsToEntries` (lib/history.ts). */
+  taskEvents: (taskId: string) =>
+    invoke<import("./history").AuditEvent[]>("task_events", { taskId }),
+};

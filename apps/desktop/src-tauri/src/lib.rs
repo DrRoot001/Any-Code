@@ -8,6 +8,7 @@ mod agent_commands;
 mod agent_live_test;
 mod fs_commands;
 mod git_commands;
+mod memory_commands;
 mod provider_commands;
 mod terminal_commands;
 mod workspace;
@@ -144,6 +145,15 @@ pub fn run() {
             agent_commands::run_task,
             agent_commands::respond_to_approval,
             agent_commands::cancel_task,
+            memory_commands::list_memories,
+            memory_commands::add_memory,
+            memory_commands::update_memory,
+            memory_commands::delete_memory,
+            memory_commands::export_memories,
+            memory_commands::repository_instructions,
+            memory_commands::adopt_instruction,
+            memory_commands::list_tasks,
+            memory_commands::task_events,
         ])
         .run(app_context())
         .expect("error while running Any Code");
