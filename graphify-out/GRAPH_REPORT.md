@@ -1,16 +1,16 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~246,815 words
+- 138 files · ~248,187 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1515 nodes · 2513 edges · 127 communities (94 shown, 33 thin omitted)
+- 1534 nodes · 2534 edges · 148 communities (97 shown, 51 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `820fb2f6`
+- Built from commit: `9c96ceae`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -81,7 +81,7 @@
 - Security model
 - Verification history
 - AgentPanel.tsx
-- Any Code — agent operating instructions
+- Agent Routing Policy
 - Staging operations and monitoring
 - Any Code brand
 - Repository knowledge graph
@@ -89,9 +89,9 @@
 - AppState
 - WorkspaceRoot
 - shell.rs
-- terminal_commands.rs
+- PtySession
 - default.json
-- Store
+- anycode-store/src/lib.rs
 - Project audit — 2026-09-24
 - useWorkbenchStore
 - .prettierrc.json
@@ -99,7 +99,7 @@
 - PROJECT-RULES.md
 - devDependencies
 - SettingsPanel.tsx
-- ProviderManifest
+- Metered
 - tauri.ts
 - .push
 - types.rs
@@ -115,7 +115,7 @@
 - Value
 - event.rs
 - anycode-security/src/lib.rs
-- Message
+- terminal_commands.rs
 - Send
 - 3. VS Code extension compatibility and the package registry
 - ApprovalDialog.tsx
@@ -124,11 +124,11 @@
 - react-dom
 - @xterm/xterm
 - ToolError
-- ModelDefinition
-- CommandRecord
-- ModelDefinition
-- Client
-- ModelDefinition
+- Message
+- RiskLevel
+- ProviderError
+- WorkspaceRoot
+- Uuid
 - AsRef
 - TempDir
 - Sync
@@ -137,36 +137,57 @@
 - Result
 - State
 - String
+- Message
+- ProviderError
+- Client
+- Context
+- AsRef
+- TempDir
+- Item
+- ModelRequest
+- ProviderError
+- ProviderManifest
+- StreamEvent
+- Default
+- Message
+- ModelRequest
+- ProviderError
+- ProviderManifest
+- StreamEvent
+- Role
+- ToolCallRequest
+- ToolDefinition
+- Verdict
 
 ## God Nodes (most connected - your core abstractions)
 1. `AppState` - 36 edges
 2. `useWorkbenchStore` - 20 edges
-3. `Store` - 18 edges
-4. `compilerOptions` - 15 edges
-5. `StoreError` - 15 edges
+3. `ProviderError` - 17 edges
+4. `ModelRequest` - 16 edges
+5. `WorkspaceRoot` - 15 edges
 6. `Metered` - 15 edges
-7. `ToolContext` - 14 edges
-8. `OpenAiProvider` - 13 edges
-9. `ToolRegistry` - 12 edges
-10. `csp` - 12 edges
+7. `compilerOptions` - 15 edges
+8. `Store` - 15 edges
+9. `StoreError` - 15 edges
+10. `Message` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Store` --references--> `Connection`  [EXTRACTED]
   crates/anycode-store/src/lib.rs → apps/desktop/src-tauri/src/provider_commands.rs
-- `App()` --calls--> `applyTheme()`  [EXTRACTED]
-  apps/desktop/src/App.tsx → packages/design-tokens/src/index.ts
-- `AppState` --references--> `ToolRegistry`  [EXTRACTED]
-  apps/desktop/src-tauri/src/lib.rs → crates/anycode-tools/src/lib.rs
-- `git_status()` --references--> `StatusEntry`  [EXTRACTED]
-  apps/desktop/src-tauri/src/git_commands.rs → crates/anycode-git/src/lib.rs
-- `anycode-desktop` --depends_on--> `anycode-agent`  [EXTRACTED]
-  apps/desktop/src-tauri/Cargo.toml → crates/anycode-agent/Cargo.toml
+- `TaskDoneEvent` --references--> `Verdict`  [EXTRACTED]
+  apps/desktop/src-tauri/src/agent_commands.rs → crates/anycode-agent/src/verdict.rs
+- `tool_definitions()` --references--> `ToolDefinition`  [EXTRACTED]
+  apps/desktop/src-tauri/src/agent_commands.rs → crates/anycode-models/src/types.rs
+- `execute_tool()` --references--> `WorkspaceRoot`  [EXTRACTED]
+  apps/desktop/src-tauri/src/agent_commands.rs → crates/anycode-fs/src/lib.rs
+- `provider_error_message()` --references--> `ProviderError`  [EXTRACTED]
+  apps/desktop/src-tauri/src/provider_commands.rs → crates/anycode-models/src/types.rs
 
 ## Import Cycles
-- 2-file cycle: `apps/desktop/src-tauri/src/agent_commands.rs -> apps/desktop/src-tauri/src/lib.rs -> apps/desktop/src-tauri/src/agent_commands.rs`
 - 2-file cycle: `crates/anycode-tools/src/filesystem.rs -> crates/anycode-tools/src/lib.rs -> crates/anycode-tools/src/filesystem.rs`
+- 2-file cycle: `apps/desktop/src-tauri/src/agent_commands.rs -> apps/desktop/src-tauri/src/lib.rs -> apps/desktop/src-tauri/src/agent_commands.rs`
 
-## Communities (127 total, 33 thin omitted)
+## Communities (148 total, 51 thin omitted)
 
 ### Community 0 - "PRD.md"
 Cohesion: 0.02
@@ -189,12 +210,12 @@ Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
 ### Community 5 - "provider_commands.rs"
-Cohesion: 0.17
-Nodes (30): build_adapter(), build_provider(), ChatDeltaEvent, ChatDoneEvent, ChatErrorEvent, ChatToolCallEvent, Connection, endpoint_setting() (+22 more)
+Cohesion: 0.18
+Nodes (29): build_adapter(), build_provider(), ChatDeltaEvent, ChatDoneEvent, ChatErrorEvent, ChatToolCallEvent, Connection, endpoint_setting() (+21 more)
 
 ### Community 6 - "anthropic.rs"
-Cohesion: 0.13
-Nodes (18): AnthropicProvider, build_messages_request(), parse_event(), parses_content_block_delta(), parses_output_usage_from_message_delta(), Client, ModelDefinition, ModelStream (+10 more)
+Cohesion: 0.10
+Nodes (18): AnthropicProvider, build_messages_request(), parse_event(), parses_content_block_delta(), parses_output_usage_from_message_delta(), Client, ModelDefinition, ModelProvider (+10 more)
 
 ### Community 7 - "98. Implementation Phases"
 Cohesion: 0.17
@@ -325,8 +346,8 @@ Cohesion: 0.12
 Nodes (17): @anycode/design-tokens, dependencies, @anycode/design-tokens, monaco-editor, react, @tanstack/react-query, @tauri-apps/api, @tauri-apps/plugin-dialog (+9 more)
 
 ### Community 53 - "verdict.rs"
-Cohesion: 0.20
-Nodes (17): a_check_that_failed_then_passed_has_passed(), a_check_that_passed_then_failed_has_failed(), check(), CommandRecord, exploration_never_counts_either_way(), explore(), failing_checks_are_pushed_back_and_an_empty_delta_is_named(), Observed (+9 more)
+Cohesion: 0.11
+Nodes (20): parse_plan(), String, Vec, a_check_that_failed_then_passed_has_passed(), a_check_that_passed_then_failed_has_failed(), check(), CommandRecord, exploration_never_counts_either_way() (+12 more)
 
 ### Community 54 - "compilerOptions"
 Cohesion: 0.10
@@ -376,9 +397,9 @@ Nodes (15): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:4
 Cohesion: 0.21
 Nodes (15): AgentPanel(), STATE_LABEL, agentCommands, TaskDone, TaskEvidence, TaskToolCall, TaskToolResult, TaskUsage (+7 more)
 
-### Community 69 - "Any Code — agent operating instructions"
+### Community 69 - "Agent Routing Policy"
 Cohesion: 0.33
-Nodes (6): Any Code — agent operating instructions, Before writing code, Commands, Definition of done, graphify, Non-negotiable
+Nodes (6): Agent Routing Policy, Before writing code, Commands, Definition of done, graphify, Non-negotiable
 
 ### Community 70 - "Staging operations and monitoring"
 Cohesion: 0.33
@@ -397,28 +418,28 @@ Cohesion: 0.20
 Nodes (10): Assigned by the 2026-09-24 audit, Current phase: 3 close-out, Distribution gate, Phase 0 · Foundation, Phase 1 · Workbench, Phase 2 · Provider layer, Phase 3 · Agent runtime, Phase 4 · Code intelligence (next) (+2 more)
 
 ### Community 75 - "AppState"
-Cohesion: 0.07
-Nodes (57): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+49 more)
+Cohesion: 0.06
+Nodes (64): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+56 more)
 
 ### Community 76 - "WorkspaceRoot"
 Cohesion: 0.16
-Nodes (21): Entry, FsError, list_dir(), read_file(), rejects_absolute_path(), rejects_parent_dir_traversal(), round_trips_a_file_inside_the_root(), AsRef (+13 more)
+Nodes (21): AsRef, accepts_an_absolute_path_inside_the_root(), Entry, FsError, list_dir(), read_file(), rejects_an_absolute_path_outside_the_root(), rejects_parent_dir_traversal() (+13 more)
 
 ### Community 77 - "shell.rs"
 Cohesion: 0.15
 Nodes (11): a_failing_command_is_a_result_not_an_error(), a_grant_covers_only_the_command_it_was_given_for(), captures_stdout_and_exit_code(), context(), Option, Result, RiskLevel, String (+3 more)
 
-### Community 78 - "terminal_commands.rs"
-Cohesion: 0.10
-Nodes (33): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+25 more)
+### Community 78 - "PtySession"
+Cohesion: 0.15
+Nodes (20): Child, default_shell(), login_shell_path(), login_shell_path_is_the_shells_own(), PtySession, resolve_login_shell_path(), Box, Error (+12 more)
 
 ### Community 79 - "default.json"
 Cohesion: 0.22
 Nodes (8): description, identifier, permissions, $schema, windows, core:default, dialog:default, main
 
-### Community 81 - "Store"
+### Community 81 - "anycode-store/src/lib.rs"
 Cohesion: 0.15
-Nodes (20): AsRef, a_tasks_events_come_back_in_order_and_only_for_that_task(), granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), Error, Option, Path, Result (+12 more)
+Nodes (20): a_tasks_events_come_back_in_order_and_only_for_that_task(), granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), Error, Option, Path, Result, Self (+12 more)
 
 ### Community 82 - "Project audit — 2026-09-24"
 Cohesion: 0.15
@@ -429,8 +450,12 @@ Cohesion: 0.35
 Nodes (8): DiffPane(), EditorArea(), MonacoPane(), EXTENSION_LANGUAGE, languageForPath(), loadMonaco(), Monaco, useWorkbenchStore
 
 ### Community 85 - "agent_commands.rs"
-Cohesion: 0.08
-Nodes (65): ApprovalContext, ApprovalResponse, cancel_task(), changed_since(), dirty_paths(), execute_tool(), for_audit(), GateFacts (+57 more)
+Cohesion: 0.09
+Nodes (60): ApprovalContext, ApprovalResponse, cancel_task(), changed_since(), dirty_paths(), execute_tool(), for_audit(), GateFacts (+52 more)
+
+### Community 86 - "PROJECT-RULES.md"
+Cohesion: 0.27
+Nodes (3): graphify, QA record, Any Code — agent operating instructions
 
 ### Community 87 - "devDependencies"
 Cohesion: 0.13
@@ -439,6 +464,10 @@ Nodes (15): devDependencies, @tauri-apps/cli, @types/react, @types/react-dom, ty
 ### Community 88 - "SettingsPanel.tsx"
 Cohesion: 0.20
 Nodes (11): Command, CommandPalette(), SettingsPanel(), THEMES, useDialogFocus(), applyTheme(), fonts, motion (+3 more)
+
+### Community 89 - "Metered"
+Cohesion: 0.16
+Nodes (16): Metered, Report, Arc, Box, Context, Drop, Into, ModelProvider (+8 more)
 
 ### Community 90 - "tauri.ts"
 Cohesion: 0.17
@@ -449,8 +478,8 @@ Cohesion: 0.29
 Nodes (10): handles_multiple_events_in_one_chunk(), parses_a_single_data_only_event(), parses_named_events(), reassembles_an_event_split_across_two_chunks(), Option, Self, String, Vec (+2 more)
 
 ### Community 92 - "types.rs"
-Cohesion: 0.26
-Nodes (15): ModelDefinition, ModelRequest, ProviderError, RequestMetadata, Error, Option, String, Value (+7 more)
+Cohesion: 0.21
+Nodes (18): role_str(), role_str(), Message, ModelDefinition, ModelRequest, RequestMetadata, Role, Into (+10 more)
 
 ### Community 93 - "workbenchStore.ts"
 Cohesion: 0.17
@@ -461,20 +490,20 @@ Cohesion: 0.30
 Nodes (14): a_missing_key_reads_as_none_not_an_error(), delete_api_key(), entry(), get_api_key(), removing_a_key_that_was_never_set_is_not_an_error(), round_trips_through_the_real_keychain(), Error, Option (+6 more)
 
 ### Community 95 - "ollama.rs"
-Cohesion: 0.13
-Nodes (18): build_chat_request(), OllamaProvider, parse_line(), parses_a_content_line(), parses_a_whole_tool_call_and_decodes_its_name(), parses_the_final_usage_line(), request_carries_tools_and_links_results_to_their_call_by_name(), role_str() (+10 more)
+Cohesion: 0.12
+Nodes (19): build_chat_request(), caps_output_and_widens_the_context_window(), OllamaProvider, parse_line(), parses_a_content_line(), parses_a_whole_tool_call_and_decodes_its_name(), parses_the_final_usage_line(), request_carries_tools_and_links_results_to_their_call_by_name() (+11 more)
 
 ### Community 96 - "metered.rs"
-Cohesion: 0.09
-Nodes (35): Context, a_clean_end_without_usage_is_success_with_unknown_counts(), a_completed_request_is_reported_once_with_real_counts(), an_abandoned_stream_is_reported_as_cancelled(), done(), failures_are_reported_whether_at_open_or_mid_stream(), Metered, MeteredStream (+27 more)
+Cohesion: 0.17
+Nodes (16): a_clean_end_without_usage_is_success_with_unknown_counts(), a_completed_request_is_reported_once_with_real_counts(), an_abandoned_stream_is_reported_as_cancelled(), done(), failures_are_reported_whether_at_open_or_mid_stream(), MeteredStream, request(), ModelStream (+8 more)
 
 ### Community 97 - "openai.rs"
-Cohesion: 0.08
-Nodes (35): Client, a_compatible_provider_keeps_its_own_identity(), accumulates_argument_fragments_across_chunks(), build_chat_request(), builds_a_streaming_chat_request(), extract_tool_call_fragments(), extracts_tool_call_fragments_by_index(), finish_reason() (+27 more)
+Cohesion: 0.10
+Nodes (30): a_compatible_provider_keeps_its_own_identity(), accumulates_argument_fragments_across_chunks(), build_chat_request(), builds_a_streaming_chat_request(), extract_tool_call_fragments(), extracts_tool_call_fragments_by_index(), finish_reason(), history_tool_calls_use_the_wire_name() (+22 more)
 
 ### Community 98 - "state.rs"
-Cohesion: 0.10
-Nodes (11): parse_plan(), String, Vec, InvalidTransition, Default, Result, Self, run() (+3 more)
+Cohesion: 0.17
+Nodes (8): InvalidTransition, Default, Result, Self, run(), TaskMachine, TaskState, TaskState
 
 ### Community 99 - "live_openai.rs"
 Cohesion: 0.52
@@ -500,9 +529,9 @@ Nodes (22): Event, EventScope, omits_empty_scope_and_payload(), roundtrips_throu
 Cohesion: 0.09
 Nodes (19): capability_risk(), classify_shell_command(), decide(), Decision, path_risk(), RiskLevel, Option, secret_bearing_paths_are_not_ordinary_files() (+11 more)
 
-### Community 105 - "Message"
-Cohesion: 0.61
-Nodes (4): Message, Role, Into, Self
+### Community 105 - "terminal_commands.rs"
+Cohesion: 0.33
+Nodes (13): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+5 more)
 
 ### Community 107 - "3. VS Code extension compatibility and the package registry"
 Cohesion: 0.33
@@ -524,22 +553,26 @@ Nodes (7): scripts, build, dev, lint, preview, tauri, test
 Cohesion: 0.20
 Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 
+### Community 116 - "ProviderError"
+Cohesion: 0.48
+Nodes (5): ModelDefinition, Vec, Scripted, ProviderError, Error
+
 ## Knowledge Gaps
-- **516 isolated node(s):** `PtyExitEvent`, `IconName`, `ChatRole`, `CommandRecord`, `FileDiff` (+511 more)
+- **517 isolated node(s):** `Any Code — agent operating instructions`, `Before writing code`, `Non-negotiable`, `Definition of done`, `Commands` (+512 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **33 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **51 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `AppState` connect `AppState` to `Store`, `anycode-tools/src/lib.rs`, `provider_commands.rs`, `agent_commands.rs`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `ToolRegistry` connect `anycode-tools/src/lib.rs` to `AppState`, `provider_commands.rs`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `Tool` connect `anycode-tools/src/lib.rs` to `anycode-security/src/lib.rs`, `ToolError`, `shell.rs`, `Value`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
-- **What connects `PtyExitEvent`, `IconName`, `ChatRole` to the rest of the system?**
-  _516 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
+- **Why does `AppState` connect `AppState` to `provider_commands.rs`, `agent_commands.rs`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
+- **Why does `git_status()` connect `AppState` to `anycode-git/src/lib.rs`?**
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **What connects `Any Code — agent operating instructions`, `Before writing code`, `Non-negotiable` to the rest of the system?**
+  _517 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**

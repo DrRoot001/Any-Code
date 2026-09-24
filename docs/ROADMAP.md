@@ -116,9 +116,8 @@ implement and verify a simple repository task.*
 - [x] Agent commands run with the user's login-shell `PATH`, so an app opened from
       Finder still finds `npm`, `cargo`, `python3`
 - [x] Exit condition demonstrated end to end — a local model implemented and verified a
-      task through the production loop (1 of 6 live runs; the runtime judged all 6
-      correctly). Not yet re-confirmed on the final code, and reliability with a 3B model
-      is low — see REVIEW.md
+      task through the production loop, confirmed again on the final close-out code
+      (`9c96cea`). Reliability with a 3B model is low — see REVIEW.md
 
 Deferred past Phase 3 (not needed for the exit condition): a task DAG and parallel
 subagents (Phase 5), tool-calling for Anthropic (it still honestly declares no tool
@@ -132,7 +131,7 @@ from anything the model says. A task where no check ran is reported as *unverifi
 never as success. The model decides which commands are checks; it cannot make a failing
 check pass, and `anycode_agent::verdict` alone decides the outcome.
 
-## Current phase: 3 close-out
+## Phase 3 close-out — done except C4 (needs a Windows machine)
 
 Work that belongs to Phases 0–3 and is not finished. It comes before Phase 4 because Phase 4
 builds on all of it — and S1/S2 are security defects in code users can run today. Detail and
@@ -166,7 +165,11 @@ evidence for every item: [AUDIT.md](AUDIT.md).
       frontend in a browser shows the first output even when it is emitted before
       `terminal_spawn` returns, and keeps the same shell across a Chat round-trip. The
       owner's own look at the native window is still welcome.*
-- [ ] **C6 · Phase 3 on the final code** — one passing live run of `agent_live_test`.
+- [x] **C6 · Phase 3 on the final code** — one passing live run of `agent_live_test`.
+      *Passed on `9c96cea` (attempt 3 of 3): plan → read → failing test run → runtime
+      push-back → fixed `calc.py` → tests exit 0 → `verifying` → `completed`; the original
+      tests passed independently; 28 audit events. Reliability with a 3B local model is low
+      (see REVIEW.md) — the runtime judged every run correctly.*
 - [x] **C7 · Phase 2** — configurable base URL (OpenRouter, LM Studio), Gemini adapter, then
       the same chat task switched between two live providers (**owner**: keys).
       *Built: Gemini (API key), OpenRouter, OpenAI-compatible endpoint. **Exit condition
@@ -195,7 +198,7 @@ evidence for every item: [AUDIT.md](AUDIT.md).
 - [x] **C10 · Tests** — `anycode-secrets` (currently 0); a first frontend test for the Agent
       Dock's event handling, runnable in CI.
 
-## Phase 4 · Code intelligence (next)
+## Current phase: 4 · Code intelligence
 
 Exit condition: **agents retrieve targeted repository context instead of dumping files.**
 Specified by PRD §35–40 and [ADR 0003](adr/0003-extension-compatibility-and-registry.md).

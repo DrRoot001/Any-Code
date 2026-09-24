@@ -8,9 +8,9 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 
 | Area | Last result | Evidence |
 |------|-------------|----------|
-| Rust workspace | Pass | 104 passed, 0 failed, 3 ignored (live/keychain) on 2026-09-24 |
+| Rust workspace | Pass | 109 passed, 0 failed, 3 ignored (live/keychain) on 2026-09-24 |
 | Desktop runtime crate | Pass | fmt + clippy clean; 1 ignored live test; now gated in CI (new job) |
-| Integrated terminal | Fixed, not hand-verified | 4 defects fixed on 2026-09-23; no interactive run observed — see entry |
+| Integrated terminal | Pass | Real PTY path tested end to end headless, and the panel checked in the browser, 2026-09-24; native window not seen |
 | Rust lint | Pass | Clippy with warnings denied, both cargo workspaces, 2026-09-23 |
 | TypeScript | Pass | `tsc -b --noEmit` on 2026-09-23 |
 | Web production build | Pass with warning | `pnpm build` on 2026-09-23; large Monaco chunks remain |
@@ -23,7 +23,8 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | Credential vault | Pass | Real macOS Keychain round trip, 2026-09-24. **Before that date it never persisted a key** (in-memory mock) |
 | Security review | Pass — S1–S3 fixed | Fixed and tested 2026-09-24; CSP checked in a browser, not yet in the native WebView |
 | Frontend tests | Pass | 15 Vitest tests (timeline, approval), in CI since 2026-09-24; no component or end-to-end suite yet |
-| Agent runtime (live model) | **Pass, 1 of 6 runs** | Local qwen2.5:3b implemented and verified a task once; the runtime judged all 6 runs correctly — see 2026-09-23 Phase 3 entry |
+| Agent runtime (live model) | Pass on final code, low reliability | Passed on `9c96cea`; 2 passes in 13 live runs with a 3B local model; verdict correct in every run |
+| Provider switch (Phase 2 exit) | Pass | Same chat task through two adapters live, 2026-09-24 |
 
 ## Review protocol
 
@@ -40,6 +41,64 @@ A failed test remains visible. Fixing it requires a new passing entry with a lin
 the earlier failure.
 
 ## Verification history
+
+### 2026-09-24 — Close-out, continued: C3, C5, C6, C7 verified live
+
+- **Scope:** the close-out items still open after the first pass. C4 (Windows launch) is
+  parked: no Windows machine is available. Source `9c96cea`.
+- **Environment:** Ollama 0.34.3 reinstalled locally, with `qwen2.5:3b`.
+- **Pass — C3:** a test proves the context compiled into the app carries the strict CSP. It
+  fails when `"csp": null` is put back; I checked by doing exactly that. Tauri's page server
+  (`protocol/tauri.rs`) sets the header from that context. WebKit enforcing it inside the
+  native window was not observed.
+- **Pass — C5:** a headless test drives the real PTY path.
+  - The first output reaches a listener registered before the spawn.
+  - Typed input runs with `TERM=xterm-256color`.
+  - Kill emits exit and frees the session.
+  - In the browser, the production frontend showed the first output even when it was
+    emitted inside `terminal_spawn`. It kept the same shell across a Chat round-trip:
+    spawned once, killed zero times.
+- **Pass — C7 exit condition:** `the_same_chat_task_switches_providers_live`.
+  - The same chat task went through the Ollama adapter and the OpenAI adapter (via Ollama's
+    `/v1`), changing only the provider id.
+  - Both replied "ready"; both were metered (36 in / 2 out).
+  - This is the first time the OpenAI adapter has run against a real server.
+  - Two adapters on one server, not two vendors: Gemini and OpenRouter need keys.
+- **Found live, fixed:**
+  - **No per-turn output cap:** one degenerate turn generated 3,600+ tokens for half an hour.
+    Now `max_output_tokens`, mapped per adapter. The agent caps plans at 1,024 tokens and
+    turns at 4,096.
+  - **Ollama's 4,096-token context** silently dropped the system prompt (`truncated = 1`).
+    The adapter now asks for 8,192.
+  - **An in-root absolute path was refused** as an escape. It now resolves; the escape
+    cases stay refused.
+  - **An unflagged failing `python3 -m unittest` turned "failed" into "unverified".** Known
+    test, build and lint runners now always count as checks.
+  - **A rejected call produced a result with no visible call.** It is now shown as
+    `rejected`.
+- **Observed live through the OpenAI adapter:** three parallel tool calls in one streamed
+  turn, reassembled correctly.
+- **Pass — C6:** `agent_live_test` passed on `9c96cea`, in attempt 3 of 3. The model's
+  unflagged test run failed; the new known-check rule made the runtime push back rather
+  than accept "unverified". The model then fixed `calc.py`, the tests exited 0, the
+  verdict was `passed` and the state `completed`. The original tests passed independently,
+  and the audit log holds 28 events.
+
+**Every live agent run today** (`qwen2.5:3b` unless noted):
+
+| Code | Runs | Passed | Failure modes |
+|------|------|--------|---------------|
+| `2597c00` | 3 | 0 | overwrote `calc.py` and deleted `add`; test file content written into `calc.py`; inspected and stopped |
+| `2597c00`, OpenAI adapter | 1 | 0 | absolute path refused (since fixed); malformed edit |
+| `9c96cea` | 3 | **1** | inspected and stopped (×2) |
+
+The runtime's verdict matched independent reality in every run, and none was reported as
+passing when it wasn't. Reliability belongs to the model: a stronger one is needed before
+anyone should expect the agent to succeed routinely.
+
+- **Pass — gates:** 109 Rust tests at the root (3 ignored); the desktop crate 3 passed (2
+  ignored, live); 15 frontend tests; clippy and fmt clean in both cargo workspaces.
+- **Not run:** C4 (no Windows machine). Gemini and OpenRouter live (no keys).
 
 ### 2026-09-24 — Phase 3 close-out (C1–C10)
 
