@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1790218300.38335,
-    "seen": 1790219794.3672829,
-    "ast_hash": "51fbf492b72d0d3adb07261a75c5d04b",
+    "mtime": 1790222410.1958826,
+    "seen": 1790222425.282633,
+    "ast_hash": "a63252dfb7d24272e739ecb4528b90df",
     "semantic_hash": ""
   },
   "PRD.md": {
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "REVIEW.md": {
-    "mtime": 1790221534.704703,
-    "seen": 1790221543.810784,
-    "ast_hash": "83f350cbe8ea40f69948d8f51db1fb41",
+    "mtime": 1790221941.5594337,
+    "seen": 1790221952.728148,
+    "ast_hash": "42446f791be23f46ffd83b5fc46bfb91",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/capabilities/default.json": {
@@ -1161,6 +1161,66 @@
     "mtime": 1790219118.9111073,
     "seen": 1790219794.367049,
     "ast_hash": "68daa446ccd0f8d668c29923689fea8f",
+    "semantic_hash": ""
+  },
+  ".claude/agents/code-intelligence-engineer.md": {
+    "mtime": 1790222391.1974084,
+    "seen": 1790222425.282488,
+    "ast_hash": "a1628e39d26a259e4504d4c57a4cb1c3",
+    "semantic_hash": ""
+  },
+  ".claude/agents/code-reviewer.md": {
+    "mtime": 1790222391.2001386,
+    "seen": 1790222425.282494,
+    "ast_hash": "340476b277f2128e33e4e8d71578010d",
+    "semantic_hash": ""
+  },
+  ".claude/agents/compatibility-engineer.md": {
+    "mtime": 1790222391.203486,
+    "seen": 1790222425.2824981,
+    "ast_hash": "20e2cf14e658b735e67ca08d71a4eeab",
+    "semantic_hash": ""
+  },
+  ".claude/agents/debugger.md": {
+    "mtime": 1790222391.205815,
+    "seen": 1790222425.2825012,
+    "ast_hash": "cb2212658f5f4ac4fe0f33c1a12566bd",
+    "semantic_hash": ""
+  },
+  ".claude/agents/performance-engineer.md": {
+    "mtime": 1790222391.2086706,
+    "seen": 1790222425.282505,
+    "ast_hash": "2c95e45a42167bc66d10c4b3c9e37e46",
+    "semantic_hash": ""
+  },
+  ".claude/agents/schema-designer.md": {
+    "mtime": 1790222391.2123,
+    "seen": 1790222425.2825081,
+    "ast_hash": "59285bedcf7af39f92cd12055c384a16",
+    "semantic_hash": ""
+  },
+  ".claude/agents/security-reviewer.md": {
+    "mtime": 1790222391.2139838,
+    "seen": 1790222425.282512,
+    "ast_hash": "7034358eb1cbe337431de752cc7e5654",
+    "semantic_hash": ""
+  },
+  ".claude/agents/test-writer.md": {
+    "mtime": 1790222391.2168298,
+    "seen": 1790222425.282516,
+    "ast_hash": "d461b98e5e81b59fde5184f6555c34df",
+    "semantic_hash": ""
+  },
+  ".claude/agents/ui-engineer.md": {
+    "mtime": 1790222391.2185867,
+    "seen": 1790222425.282519,
+    "ast_hash": "b94488d505c9f6acce52e5ca8806c997",
+    "semantic_hash": ""
+  },
+  ".claude/agents/ux-reviewer.md": {
+    "mtime": 1790222391.2207472,
+    "seen": 1790222425.282523,
+    "ast_hash": "c63779ebd1055517b2c050391f2c1f0a",
     "semantic_hash": ""
   }
 }

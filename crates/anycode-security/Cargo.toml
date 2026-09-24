@@ -8,3 +8,7 @@ repository.workspace = true
 
 [dependencies]
 serde = { workspace = true }
+thiserror = { workspace = true }
+# .anycode/permissions.yaml (PRD §39): its format, and glob matching for protected paths.
+serde_yaml = "0.9"
+globset = "0.4"

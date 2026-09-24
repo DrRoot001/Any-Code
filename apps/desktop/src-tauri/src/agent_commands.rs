@@ -27,7 +27,7 @@ use anycode_models::{
     Message, ModelProvider, ModelRequest, RequestMetadata, Role, StreamEvent, ToolCallRequest,
     ToolDefinition,
 };
-use anycode_security::{decide, Decision, StandingGrant};
+use anycode_security::{decide, Decision, PathAccess, StandingGrant, WorkspacePolicy, POLICY_FILE};
 use anycode_tools::ToolContext;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
@@ -330,6 +330,7 @@ pub fn run_task<R: Runtime>(
         model,
         session_id,
         usage: TaskUsage::default(),
+        policy: WorkspacePolicy::default(),
     };
     tauri::async_runtime::spawn(run.drive(adapter, workspace_path, fs_root, instruction));
 
@@ -348,6 +349,8 @@ struct TaskRun<R: Runtime> {
     model: String,
     session_id: String,
     usage: TaskUsage,
+    /// The workspace's own restrictions, loaded when the task starts (PRD §39).
+    policy: WorkspacePolicy,
 }
 
 impl<R: Runtime> TaskRun<R> {
@@ -392,6 +395,7 @@ impl<R: Runtime> TaskRun<R> {
                 "workspace": workspace_path,
             }),
         );
+        self.policy = load_workspace_policy(workspace_path)?;
         let tool_defs = tool_definitions(&self.app);
         let dirty_before = dirty_paths(workspace_path);
 
@@ -446,6 +450,12 @@ impl<R: Runtime> TaskRun<R> {
                     "delta",
                 )
                 .await?;
+            // What the model said this turn, so a past task's timeline can be rebuilt from
+            // the audit log after a restart (ADR 0004 "Session resume"). Bounded like every
+            // other audited value.
+            if !turn.text.trim().is_empty() {
+                self.audit("task.turn", json!({ "text": for_audit(&json!(turn.text)) }));
+            }
 
             if turn.tool_calls.is_empty() {
                 // ── Verify ──────────────────────────────────────────────────────
@@ -661,6 +671,8 @@ impl<R: Runtime> TaskRun<R> {
             }
         };
 
+        let (risk, reason) = self.apply_workspace_policy(fs_root, call, risk, reason);
+
         let workspace_key = workspace_path.to_string_lossy().to_string();
         let has_standing_grant = has_grant(&self.app, &grant_scope, &workspace_key);
         // Offered only where the policy lets a grant apply; enforced below regardless of
@@ -771,6 +783,47 @@ impl<R: Runtime> TaskRun<R> {
         Ok((result, true))
     }
 
+    /// Raises — never lowers — a call's risk by the workspace's `.anycode/permissions.yaml`.
+    /// A shell command that names a protected path (or the policy file) is at least High:
+    /// the runtime cannot tell whether it reads or writes, so the user sees it every time.
+    fn apply_workspace_policy(
+        &self,
+        fs_root: &anycode_fs::WorkspaceRoot,
+        call: &ToolCallRequest,
+        risk: anycode_security::RiskLevel,
+        reason: Option<String>,
+    ) -> (anycode_security::RiskLevel, Option<String>) {
+        let access = match call.name.as_str() {
+            "filesystem.write.workspace" | "filesystem.edit.workspace" => Some(PathAccess::Write),
+            "filesystem.read.workspace" => Some(PathAccess::Read),
+            _ => None,
+        };
+        let path = call.arguments["path"]
+            .as_str()
+            .and_then(|p| workspace_relative(fs_root, p));
+        let target = access.zip(path.as_deref()).map(|(a, p)| (p, a));
+        let (mut risk_after, mut why) = self.policy.apply(&call.name, target, risk);
+
+        if call.name == SHELL_TOOL && risk_after < anycode_security::RiskLevel::High {
+            if let Some(command) = call.arguments["command"].as_str() {
+                let named = command
+                    .split(|c: char| c.is_whitespace() || "|;&<>()'\"=`".contains(c))
+                    .filter(|t| !t.is_empty())
+                    .find(|t| {
+                        let t = t.trim_start_matches("./");
+                        t == POLICY_FILE || self.policy.is_protected(t)
+                    });
+                if let Some(token) = named {
+                    risk_after = anycode_security::RiskLevel::High;
+                    why = Some(format!(
+                        "the command names {token}, protected by {POLICY_FILE}"
+                    ));
+                }
+            }
+        }
+        (risk_after, why.or(reason))
+    }
+
     /// The single way a task changes state: validated by `anycode-agent`, then shown
     /// and audited. An illegal move is a bug in this loop, so it fails the task loudly
     /// instead of leaving the UI showing a state the task isn't in.
@@ -818,6 +871,32 @@ impl<R: Runtime> TaskRun<R> {
             json!({ "id": call.id, "name": call.name, "decision": decision }),
         );
     }
+}
+
+/// Loads `.anycode/permissions.yaml` if the workspace has one. A file that exists but does
+/// not parse fails the task: silently ignoring restrictions the user wrote would be worse
+/// than refusing to start.
+fn load_workspace_policy(workspace_path: &Path) -> Result<WorkspacePolicy, Stop> {
+    match std::fs::read_to_string(workspace_path.join(POLICY_FILE)) {
+        Ok(text) => WorkspacePolicy::parse(&text).map_err(|e| Stop::Failed(e.to_string())),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(WorkspacePolicy::default()),
+        Err(e) => Err(Stop::Failed(format!("could not read {POLICY_FILE}: {e}"))),
+    }
+}
+
+/// A tool's path argument as the workspace-relative, `/`-separated form the policy matches
+/// against — whether the model wrote it relative or absolute. `None` if it cannot resolve;
+/// the tool itself then refuses the call.
+fn workspace_relative(fs_root: &anycode_fs::WorkspaceRoot, path: &str) -> Option<String> {
+    let resolved = fs_root.resolve(path).ok()?;
+    let relative = resolved.strip_prefix(fs_root.path()).ok()?;
+    Some(
+        relative
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy())
+            .collect::<Vec<_>>()
+            .join("/"),
+    )
 }
 
 fn tool_definitions<R: Runtime>(app: &AppHandle<R>) -> Vec<ToolDefinition> {

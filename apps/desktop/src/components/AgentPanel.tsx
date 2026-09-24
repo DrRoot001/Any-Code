@@ -346,6 +346,8 @@ function TimelineEntry({ entry }: { entry: Entry }) {
       );
     case "cancelled":
       return <p className="muted">Task stopped.</p>;
+    case "interrupted":
+      return <p className="muted">Did not finish — the app closed while this task was running.</p>;
   }
 }
 

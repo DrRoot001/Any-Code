@@ -1,16 +1,16 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~249,022 words
+- 148 files · ~253,815 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1544 nodes · 2546 edges · 159 communities (100 shown, 59 thin omitted)
+- 1574 nodes · 2566 edges · 165 communities (96 shown, 69 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d0c89cbb`
+- Built from commit: `7fac9962`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -20,7 +20,7 @@
 - What You Must Do When Invoked
 - What You Must Do When Invoked
 - What You Must Do When Invoked
-- provider_commands.rs
+- AppState
 - anthropic.rs
 - 98. Implementation Phases
 - graphify reference: extra exports and benchmark
@@ -86,7 +86,7 @@
 - Any Code brand
 - Repository knowledge graph
 - Roadmap
-- AppState
+- code-intelligence-engineer.md
 - anycode-fs/src/lib.rs
 - shell.rs
 - PtySession
@@ -113,9 +113,9 @@
 - filesystem.rs
 - anycode-tools/src/lib.rs
 - Value
-- trust.rs
+- event.rs
 - anycode-security/src/lib.rs
-- require_root
+- code-reviewer.md
 - Send
 - 3. VS Code extension compatibility and the package registry
 - ApprovalDialog.tsx
@@ -158,9 +158,9 @@
 - ToolCallRequest
 - ToolDefinition
 - Verdict
-- agent_live_test.rs
+- compatibility-engineer.md
 - current_path
-- git_status
+- debugger.md
 - Drop
 - Error
 - Path
@@ -169,14 +169,20 @@
 - Self
 - String
 - Vec
+- performance-engineer.md
+- schema-designer.md
+- security-reviewer.md
+- test-writer.md
+- ui-engineer.md
+- ux-reviewer.md
 
 ## God Nodes (most connected - your core abstractions)
 1. `AppState` - 36 edges
 2. `useWorkbenchStore` - 20 edges
 3. `ProviderError` - 17 edges
 4. `ModelRequest` - 16 edges
-5. `WorkspaceRoot` - 15 edges
-6. `compilerOptions` - 15 edges
+5. `compilerOptions` - 15 edges
+6. `WorkspaceRoot` - 15 edges
 7. `Store` - 15 edges
 8. `StoreError` - 15 edges
 9. `Metered` - 15 edges
@@ -185,20 +191,20 @@
 ## Surprising Connections (you probably didn't know these)
 - `Store` --references--> `Connection`  [EXTRACTED]
   crates/anycode-store/src/lib.rs → apps/desktop/src-tauri/src/provider_commands.rs
-- `execute_tool()` --references--> `WorkspaceRoot`  [EXTRACTED]
-  apps/desktop/src-tauri/src/agent_commands.rs → crates/anycode-fs/src/lib.rs
-- `to_info()` --references--> `WorkspaceRoot`  [EXTRACTED]
-  apps/desktop/src-tauri/src/workspace.rs → crates/anycode-fs/src/lib.rs
-- `WorkspaceState` --references--> `WorkspaceRoot`  [EXTRACTED]
-  apps/desktop/src-tauri/src/workspace.rs → crates/anycode-fs/src/lib.rs
 - `App()` --calls--> `applyTheme()`  [EXTRACTED]
   apps/desktop/src/App.tsx → packages/design-tokens/src/index.ts
+- `provider_error_message()` --references--> `ProviderError`  [EXTRACTED]
+  apps/desktop/src-tauri/src/provider_commands.rs → crates/anycode-models/src/types.rs
+- `to_info()` --references--> `WorkspaceRoot`  [EXTRACTED]
+  apps/desktop/src-tauri/src/workspace.rs → crates/anycode-fs/src/lib.rs
+- `git_status()` --references--> `StatusEntry`  [EXTRACTED]
+  apps/desktop/src-tauri/src/git_commands.rs → crates/anycode-git/src/lib.rs
 
 ## Import Cycles
 - 2-file cycle: `apps/desktop/src-tauri/src/agent_commands.rs -> apps/desktop/src-tauri/src/lib.rs -> apps/desktop/src-tauri/src/agent_commands.rs`
 - 2-file cycle: `crates/anycode-tools/src/filesystem.rs -> crates/anycode-tools/src/lib.rs -> crates/anycode-tools/src/filesystem.rs`
 
-## Communities (159 total, 59 thin omitted)
+## Communities (165 total, 69 thin omitted)
 
 ### Community 0 - "PRD.md"
 Cohesion: 0.02
@@ -220,9 +226,9 @@ Nodes (24): For /graphify add and --watch, For /graphify query, For the commit h
 Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
-### Community 5 - "provider_commands.rs"
-Cohesion: 0.18
-Nodes (29): build_adapter(), build_provider(), ChatDeltaEvent, ChatDoneEvent, ChatErrorEvent, ChatToolCallEvent, Connection, endpoint_setting() (+21 more)
+### Community 5 - "AppState"
+Cohesion: 0.06
+Nodes (72): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+64 more)
 
 ### Community 6 - "anthropic.rs"
 Cohesion: 0.10
@@ -428,13 +434,9 @@ Nodes (5): Installation for a new workstation, Installed integration, Repository
 Cohesion: 0.20
 Nodes (10): Assigned by the 2026-09-24 audit, Current phase: 4 · Code intelligence, Distribution gate, Phase 0 · Foundation, Phase 1 · Workbench, Phase 2 · Provider layer, Phase 3 · Agent runtime, Phase 3 close-out — done except C4 (needs a Windows machine) (+2 more)
 
-### Community 75 - "AppState"
-Cohesion: 0.14
-Nodes (21): app_context(), AppState, get_theme(), Arc, AtomicBool, Context, Mutex, Option (+13 more)
-
 ### Community 76 - "anycode-fs/src/lib.rs"
 Cohesion: 0.11
-Nodes (34): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+26 more)
+Nodes (35): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+27 more)
 
 ### Community 77 - "shell.rs"
 Cohesion: 0.15
@@ -449,8 +451,8 @@ Cohesion: 0.22
 Nodes (8): description, identifier, permissions, $schema, windows, core:default, dialog:default, main
 
 ### Community 81 - "anycode-store/src/lib.rs"
-Cohesion: 0.09
-Nodes (32): Event, EventScope, omits_empty_scope_and_payload(), roundtrips_through_json(), Into, Option, Self, String (+24 more)
+Cohesion: 0.15
+Nodes (20): a_tasks_events_come_back_in_order_and_only_for_that_task(), granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), Error, Option, Path, Result, Self (+12 more)
 
 ### Community 82 - "Project audit — 2026-09-24"
 Cohesion: 0.15
@@ -532,17 +534,13 @@ Nodes (22): every_tool_name_survives_wire_encoding(), every_tool_produces_a_non_
 Cohesion: 0.22
 Nodes (8): FilesystemEditTool, FilesystemWriteTool, reason_for_path(), risk_for_path(), Option, RiskLevel, String, Value
 
-### Community 103 - "trust.rs"
-Cohesion: 0.18
-Nodes (10): Into, Self, String, Tagged, Tagged<String>, Tagged<T>, Trust, untrusted_content_cannot_close_its_own_envelope() (+2 more)
+### Community 103 - "event.rs"
+Cohesion: 0.10
+Nodes (22): Event, EventScope, omits_empty_scope_and_payload(), roundtrips_through_json(), Into, Option, Self, String (+14 more)
 
 ### Community 104 - "anycode-security/src/lib.rs"
 Cohesion: 0.09
 Nodes (19): capability_risk(), classify_shell_command(), decide(), Decision, path_risk(), RiskLevel, Option, secret_bearing_paths_are_not_ordinary_files() (+11 more)
-
-### Community 105 - "require_root"
-Cohesion: 0.33
-Nodes (12): list_dir(), read_file(), require_root(), Option, Result, State, String, Vec (+4 more)
 
 ### Community 107 - "3. VS Code extension compatibility and the package registry"
 Cohesion: 0.33
@@ -568,34 +566,26 @@ Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 Cohesion: 0.48
 Nodes (5): ModelDefinition, Vec, Scripted, ProviderError, Error
 
-### Community 148 - "agent_live_test.rs"
-Cohesion: 0.26
-Nodes (11): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+3 more)
-
 ### Community 149 - "current_path"
-Cohesion: 0.45
-Nodes (11): current_path(), get_last_workspace(), open_workspace(), open_workspace_at(), Option, PathBuf, Result, State (+3 more)
-
-### Community 150 - "git_status"
-Cohesion: 0.36
-Nodes (9): git_branch(), git_diff(), git_status(), Option, Result, State, String, Vec (+1 more)
+Cohesion: 0.21
+Nodes (20): git_branch(), git_diff(), git_status(), Option, Result, State, String, Vec (+12 more)
 
 ## Knowledge Gaps
-- **518 isolated node(s):** `IconName`, `ChatRole`, `CommandRecord`, `FileDiff`, `GitStatusEntry` (+513 more)
+- **538 isolated node(s):** `This repository`, `Report back`, `This repository`, `Report back`, `This repository` (+533 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **59 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **69 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Tool` connect `anycode-tools/src/lib.rs` to `anycode-security/src/lib.rs`, `ToolError`, `shell.rs`, `Value`?**
-  _High betweenness centrality (0.043) - this node is a cross-community bridge._
-- **Why does `AppState` connect `AppState` to `provider_commands.rs`, `require_root`, `agent_live_test.rs`, `agent_commands.rs`, `git_status`, `current_path`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+- **Why does `AppState` connect `AppState` to `agent_commands.rs`, `current_path`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Why does `ToolCallRequest` connect `agent_commands.rs` to `types.rs`?**
   _High betweenness centrality (0.025) - this node is a cross-community bridge._
-- **What connects `IconName`, `ChatRole`, `CommandRecord` to the rest of the system?**
-  _518 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `This repository`, `Report back`, `This repository` to the rest of the system?**
+  _538 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**

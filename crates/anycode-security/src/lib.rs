@@ -8,6 +8,9 @@
 
 use serde::{Deserialize, Serialize};
 
+mod workspace_policy;
+pub use workspace_policy::{PathAccess, PolicyError, WorkspacePolicy, POLICY_FILE};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum RiskLevel {

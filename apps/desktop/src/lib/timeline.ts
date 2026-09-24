@@ -26,7 +26,9 @@ export type Entry =
       usage: TaskUsage;
     }
   | { kind: "error"; message: string }
-  | { kind: "cancelled" };
+  | { kind: "cancelled" }
+  /** A past task with no terminal event in the log: the app closed while it ran. */
+  | { kind: "interrupted" };
 
 export function argumentSummary(args: Record<string, unknown>): string {
   if (typeof args?.command === "string") return args.command;

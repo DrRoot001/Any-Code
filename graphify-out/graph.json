@@ -2993,11 +2993,176 @@
       "source_location": ""
     },
     {
+      "id": "crates_anycode_core_src_event",
+      "label": "event.rs",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "event.rs",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "crates_anycode_core_src_event_event",
+      "label": "Event",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "event",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L27"
+    },
+    {
+      "id": "crates_anycode_core_src_event_event_namespace",
+      "label": ".namespace()",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": ".namespace()",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L51"
+    },
+    {
+      "id": "crates_anycode_core_src_event_event_new",
+      "label": ".new()",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": ".new()",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L40"
+    },
+    {
+      "id": "crates_anycode_core_src_event_eventscope",
+      "label": "EventScope",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "eventscope",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L16"
+    },
+    {
+      "id": "crates_anycode_core_src_event_omits_empty_scope_and_payload",
+      "label": "omits_empty_scope_and_payload()",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "omits_empty_scope_and_payload()",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L91"
+    },
+    {
+      "id": "crates_anycode_core_src_event_reads_events_written_by_a_newer_build",
+      "label": "reads_events_written_by_a_newer_build()",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "reads_events_written_by_a_newer_build()",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L75"
+    },
+    {
+      "id": "crates_anycode_core_src_event_roundtrips_through_json",
+      "label": "roundtrips_through_json()",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "roundtrips_through_json()",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L68"
+    },
+    {
+      "id": "crates_anycode_core_src_event_rs_into",
+      "label": "Into",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "into",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_core_src_event_rs_option",
+      "label": "Option",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "option",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_core_src_event_rs_self",
+      "label": "Self",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "self",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_core_src_event_rs_string",
+      "label": "String",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_core_src_event_rs_uuid",
+      "label": "Uuid",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "uuid",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_core_src_event_rs_value",
+      "label": "Value",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "value",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_anycode_core_src_event_scope",
+      "label": "scope()",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "scope()",
+      "source_file": "crates/anycode-core/src/event.rs",
+      "source_location": "L60"
+    },
+    {
       "id": "crates_anycode_core_src_lib",
       "label": "anycode-core/src/lib.rs",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "anycode-core/src/lib.rs",
       "source_file": "crates/anycode-core/src/lib.rs",
@@ -3008,7 +3173,7 @@
       "label": "trust.rs",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "trust.rs",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3019,7 +3184,7 @@
       "label": "only_the_user_may_instruct()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "only_the_user_may_instruct()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3030,7 +3195,7 @@
       "label": "Into",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "into",
       "source_file": "",
@@ -3041,7 +3206,7 @@
       "label": "Self",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "self",
       "source_file": "",
@@ -3052,7 +3217,7 @@
       "label": "String",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "string",
       "source_file": "",
@@ -3063,7 +3228,7 @@
       "label": "Tagged",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "tagged",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3074,7 +3239,7 @@
       "label": "Tagged<String>",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "tagged<string>",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3085,7 +3250,7 @@
       "label": ".to_prompt_text()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": ".to_prompt_text()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3096,7 +3261,7 @@
       "label": "Tagged<T>",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "tagged<t>",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3107,7 +3272,7 @@
       "label": ".system()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": ".system()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3118,7 +3283,7 @@
       "label": ".untrusted()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": ".untrusted()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3129,7 +3294,7 @@
       "label": ".user()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": ".user()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3140,7 +3305,7 @@
       "label": "Trust",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "trust",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3151,7 +3316,7 @@
       "label": ".may_instruct()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": ".may_instruct()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3162,7 +3327,7 @@
       "label": "untrusted_content_cannot_close_its_own_envelope()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "untrusted_content_cannot_close_its_own_envelope()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3173,7 +3338,7 @@
       "label": "untrusted_content_is_fenced_with_its_origin()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "untrusted_content_is_fenced_with_its_origin()",
       "source_file": "crates/anycode-core/src/trust.rs",
@@ -3184,18 +3349,29 @@
       "label": "user_and_system_text_pass_through_unwrapped()",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "user_and_system_text_pass_through_unwrapped()",
       "source_file": "crates/anycode-core/src/trust.rs",
       "source_location": "L111"
     },
     {
+      "id": "offsetdatetime",
+      "label": "OffsetDateTime",
+      "_origin": "ast",
+      "community": 103,
+      "community_name": "event.rs",
+      "file_type": "code",
+      "norm_label": "offsetdatetime",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "t",
       "label": "T",
       "_origin": "ast",
       "community": 103,
-      "community_name": "trust.rs",
+      "community_name": "event.rs",
       "file_type": "code",
       "norm_label": "t",
       "source_file": "",
@@ -3587,147 +3763,46 @@
       "source_location": ""
     },
     {
-      "id": "apps_desktop_src_tauri_src_fs_commands",
-      "label": "fs_commands.rs",
+      "id": "claude_agents_code_reviewer",
+      "label": "code-reviewer.md",
       "_origin": "ast",
       "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "fs_commands.rs",
-      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
+      "community_name": "code-reviewer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "code-reviewer",
+        "description": "Reviewing a diff before it is committed \u2014 correctness, architecture invariants, security-relevant changes, simplification, missing tests. Read-only: reports findings, does not edit.",
+        "model": "sonnet",
+        "tools": "Read, Grep, Glob, Bash"
+      },
+      "node_kind": "page",
+      "norm_label": "code-reviewer.md",
+      "source_file": ".claude/agents/code-reviewer.md",
       "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_tauri_src_fs_commands_list_dir",
-      "label": "list_dir()",
+      "id": "claude_agents_code_reviewer_report_back",
+      "label": "Report back",
       "_origin": "ast",
       "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "list_dir()",
-      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
-      "source_location": "L20"
+      "community_name": "code-reviewer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/code-reviewer.md",
+      "source_location": "L50"
     },
     {
-      "id": "apps_desktop_src_tauri_src_fs_commands_read_file",
-      "label": "read_file()",
+      "id": "claude_agents_code_reviewer_this_repository",
+      "label": "This repository",
       "_origin": "ast",
       "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "read_file()",
-      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
-      "source_location": "L26"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_require_root",
-      "label": "require_root()",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "require_root()",
-      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
-      "source_location": "L9"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_rs_option",
-      "label": "Option",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "option",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_rs_result",
-      "label": "Result",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "result",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_rs_state",
-      "label": "State",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "state",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_rs_string",
-      "label": "String",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_rs_vec",
-      "label": "Vec",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "vec",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_fs_commands_write_file",
-      "label": "write_file()",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "write_file()",
-      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
-      "source_location": "L32"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_workspace_workspacestate",
-      "label": "WorkspaceState",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "workspacestate",
-      "source_file": "apps/desktop/src-tauri/src/workspace.rs",
-      "source_location": "L11"
-    },
-    {
-      "id": "entry",
-      "label": "Entry",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "entry",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "mutexguard",
-      "label": "MutexGuard",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "require_root",
-      "file_type": "code",
-      "norm_label": "mutexguard",
-      "source_file": "",
-      "source_location": ""
+      "community_name": "code-reviewer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/code-reviewer.md",
+      "source_location": "L24"
     },
     {
       "id": "crates_anycode_tools_src_lib_rs_send",
@@ -5377,134 +5452,142 @@
       "source_location": ""
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test",
-      "label": "agent_live_test.rs",
+      "id": "claude_agents_compatibility_engineer",
+      "label": "compatibility-engineer.md",
       "_origin": "ast",
       "community": 148,
-      "community_name": "agent_live_test.rs",
-      "file_type": "code",
-      "norm_label": "agent_live_test.rs",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "community_name": "compatibility-engineer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "compatibility-engineer",
+        "description": "Cross-platform correctness on Windows, macOS and Linux \u2014 paths (including Windows verbatim paths), shells (cmd vs sh), PTYs, keychain backends, WebView differences, file watching, line endings, the CI matrix and release builds (universal macOS, NSIS/MSI).",
+        "model": "sonnet"
+      },
+      "node_kind": "page",
+      "norm_label": "compatibility-engineer.md",
+      "source_file": ".claude/agents/compatibility-engineer.md",
       "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_an_agent_implements_and_verifies_a_repository_task",
-      "label": "an_agent_implements_and_verifies_a_repository_task()",
+      "id": "claude_agents_compatibility_engineer_report_back",
+      "label": "Report back",
       "_origin": "ast",
       "community": 148,
-      "community_name": "agent_live_test.rs",
-      "file_type": "code",
-      "norm_label": "an_agent_implements_and_verifies_a_repository_task()",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
-      "source_location": "L155"
+      "community_name": "compatibility-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/compatibility-engineer.md",
+      "source_location": "L50"
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_git",
-      "label": "git()",
+      "id": "claude_agents_compatibility_engineer_this_repository",
+      "label": "This repository",
       "_origin": "ast",
       "community": 148,
-      "community_name": "agent_live_test.rs",
-      "file_type": "code",
-      "norm_label": "git()",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
-      "source_location": "L81"
+      "community_name": "compatibility-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/compatibility-engineer.md",
+      "source_location": "L24"
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_make_repo",
-      "label": "make_repo()",
+      "id": "apps_desktop_src_tauri_src_git_commands",
+      "label": "git_commands.rs",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
-      "norm_label": "make_repo()",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
-      "source_location": "L97"
+      "norm_label": "git_commands.rs",
+      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
+      "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_one_line",
-      "label": "one_line()",
+      "id": "apps_desktop_src_tauri_src_git_commands_git_branch",
+      "label": "git_branch()",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
-      "norm_label": "one_line()",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
-      "source_location": "L144"
+      "norm_label": "git_branch()",
+      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
+      "source_location": "L19"
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_original_suite_passes",
-      "label": "original_suite_passes()",
+      "id": "apps_desktop_src_tauri_src_git_commands_git_diff",
+      "label": "git_diff()",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
-      "norm_label": "original_suite_passes()",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
-      "source_location": "L129"
+      "norm_label": "git_diff()",
+      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
+      "source_location": "L14"
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_path",
-      "label": "Path",
+      "id": "apps_desktop_src_tauri_src_git_commands_git_status",
+      "label": "git_status()",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
-      "norm_label": "path",
+      "norm_label": "git_status()",
+      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_git_commands_rs_option",
+      "label": "Option",
+      "_origin": "ast",
+      "community": 149,
+      "community_name": "current_path",
+      "file_type": "code",
+      "norm_label": "option",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_pathbuf",
-      "label": "PathBuf",
+      "id": "apps_desktop_src_tauri_src_git_commands_rs_result",
+      "label": "Result",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
-      "norm_label": "pathbuf",
+      "norm_label": "result",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_string",
+      "id": "apps_desktop_src_tauri_src_git_commands_rs_state",
+      "label": "State",
+      "_origin": "ast",
+      "community": 149,
+      "community_name": "current_path",
+      "file_type": "code",
+      "norm_label": "state",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_git_commands_rs_string",
       "label": "String",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
       "norm_label": "string",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_value",
-      "label": "Value",
+      "id": "apps_desktop_src_tauri_src_git_commands_rs_vec",
+      "label": "Vec",
       "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
+      "community": 149,
+      "community_name": "current_path",
       "file_type": "code",
-      "norm_label": "value",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_agent_live_test_suite_passes",
-      "label": "suite_passes()",
-      "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
-      "file_type": "code",
-      "norm_label": "suite_passes()",
-      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
-      "source_location": "L116"
-    },
-    {
-      "id": "uuid",
-      "label": "Uuid",
-      "_origin": "ast",
-      "community": 148,
-      "community_name": "agent_live_test.rs",
-      "file_type": "code",
-      "norm_label": "uuid",
+      "norm_label": "vec",
       "source_file": "",
       "source_location": ""
     },
@@ -5641,6 +5724,17 @@
       "source_location": "L27"
     },
     {
+      "id": "filediff",
+      "label": "FileDiff",
+      "_origin": "ast",
+      "community": 149,
+      "community_name": "current_path",
+      "file_type": "code",
+      "norm_label": "filediff",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "claude_skills_provider_adapter_skill",
       "label": "provider-adapter/SKILL.md",
       "_origin": "ast",
@@ -5729,114 +5823,45 @@
       "source_location": "L34"
     },
     {
-      "id": "apps_desktop_src_tauri_src_git_commands",
-      "label": "git_commands.rs",
+      "id": "claude_agents_debugger",
+      "label": "debugger.md",
       "_origin": "ast",
       "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "git_commands.rs",
-      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
+      "community_name": "debugger.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "debugger",
+        "description": "Root-causing bugs with an unclear cause: race conditions, event ordering, auth/session or permission logic, state shared across files or across the Tauri boundary, anything flaky or platform-specific. Use instead of debugging multi-file issues in the main thread.",
+        "model": "opus"
+      },
+      "node_kind": "page",
+      "norm_label": "debugger.md",
+      "source_file": ".claude/agents/debugger.md",
       "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_tauri_src_git_commands_git_branch",
-      "label": "git_branch()",
+      "id": "claude_agents_debugger_report_back",
+      "label": "Report back",
       "_origin": "ast",
       "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "git_branch()",
-      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
-      "source_location": "L19"
+      "community_name": "debugger.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/debugger.md",
+      "source_location": "L46"
     },
     {
-      "id": "apps_desktop_src_tauri_src_git_commands_git_diff",
-      "label": "git_diff()",
+      "id": "claude_agents_debugger_this_repository",
+      "label": "This repository",
       "_origin": "ast",
       "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "git_diff()",
-      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
-      "source_location": "L14"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_git_commands_git_status",
-      "label": "git_status()",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "git_status()",
-      "source_file": "apps/desktop/src-tauri/src/git_commands.rs",
-      "source_location": "L9"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_git_commands_rs_option",
-      "label": "Option",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "option",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_git_commands_rs_result",
-      "label": "Result",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "result",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_git_commands_rs_state",
-      "label": "State",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "state",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_git_commands_rs_string",
-      "label": "String",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_git_commands_rs_vec",
-      "label": "Vec",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "vec",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "filediff",
-      "label": "FileDiff",
-      "_origin": "ast",
-      "community": 150,
-      "community_name": "git_status",
-      "file_type": "code",
-      "norm_label": "filediff",
-      "source_file": "",
-      "source_location": ""
+      "community_name": "debugger.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/debugger.md",
+      "source_location": "L20"
     },
     {
       "id": "crates_anycode_fs_src_lib_rs_drop",
@@ -5927,6 +5952,47 @@
       "source_location": ""
     },
     {
+      "id": "claude_agents_performance_engineer",
+      "label": "performance-engineer.md",
+      "_origin": "ast",
+      "community": 159,
+      "community_name": "performance-engineer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "performance-engineer",
+        "description": "Measuring and improving performance against PRD \u00a770 \u2014 launch time, input latency, memory, bundle size, indexing throughput and incremental re-index time, keeping heavy work off the UI thread.",
+        "model": "sonnet"
+      },
+      "node_kind": "page",
+      "norm_label": "performance-engineer.md",
+      "source_file": ".claude/agents/performance-engineer.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_agents_performance_engineer_report_back",
+      "label": "Report back",
+      "_origin": "ast",
+      "community": 159,
+      "community_name": "performance-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/performance-engineer.md",
+      "source_location": "L47"
+    },
+    {
+      "id": "claude_agents_performance_engineer_this_repository",
+      "label": "This repository",
+      "_origin": "ast",
+      "community": 159,
+      "community_name": "performance-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/performance-engineer.md",
+      "source_location": "L21"
+    },
+    {
       "id": "agents_skills_graphify_references_query",
       "label": ".agents/skills/graphify/references/query.md",
       "_origin": "ast",
@@ -5997,6 +6063,213 @@
       "norm_label": "step 1 \u2014 traversal",
       "source_file": ".agents/skills/graphify/references/query.md",
       "source_location": "L61"
+    },
+    {
+      "id": "claude_agents_schema_designer",
+      "label": "schema-designer.md",
+      "_origin": "ast",
+      "community": 160,
+      "community_name": "schema-designer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "schema-designer",
+        "description": "Designing SQLite schema, migrations and data models \u2014 anycode-store tables, the append-only events log, indexes, FTS5 tables, and the Rust types that read and write them.",
+        "model": "sonnet"
+      },
+      "node_kind": "page",
+      "norm_label": "schema-designer.md",
+      "source_file": ".claude/agents/schema-designer.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_agents_schema_designer_report_back",
+      "label": "Report back",
+      "_origin": "ast",
+      "community": 160,
+      "community_name": "schema-designer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/schema-designer.md",
+      "source_location": "L49"
+    },
+    {
+      "id": "claude_agents_schema_designer_this_repository",
+      "label": "This repository",
+      "_origin": "ast",
+      "community": 160,
+      "community_name": "schema-designer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/schema-designer.md",
+      "source_location": "L23"
+    },
+    {
+      "id": "claude_agents_security_reviewer",
+      "label": "security-reviewer.md",
+      "_origin": "ast",
+      "community": 161,
+      "community_name": "security-reviewer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "security-reviewer",
+        "description": "Security review of anything touching the permission engine, capability registry, tool execution, secrets and the keychain, the trust boundary, filesystem path resolution, shell classification, the CSP, IPC commands, or new network access. Read-only.",
+        "model": "opus",
+        "tools": "Read, Grep, Glob, Bash"
+      },
+      "node_kind": "page",
+      "norm_label": "security-reviewer.md",
+      "source_file": ".claude/agents/security-reviewer.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_agents_security_reviewer_report_back",
+      "label": "Report back",
+      "_origin": "ast",
+      "community": 161,
+      "community_name": "security-reviewer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/security-reviewer.md",
+      "source_location": "L55"
+    },
+    {
+      "id": "claude_agents_security_reviewer_this_repository",
+      "label": "This repository",
+      "_origin": "ast",
+      "community": 161,
+      "community_name": "security-reviewer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/security-reviewer.md",
+      "source_location": "L29"
+    },
+    {
+      "id": "claude_agents_test_writer",
+      "label": "test-writer.md",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "test-writer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "test-writer",
+        "description": "Writing unit and integration tests against an interface that already exists \u2014 Rust (inline #[cfg(test)] modules, Tauri mock-runtime tests) and frontend (Vitest in apps/desktop/src/lib). Use haiku-level effort for pure boilerplate.",
+        "model": "sonnet"
+      },
+      "node_kind": "page",
+      "norm_label": "test-writer.md",
+      "source_file": ".claude/agents/test-writer.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_agents_test_writer_report_back",
+      "label": "Report back",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "test-writer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/test-writer.md",
+      "source_location": "L49"
+    },
+    {
+      "id": "claude_agents_test_writer_this_repository",
+      "label": "This repository",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "test-writer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/test-writer.md",
+      "source_location": "L23"
+    },
+    {
+      "id": "claude_agents_ui_engineer",
+      "label": "ui-engineer.md",
+      "_origin": "ast",
+      "community": 163,
+      "community_name": "ui-engineer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "ui-engineer",
+        "description": "Building or changing React/TypeScript UI in apps/desktop \u2014 components, the Agent Dock, Context Inspector, settings, Monaco and xterm integration, design tokens and CSS, accessibility.",
+        "model": "sonnet"
+      },
+      "node_kind": "page",
+      "norm_label": "ui-engineer.md",
+      "source_file": ".claude/agents/ui-engineer.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_agents_ui_engineer_report_back",
+      "label": "Report back",
+      "_origin": "ast",
+      "community": 163,
+      "community_name": "ui-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/ui-engineer.md",
+      "source_location": "L50"
+    },
+    {
+      "id": "claude_agents_ui_engineer_this_repository",
+      "label": "This repository",
+      "_origin": "ast",
+      "community": 163,
+      "community_name": "ui-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/ui-engineer.md",
+      "source_location": "L24"
+    },
+    {
+      "id": "claude_agents_ux_reviewer",
+      "label": "ux-reviewer.md",
+      "_origin": "ast",
+      "community": 164,
+      "community_name": "ux-reviewer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "ux-reviewer",
+        "description": "Reviewing user flows, copy and interaction design against PRD \u00a753-69 \u2014 onboarding, approval prompts, the agent timeline, evidence and verdicts, error and empty states, settings. Read-only: proposes concrete changes.",
+        "model": "sonnet",
+        "tools": "Read, Grep, Glob, Bash"
+      },
+      "node_kind": "page",
+      "norm_label": "ux-reviewer.md",
+      "source_file": ".claude/agents/ux-reviewer.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "claude_agents_ux_reviewer_report_back",
+      "label": "Report back",
+      "_origin": "ast",
+      "community": 164,
+      "community_name": "ux-reviewer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/ux-reviewer.md",
+      "source_location": "L50"
+    },
+    {
+      "id": "claude_agents_ux_reviewer_this_repository",
+      "label": "This repository",
+      "_origin": "ast",
+      "community": 164,
+      "community_name": "ux-reviewer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/ux-reviewer.md",
+      "source_location": "L24"
     },
     {
       "id": "claude_skills_anycode_architecture_skill",
@@ -8558,11 +8831,429 @@
       "source_location": "L553"
     },
     {
+      "id": "apps_desktop_src_tauri_src_agent_live_test",
+      "label": "agent_live_test.rs",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "agent_live_test.rs",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_an_agent_implements_and_verifies_a_repository_task",
+      "label": "an_agent_implements_and_verifies_a_repository_task()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "an_agent_implements_and_verifies_a_repository_task()",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L155"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_git",
+      "label": "git()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "git()",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L81"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_make_repo",
+      "label": "make_repo()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "make_repo()",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L97"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_one_line",
+      "label": "one_line()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "one_line()",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L144"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_original_suite_passes",
+      "label": "original_suite_passes()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "original_suite_passes()",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L129"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_path",
+      "label": "Path",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_pathbuf",
+      "label": "PathBuf",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "pathbuf",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_string",
+      "label": "String",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_rs_value",
+      "label": "Value",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "value",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_agent_live_test_suite_passes",
+      "label": "suite_passes()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "suite_passes()",
+      "source_file": "apps/desktop/src-tauri/src/agent_live_test.rs",
+      "source_location": "L116"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands",
+      "label": "fs_commands.rs",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "fs_commands.rs",
+      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_list_dir",
+      "label": "list_dir()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "list_dir()",
+      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
+      "source_location": "L20"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_read_file",
+      "label": "read_file()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "read_file()",
+      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
+      "source_location": "L26"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_require_root",
+      "label": "require_root()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "require_root()",
+      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_rs_option",
+      "label": "Option",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "option",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_rs_result",
+      "label": "Result",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "result",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_rs_state",
+      "label": "State",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "state",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_rs_string",
+      "label": "String",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_rs_vec",
+      "label": "Vec",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "vec",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_fs_commands_write_file",
+      "label": "write_file()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "write_file()",
+      "source_file": "apps/desktop/src-tauri/src/fs_commands.rs",
+      "source_location": "L32"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib",
+      "label": "src-tauri/src/lib.rs",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "src-tauri/src/lib.rs",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_app_context",
+      "label": "app_context()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "app_context()",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L83"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_appstate",
+      "label": "AppState",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "appstate",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L24"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_appstate_audit",
+      "label": ".audit()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": ".audit()",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L40"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_get_theme",
+      "label": "get_theme()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "get_theme()",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L64"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_arc",
+      "label": "Arc",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "arc",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_atomicbool",
+      "label": "AtomicBool",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "atomicbool",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_context",
+      "label": "Context",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "context",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_mutex",
+      "label": "Mutex",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "mutex",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_option",
+      "label": "Option",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "option",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_result",
+      "label": "Result",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "result",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_state",
+      "label": "State",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "state",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_string",
+      "label": "String",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "string",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_rs_value",
+      "label": "Value",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "value",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_run",
+      "label": "run()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "run()",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L88"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_set_theme",
+      "label": "set_theme()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "set_theme()",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L73"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_lib_the_app_ships_a_strict_content_security_policy",
+      "label": "the_app_ships_a_strict_content_security_policy()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "the_app_ships_a_strict_content_security_policy()",
+      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "source_location": "L159"
+    },
+    {
       "id": "apps_desktop_src_tauri_src_provider_commands",
       "label": "provider_commands.rs",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "provider_commands.rs",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8573,7 +9264,7 @@
       "label": "build_adapter()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "build_adapter()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8584,7 +9275,7 @@
       "label": "build_provider()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "build_provider()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8595,7 +9286,7 @@
       "label": "ChatDeltaEvent",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "chatdeltaevent",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8606,7 +9297,7 @@
       "label": "ChatDoneEvent",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "chatdoneevent",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8617,7 +9308,7 @@
       "label": "ChatErrorEvent",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "chaterrorevent",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8628,7 +9319,7 @@
       "label": "ChatToolCallEvent",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "chattoolcallevent",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8639,7 +9330,7 @@
       "label": "Connection",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "connection",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8650,7 +9341,7 @@
       "label": "endpoint_setting()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "endpoint_setting()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8661,7 +9352,7 @@
       "label": "list_models()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "list_models()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8672,7 +9363,7 @@
       "label": "list_providers()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "list_providers()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8683,7 +9374,7 @@
       "label": "provider_error_message()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "provider_error_message()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8694,7 +9385,7 @@
       "label": "provider_key_changes_are_audited_without_the_key()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "provider_key_changes_are_audited_without_the_key()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8705,7 +9396,7 @@
       "label": "ProviderStatus",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "providerstatus",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8716,7 +9407,7 @@
       "label": "remove_provider_key()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "remove_provider_key()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8727,7 +9418,7 @@
       "label": "AppHandle",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "apphandle",
       "source_file": "",
@@ -8738,7 +9429,7 @@
       "label": "Box",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "box",
       "source_file": "",
@@ -8749,7 +9440,7 @@
       "label": "ModelDefinition",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "modeldefinition",
       "source_file": "",
@@ -8760,7 +9451,7 @@
       "label": "ModelProvider",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "modelprovider",
       "source_file": "",
@@ -8771,7 +9462,7 @@
       "label": "Option",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "option",
       "source_file": "",
@@ -8782,7 +9473,7 @@
       "label": "R",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "r",
       "source_file": "",
@@ -8793,7 +9484,7 @@
       "label": "Result",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "result",
       "source_file": "",
@@ -8804,7 +9495,7 @@
       "label": "State",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "state",
       "source_file": "",
@@ -8815,7 +9506,7 @@
       "label": "String",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "string",
       "source_file": "",
@@ -8826,7 +9517,7 @@
       "label": "Value",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "value",
       "source_file": "",
@@ -8837,7 +9528,7 @@
       "label": "Vec",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "vec",
       "source_file": "",
@@ -8848,7 +9539,7 @@
       "label": "send_chat()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "send_chat()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8859,7 +9550,7 @@
       "label": "set_provider_endpoint()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "set_provider_endpoint()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8870,7 +9561,7 @@
       "label": "set_provider_key()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "set_provider_key()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
@@ -8881,11 +9572,110 @@
       "label": "the_same_chat_task_switches_providers_live()",
       "_origin": "ast",
       "community": 5,
-      "community_name": "provider_commands.rs",
+      "community_name": "AppState",
       "file_type": "code",
       "norm_label": "the_same_chat_task_switches_providers_live()",
       "source_file": "apps/desktop/src-tauri/src/provider_commands.rs",
       "source_location": "L447"
+    },
+    {
+      "id": "entry",
+      "label": "Entry",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "entry",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "hashmap",
+      "label": "HashMap",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "hashmap",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "mutexguard",
+      "label": "MutexGuard",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "mutexguard",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "ptysession",
+      "label": "PtySession",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "ptysession",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "store",
+      "label": "Store",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "store",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "toolregistry",
+      "label": "ToolRegistry",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "toolregistry",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "uuid",
+      "label": "Uuid",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "uuid",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "workspacestate",
+      "label": "WorkspaceState",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "workspacestate",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "wry",
+      "label": "Wry",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "AppState",
+      "file_type": "code",
+      "norm_label": "wry",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "prd_4_1_name",
@@ -11111,7 +11901,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:41:22z \u2014 brand integration baseline",
       "source_file": "REVIEW.md",
-      "source_location": "L366"
+      "source_location": "L371"
     },
     {
       "id": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
@@ -11123,7 +11913,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:45:09z \u2014 github ci after branding and governance push",
       "source_file": "REVIEW.md",
-      "source_location": "L391"
+      "source_location": "L396"
     },
     {
       "id": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
@@ -11135,7 +11925,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 phase 1 workbench review and ux remediation",
       "source_file": "REVIEW.md",
-      "source_location": "L403"
+      "source_location": "L408"
     },
     {
       "id": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
@@ -11147,7 +11937,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 second-pass ui/ux and ledger audit",
       "source_file": "REVIEW.md",
-      "source_location": "L442"
+      "source_location": "L447"
     },
     {
       "id": "review_2026_09_23_integrated_terminal_defect_hunt",
@@ -11159,7 +11949,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 integrated terminal defect hunt",
       "source_file": "REVIEW.md",
-      "source_location": "L301"
+      "source_location": "L306"
     },
     {
       "id": "review_2026_09_23_phase_3_completion_planner_state_machine_audit_log_live_exit_condition",
@@ -11171,7 +11961,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 completion: planner, state machine, audit log, live exit condition",
       "source_file": "REVIEW.md",
-      "source_location": "L204"
+      "source_location": "L209"
     },
     {
       "id": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
@@ -11183,7 +11973,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 mvp: agent dock, approvals, cancellation, evidence",
       "source_file": "REVIEW.md",
-      "source_location": "L468"
+      "source_location": "L473"
     },
     {
       "id": "review_2026_09_23_scope_decision_extensions_and_the_store_documents_only",
@@ -11195,7 +11985,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 scope decision: extensions and the store (documents only)",
       "source_file": "REVIEW.md",
-      "source_location": "L288"
+      "source_location": "L293"
     },
     {
       "id": "review_2026_09_24_close_out_continued_c3_c5_c6_c7_verified_live",
@@ -11219,7 +12009,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-24 \u2014 full project audit",
       "source_file": "REVIEW.md",
-      "source_location": "L179"
+      "source_location": "L184"
     },
     {
       "id": "review_2026_09_24_phase_3_close_out_c1_c10",
@@ -11231,7 +12021,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-24 \u2014 phase 3 close-out (c1\u2013c10)",
       "source_file": "REVIEW.md",
-      "source_location": "L103"
+      "source_location": "L108"
     },
     {
       "id": "review_current_quality_status",
@@ -11255,7 +12045,7 @@
       "node_kind": "heading",
       "norm_label": "open qa risks",
       "source_file": "REVIEW.md",
-      "source_location": "L533"
+      "source_location": "L538"
     },
     {
       "id": "review_qa_and_review_ledger",
@@ -11370,7 +12160,7 @@
       "node_kind": "heading",
       "norm_label": "before writing code",
       "source_file": "CLAUDE.md",
-      "source_location": "L19"
+      "source_location": "L30"
     },
     {
       "id": "claude_commands",
@@ -11382,7 +12172,7 @@
       "node_kind": "heading",
       "norm_label": "commands",
       "source_file": "CLAUDE.md",
-      "source_location": "L54"
+      "source_location": "L65"
     },
     {
       "id": "claude_definition_of_done",
@@ -11394,7 +12184,7 @@
       "node_kind": "heading",
       "norm_label": "definition of done",
       "source_file": "CLAUDE.md",
-      "source_location": "L46"
+      "source_location": "L57"
     },
     {
       "id": "claude_graphify",
@@ -11406,7 +12196,7 @@
       "node_kind": "heading",
       "norm_label": "graphify",
       "source_file": "CLAUDE.md",
-      "source_location": "L60"
+      "source_location": "L71"
     },
     {
       "id": "claude_non_negotiable",
@@ -11418,7 +12208,7 @@
       "node_kind": "heading",
       "norm_label": "non-negotiable",
       "source_file": "CLAUDE.md",
-      "source_location": "L35"
+      "source_location": "L46"
     },
     {
       "id": "prd_98_implementation_phases",
@@ -11899,257 +12689,45 @@
       "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_tauri_src_lib",
-      "label": "src-tauri/src/lib.rs",
+      "id": "claude_agents_code_intelligence_engineer",
+      "label": "code-intelligence-engineer.md",
       "_origin": "ast",
       "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "src-tauri/src/lib.rs",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
+      "community_name": "code-intelligence-engineer.md",
+      "file_type": "document",
+      "frontmatter": {
+        "name": "code-intelligence-engineer",
+        "description": "Phase 4 code intelligence \u2014 repository indexing, tree-sitter symbol extraction, ripgrep-based search, SQLite FTS5, LSP client integration, the context builder and token budgeting, and .vsix theme/grammar/language-server support (ADR 0003).",
+        "model": "sonnet"
+      },
+      "node_kind": "page",
+      "norm_label": "code-intelligence-engineer.md",
+      "source_file": ".claude/agents/code-intelligence-engineer.md",
       "source_location": "L1"
     },
     {
-      "id": "apps_desktop_src_tauri_src_lib_app_context",
-      "label": "app_context()",
+      "id": "claude_agents_code_intelligence_engineer_report_back",
+      "label": "Report back",
       "_origin": "ast",
       "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "app_context()",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L83"
+      "community_name": "code-intelligence-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report back",
+      "source_file": ".claude/agents/code-intelligence-engineer.md",
+      "source_location": "L49"
     },
     {
-      "id": "apps_desktop_src_tauri_src_lib_appstate",
-      "label": "AppState",
+      "id": "claude_agents_code_intelligence_engineer_this_repository",
+      "label": "This repository",
       "_origin": "ast",
       "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "appstate",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L24"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_appstate_audit",
-      "label": ".audit()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": ".audit()",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L40"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_get_theme",
-      "label": "get_theme()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "get_theme()",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L64"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_arc",
-      "label": "Arc",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "arc",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_atomicbool",
-      "label": "AtomicBool",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "atomicbool",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_context",
-      "label": "Context",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "context",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_mutex",
-      "label": "Mutex",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "mutex",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_option",
-      "label": "Option",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "option",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_result",
-      "label": "Result",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "result",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_state",
-      "label": "State",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "state",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_string",
-      "label": "String",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_rs_value",
-      "label": "Value",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "value",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_run",
-      "label": "run()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "run()",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L88"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_set_theme",
-      "label": "set_theme()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "set_theme()",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L73"
-    },
-    {
-      "id": "apps_desktop_src_tauri_src_lib_the_app_ships_a_strict_content_security_policy",
-      "label": "the_app_ships_a_strict_content_security_policy()",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "the_app_ships_a_strict_content_security_policy()",
-      "source_file": "apps/desktop/src-tauri/src/lib.rs",
-      "source_location": "L159"
-    },
-    {
-      "id": "hashmap",
-      "label": "HashMap",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "hashmap",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "ptysession",
-      "label": "PtySession",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "ptysession",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "store",
-      "label": "Store",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "store",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "toolregistry",
-      "label": "ToolRegistry",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "toolregistry",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "workspacestate",
-      "label": "WorkspaceState",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "workspacestate",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "wry",
-      "label": "Wry",
-      "_origin": "ast",
-      "community": 75,
-      "community_name": "AppState",
-      "file_type": "code",
-      "norm_label": "wry",
-      "source_file": "",
-      "source_location": ""
+      "community_name": "code-intelligence-engineer.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "this repository",
+      "source_file": ".claude/agents/code-intelligence-engineer.md",
+      "source_location": "L23"
     },
     {
       "id": "apphandle",
@@ -12249,6 +12827,17 @@
       "norm_label": "terminal_write()",
       "source_file": "apps/desktop/src-tauri/src/terminal_commands.rs",
       "source_location": "L97"
+    },
+    {
+      "id": "apps_desktop_src_tauri_src_workspace_workspacestate",
+      "label": "WorkspaceState",
+      "_origin": "ast",
+      "community": 76,
+      "community_name": "anycode-fs/src/lib.rs",
+      "file_type": "code",
+      "norm_label": "workspacestate",
+      "source_file": "apps/desktop/src-tauri/src/workspace.rs",
+      "source_location": "L11"
     },
     {
       "id": "appstate",
@@ -13349,171 +13938,6 @@
       "source_location": "L1"
     },
     {
-      "id": "crates_anycode_core_src_event",
-      "label": "event.rs",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "event.rs",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L1"
-    },
-    {
-      "id": "crates_anycode_core_src_event_event",
-      "label": "Event",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "event",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L27"
-    },
-    {
-      "id": "crates_anycode_core_src_event_event_namespace",
-      "label": ".namespace()",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": ".namespace()",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L51"
-    },
-    {
-      "id": "crates_anycode_core_src_event_event_new",
-      "label": ".new()",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": ".new()",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L40"
-    },
-    {
-      "id": "crates_anycode_core_src_event_eventscope",
-      "label": "EventScope",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "eventscope",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L16"
-    },
-    {
-      "id": "crates_anycode_core_src_event_omits_empty_scope_and_payload",
-      "label": "omits_empty_scope_and_payload()",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "omits_empty_scope_and_payload()",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L91"
-    },
-    {
-      "id": "crates_anycode_core_src_event_reads_events_written_by_a_newer_build",
-      "label": "reads_events_written_by_a_newer_build()",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "reads_events_written_by_a_newer_build()",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L75"
-    },
-    {
-      "id": "crates_anycode_core_src_event_roundtrips_through_json",
-      "label": "roundtrips_through_json()",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "roundtrips_through_json()",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L68"
-    },
-    {
-      "id": "crates_anycode_core_src_event_rs_into",
-      "label": "Into",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "into",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_core_src_event_rs_option",
-      "label": "Option",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "option",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_core_src_event_rs_self",
-      "label": "Self",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "self",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_core_src_event_rs_string",
-      "label": "String",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "string",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_core_src_event_rs_uuid",
-      "label": "Uuid",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "uuid",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_core_src_event_rs_value",
-      "label": "Value",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "value",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_anycode_core_src_event_scope",
-      "label": "scope()",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "scope()",
-      "source_file": "crates/anycode-core/src/event.rs",
-      "source_location": "L60"
-    },
-    {
       "id": "crates_anycode_store_src_lib",
       "label": "anycode-store/src/lib.rs",
       "_origin": "ast",
@@ -13895,17 +14319,6 @@
       "community_name": "anycode-store/src/lib.rs",
       "file_type": "code",
       "norm_label": "eventscope",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "offsetdatetime",
-      "label": "OffsetDateTime",
-      "_origin": "ast",
-      "community": 81,
-      "community_name": "anycode-store/src/lib.rs",
-      "file_type": "code",
-      "norm_label": "offsetdatetime",
       "source_file": "",
       "source_location": ""
     },
@@ -37560,7 +37973,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L19",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -37571,7 +37984,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L35",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -37582,7 +37995,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L46",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -37593,7 +38006,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L54",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -37604,7 +38017,227 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L60",
+      "source_location": "L71",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_code_intelligence_engineer",
+      "target": "claude_agents_code_intelligence_engineer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/code-intelligence-engineer.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_code_intelligence_engineer",
+      "target": "claude_agents_code_intelligence_engineer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/code-intelligence-engineer.md",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_code_reviewer",
+      "target": "claude_agents_code_reviewer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/code-reviewer.md",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_code_reviewer",
+      "target": "claude_agents_code_reviewer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/code-reviewer.md",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_compatibility_engineer",
+      "target": "claude_agents_compatibility_engineer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/compatibility-engineer.md",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_compatibility_engineer",
+      "target": "claude_agents_compatibility_engineer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/compatibility-engineer.md",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_debugger",
+      "target": "claude_agents_debugger_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/debugger.md",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_debugger",
+      "target": "claude_agents_debugger_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/debugger.md",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_performance_engineer",
+      "target": "claude_agents_performance_engineer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/performance-engineer.md",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_performance_engineer",
+      "target": "claude_agents_performance_engineer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/performance-engineer.md",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_schema_designer",
+      "target": "claude_agents_schema_designer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/schema-designer.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_schema_designer",
+      "target": "claude_agents_schema_designer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/schema-designer.md",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_security_reviewer",
+      "target": "claude_agents_security_reviewer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/security-reviewer.md",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_security_reviewer",
+      "target": "claude_agents_security_reviewer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/security-reviewer.md",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_test_writer",
+      "target": "claude_agents_test_writer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/test-writer.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_test_writer",
+      "target": "claude_agents_test_writer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/test-writer.md",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_ui_engineer",
+      "target": "claude_agents_ui_engineer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/ui-engineer.md",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_ui_engineer",
+      "target": "claude_agents_ui_engineer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/ui-engineer.md",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_ux_reviewer",
+      "target": "claude_agents_ux_reviewer_this_repository",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/ux-reviewer.md",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "claude_agents_ux_reviewer",
+      "target": "claude_agents_ux_reviewer_report_back",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": ".claude/agents/ux-reviewer.md",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -44666,7 +45299,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L533",
+      "source_location": "L538",
       "weight": 1.0
     },
     {
@@ -44688,7 +45321,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L103",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -44699,7 +45332,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L179",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -44710,7 +45343,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L204",
+      "source_location": "L209",
       "weight": 1.0
     },
     {
@@ -44721,7 +45354,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L288",
+      "source_location": "L293",
       "weight": 1.0
     },
     {
@@ -44732,7 +45365,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L301",
+      "source_location": "L306",
       "weight": 1.0
     },
     {
@@ -44743,7 +45376,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L366",
+      "source_location": "L371",
       "weight": 1.0
     },
     {
@@ -44754,7 +45387,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L391",
+      "source_location": "L396",
       "weight": 1.0
     },
     {
@@ -44765,7 +45398,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L403",
+      "source_location": "L408",
       "weight": 1.0
     },
     {
@@ -44776,7 +45409,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L442",
+      "source_location": "L447",
       "weight": 1.0
     },
     {
@@ -44798,7 +45431,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L468",
+      "source_location": "L473",
       "weight": 1.0
     },
     {
@@ -46338,7 +46971,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L21",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -46349,7 +46982,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L23",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -46360,7 +46993,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L24",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -46371,29 +47004,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L26",
-      "weight": 1.0
-    },
-    {
-      "source": "claude",
-      "target": "docs_knowledge_graph",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CLAUDE.md",
-      "source_location": "L29",
-      "weight": 1.0
-    },
-    {
-      "source": "claude",
-      "target": "docs_operations",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "CLAUDE.md",
-      "source_location": "L30",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -46409,13 +47020,35 @@
     },
     {
       "source": "claude",
+      "target": "docs_knowledge_graph",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "claude",
+      "target": "docs_operations",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "claude",
       "target": "docs_engineering_standards",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L48",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -46426,7 +47059,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "CLAUDE.md",
-      "source_location": "L51",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -46811,7 +47444,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L188",
+      "source_location": "L193",
       "weight": 1.0
     },
     {
@@ -47032,5 +47665,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d0c89cbb4fe2f8aff502a299513c755533111fdb"
+  "built_at_commit": "7fac9962335b7c49bf33d0ae9599ae8b1d49a98e"
 }
