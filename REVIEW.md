@@ -16,9 +16,9 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | Web production build | Pass with warning | `pnpm build` on 2026-09-23; large Monaco chunks remain |
 | Rust formatting | Pass | `cargo fmt --check`, both cargo workspaces, 2026-09-23 |
 | Native desktop compile | Pass | Release build completed and `Any Code.app` launched on 2026-09-23 |
-| macOS bundle | Pass | `.app` and unsigned `.dmg` produced locally on 2026-08-23 |
+| macOS bundle | Pass | CI universal `.dmg` (x86_64 + arm64) launched on an Intel Mac, 2026-09-24; unsigned |
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
-| Windows installer | **Never built** | The Desktop Release workflow has 0 runs; no Windows build has ever been produced or launched (audit 2026-09-24) |
+| Windows installer | Built, **not launched** | `.exe` + `.msi` in draft release `app-v0.1.0` (run `35937745006`); nobody has run it on Windows |
 | GitHub CI | Pass | Run `35934057203`: all 7 jobs |
 | Credential vault | Pass | Real macOS Keychain round trip, 2026-09-24. **Before that date it never persisted a key** (in-memory mock) |
 | Security review | Pass — S1–S3 fixed | Fixed and tested 2026-09-24; CSP checked in a browser, not yet in the native WebView |
@@ -83,9 +83,25 @@ the earlier failure.
 - **Pass — tests:** 104 Rust (was 90), 3 ignored live; first frontend suite, 15 Vitest tests,
   now in CI. CI run `35934057203` passed all 7 jobs, including Linux against the real Secret
   Service and Windows against Credential Manager.
-- **Fail found, fixed — release workflow:** its first ever run (`35934070914`) built all
-  three platforms, then failed at "create a release" because the token was read-only.
-  `contents: write` was added; the rerun is `35935062802`.
+- **Release workflow — first ever runs, four defects found and fixed:**
+
+  | Run | Result | Cause | Fix |
+  |---|---|---|---|
+  | `35934070914` | all 3 fail | Built fine, then "Resource not accessible by integration" — token read-only | `permissions: contents: write` |
+  | `35935062802` | macOS fails | An unset secret arrives as `""`; Tauri tried to import an empty certificate | Export only credentials that have a value |
+  | `35936049920` | pass | — but the Mac build was **arm64-only**: it cannot start on an Intel Mac | `--target universal-apple-darwin` |
+  | `35936666105` | macOS fails | `openssl-sys` won't cross-compile to x86_64; it came only from git2's unused network features | `git2` without default features — no OpenSSL or libssh2 in the tree |
+  | `35937745006` | **pass** | | |
+
+- **Pass — draft release `app-v0.1.0`:** private and pre-release. Contents:
+  - Windows: `.exe` (NSIS) and `.msi`.
+  - macOS: universal `.dmg`.
+  - Linux: `.deb` and `.AppImage`.
+- **Pass — the CI-built macOS app runs.** It was downloaded from the draft and checked with
+  `lipo`: `x86_64 arm64`. It launched on this Intel Mac, created a 1280×800 window, ran for
+  15 s, wrote no crash report, and quit cleanly.
+  - It is unsigned: the download-quarantine flag had to be cleared first. A real user will
+    see Gatekeeper's "unidentified developer" warning until the build is signed.
 
 **Not run / open:**
 
@@ -97,7 +113,9 @@ the earlier failure.
 - **Gemini and OpenRouter have never been called live.** Unverified without keys:
   - Whether Gemini's compatible endpoint accepts `stream_options`.
   - The format of the model IDs it returns.
-- **C4 Windows launch and C5 terminal need the owner.**
+- **C4:** the Windows installer is built; **the owner has to launch it** on a Windows
+  machine — nobody has run the app on Windows.
+- **C5:** the terminal needs the owner.
 
 ### 2026-09-24 — Full project audit
 

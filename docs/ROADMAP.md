@@ -39,8 +39,8 @@ parallelism before Phase 3's approval system means shipping unbounded agents wit
 - [x] SQLite local store and migrations
 - [ ] Signed builds for Windows and macOS — unsigned pipeline built (`.github/workflows/desktop-release.yml`);
       blocked on the user supplying Apple/Windows signing certificates, see [RELEASING.md](RELEASING.md)
-- [ ] **Exit condition on Windows** — the release workflow has never been run, so no Windows
-      build has been produced or launched. macOS: launched locally (close-out C4)
+- [ ] **Exit condition on Windows** — the installer now builds in CI; it has not been
+      launched on Windows yet. macOS: the CI universal build launched (close-out C4)
 
 ## Phase 1 · Workbench
 
@@ -153,7 +153,9 @@ evidence for every item: [AUDIT.md](AUDIT.md).
 **Earlier phases' exit conditions:**
 
 - [ ] **C4 · Phase 0 on Windows** — run the Desktop Release workflow; **owner** launches the
-      Windows installer.
+      Windows installer. *Workflow fixed (four defects) and passing on all three platforms;
+      the `.exe`/`.msi` are in draft release `app-v0.1.0`. The universal macOS build was
+      launched on an Intel Mac. Remaining: a Windows launch.*
 - [ ] **C5 · Terminal** — **owner** opens the Terminal panel once and confirms a prompt.
 - [ ] **C6 · Phase 3 on the final code** — one passing live run of `agent_live_test`.
 - [ ] **C7 · Phase 2** — configurable base URL (OpenRouter, LM Studio), Gemini adapter, then

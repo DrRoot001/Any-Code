@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/desktop-release.yml": {
-    "mtime": 1790207775.8358145,
-    "seen": 1790207808.9334981,
-    "ast_hash": "b64637b536f342d8d28b11923286b7cf",
+    "mtime": 1790208242.0044959,
+    "seen": 1790209054.2431831,
+    "ast_hash": "8ce51f35ee78dcd369f69ff8873a6571",
     "semantic_hash": ""
   },
   "docs/RELEASING.md": {
@@ -882,9 +882,9 @@
     "semantic_hash": ""
   },
   "crates/anycode-git/Cargo.toml": {
-    "mtime": 1787580916.677826,
-    "seen": 1787583385.097978,
-    "ast_hash": "7aedf2b42bfb5686b012d22daf101ea4",
+    "mtime": 1790208802.3766046,
+    "seen": 1790209054.2430358,
+    "ast_hash": "907c18539ec95facfa2456e4cec4aaa3",
     "semantic_hash": ""
   },
   "crates/anycode-git/src/lib.rs": {
