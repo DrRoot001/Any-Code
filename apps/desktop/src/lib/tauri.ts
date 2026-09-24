@@ -293,3 +293,17 @@ export interface ContextPackage {
   repoEstTokens: number;
   repoFiles: number;
 }
+
+/**
+ * The workspace index (Phase 4). Returned by `index_status` and pushed as `index:status`
+ * whenever it changes. `ready` counts are what the index holds, not estimates.
+ */
+export type IndexStatus =
+  | { state: "none" }
+  | { state: "building" }
+  | { state: "ready"; files: number; chunks: number; symbols: number; lastRefreshMs: number }
+  | { state: "failed"; error: string };
+
+export const indexCommands = {
+  status: () => invoke<IndexStatus>("index_status"),
+};
