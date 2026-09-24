@@ -1,16 +1,16 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~245,409 words
+- 138 files · ~246,141 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1507 nodes · 2504 edges · 123 communities (94 shown, 29 thin omitted)
+- 1508 nodes · 2505 edges · 123 communities (94 shown, 29 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `80d6392d`
+- Built from commit: `61dfc5e8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -365,8 +365,8 @@ Cohesion: 0.25
 Nodes (7): Permissions, Reporting, Secrets, Security model, Shell risk classes, The one rule, Threat model
 
 ### Community 67 - "Verification history"
-Cohesion: 0.14
-Nodes (14): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:45:09Z — GitHub CI after branding and governance push, 2026-08-24 — Phase 1 workbench review and UX remediation, 2026-08-24 — Second-pass UI/UX and ledger audit, 2026-09-23 — Integrated terminal defect hunt, 2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition, 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence, 2026-09-23 — Scope decision: extensions and the store (documents only) (+6 more)
+Cohesion: 0.13
+Nodes (15): 2026-08-23T00:41:22Z — Brand integration baseline, 2026-08-23T00:45:09Z — GitHub CI after branding and governance push, 2026-08-24 — Phase 1 workbench review and UX remediation, 2026-08-24 — Second-pass UI/UX and ledger audit, 2026-09-23 — Integrated terminal defect hunt, 2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition, 2026-09-23 — Phase 3 MVP: agent dock, approvals, cancellation, evidence, 2026-09-23 — Scope decision: extensions and the store (documents only) (+7 more)
 
 ### Community 68 - "AgentPanel.tsx"
 Cohesion: 0.21
@@ -521,7 +521,7 @@ Cohesion: 0.20
 Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 
 ## Knowledge Gaps
-- **515 isolated node(s):** `Phase 0 · Foundation`, `Phase 1 · Workbench`, `Phase 2 · Provider layer`, `Phase 3 · Agent runtime`, `Current phase: 3 close-out` (+510 more)
+- **516 isolated node(s):** `Current quality status`, `Review protocol`, `2026-09-24 — Phase 3 close-out (C1–C10)`, `2026-09-24 — Full project audit`, `2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition` (+511 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **29 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -529,13 +529,13 @@ Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `AppState` connect `AppState` to `Store`, `anycode-tools/src/lib.rs`, `provider_commands.rs`, `agent_commands.rs`?**
-  _High betweenness centrality (0.100) - this node is a cross-community bridge._
+  _High betweenness centrality (0.094) - this node is a cross-community bridge._
 - **Why does `ToolRegistry` connect `anycode-tools/src/lib.rs` to `AppState`, `provider_commands.rs`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **Why does `replan_prompt()` connect `verdict.rs` to `agent_commands.rs`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **What connects `Phase 0 · Foundation`, `Phase 1 · Workbench`, `Phase 2 · Provider layer` to the rest of the system?**
-  _515 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **What connects `Current quality status`, `Review protocol`, `2026-09-24 — Phase 3 close-out (C1–C10)` to the rest of the system?**
+  _516 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**

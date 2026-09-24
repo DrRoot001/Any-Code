@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/desktop-release.yml": {
-    "mtime": 1790207047.7477577,
-    "seen": 1790207056.915296,
-    "ast_hash": "ef225bdf389503fd9d1ed371e5e9ceea",
+    "mtime": 1790207775.8358145,
+    "seen": 1790207808.9334981,
+    "ast_hash": "b64637b536f342d8d28b11923286b7cf",
     "semantic_hash": ""
   },
   "docs/RELEASING.md": {
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "REVIEW.md": {
-    "mtime": 1790203800.3843744,
-    "seen": 1790203815.733461,
-    "ast_hash": "8ead8813ca1b07ce5ee3dbc63cab7d81",
+    "mtime": 1790207704.4050074,
+    "seen": 1790207808.9335098,
+    "ast_hash": "ac508c4093cc03e7f078912ced0416bd",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/capabilities/default.json": {

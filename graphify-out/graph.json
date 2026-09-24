@@ -10363,7 +10363,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:41:22z \u2014 brand integration baseline",
       "source_file": "REVIEW.md",
-      "source_location": "L230"
+      "source_location": "L289"
     },
     {
       "id": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
@@ -10375,7 +10375,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:45:09z \u2014 github ci after branding and governance push",
       "source_file": "REVIEW.md",
-      "source_location": "L255"
+      "source_location": "L314"
     },
     {
       "id": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
@@ -10387,7 +10387,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 phase 1 workbench review and ux remediation",
       "source_file": "REVIEW.md",
-      "source_location": "L267"
+      "source_location": "L326"
     },
     {
       "id": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
@@ -10399,7 +10399,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 second-pass ui/ux and ledger audit",
       "source_file": "REVIEW.md",
-      "source_location": "L306"
+      "source_location": "L365"
     },
     {
       "id": "review_2026_09_23_integrated_terminal_defect_hunt",
@@ -10411,7 +10411,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 integrated terminal defect hunt",
       "source_file": "REVIEW.md",
-      "source_location": "L165"
+      "source_location": "L224"
     },
     {
       "id": "review_2026_09_23_phase_3_completion_planner_state_machine_audit_log_live_exit_condition",
@@ -10423,7 +10423,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 completion: planner, state machine, audit log, live exit condition",
       "source_file": "REVIEW.md",
-      "source_location": "L68"
+      "source_location": "L127"
     },
     {
       "id": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
@@ -10435,7 +10435,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 mvp: agent dock, approvals, cancellation, evidence",
       "source_file": "REVIEW.md",
-      "source_location": "L332"
+      "source_location": "L391"
     },
     {
       "id": "review_2026_09_23_scope_decision_extensions_and_the_store_documents_only",
@@ -10447,7 +10447,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 scope decision: extensions and the store (documents only)",
       "source_file": "REVIEW.md",
-      "source_location": "L152"
+      "source_location": "L211"
     },
     {
       "id": "review_2026_09_24_full_project_audit",
@@ -10459,7 +10459,19 @@
       "node_kind": "heading",
       "norm_label": "2026-09-24 \u2014 full project audit",
       "source_file": "REVIEW.md",
-      "source_location": "L43"
+      "source_location": "L102"
+    },
+    {
+      "id": "review_2026_09_24_phase_3_close_out_c1_c10",
+      "label": "2026-09-24 \u2014 Phase 3 close-out (C1\u2013C10)",
+      "_origin": "ast",
+      "community": 67,
+      "community_name": "Verification history",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2026-09-24 \u2014 phase 3 close-out (c1\u2013c10)",
+      "source_file": "REVIEW.md",
+      "source_location": "L44"
     },
     {
       "id": "review_current_quality_status",
@@ -10483,7 +10495,7 @@
       "node_kind": "heading",
       "norm_label": "open qa risks",
       "source_file": "REVIEW.md",
-      "source_location": "L397"
+      "source_location": "L456"
     },
     {
       "id": "review_qa_and_review_ledger",
@@ -10507,7 +10519,7 @@
       "node_kind": "heading",
       "norm_label": "review protocol",
       "source_file": "REVIEW.md",
-      "source_location": "L27"
+      "source_location": "L28"
     },
     {
       "id": "review_verification_history",
@@ -10519,7 +10531,7 @@
       "node_kind": "heading",
       "norm_label": "verification history",
       "source_file": "REVIEW.md",
-      "source_location": "L41"
+      "source_location": "L42"
     },
     {
       "id": "apps_desktop_src_components_agentpanel",
@@ -43766,18 +43778,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L27",
-      "weight": 1.0
-    },
-    {
-      "source": "review_qa_and_review_ledger",
-      "target": "review_open_qa_risks",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L397",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -43788,7 +43789,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L41",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "review_qa_and_review_ledger",
+      "target": "review_open_qa_risks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L456",
       "weight": 1.0
     },
     {
@@ -43804,90 +43816,13 @@
     },
     {
       "source": "review_verification_history",
-      "target": "review_2026_09_23_scope_decision_extensions_and_the_store_documents_only",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L152",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_09_23_integrated_terminal_defect_hunt",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L165",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_08_23t00_41_22z_brand_integration_baseline",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L230",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L255",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L267",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L306",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
-      "target": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "REVIEW.md",
-      "source_location": "L332",
-      "weight": 1.0
-    },
-    {
-      "source": "review_verification_history",
       "target": "review_2026_09_24_full_project_audit",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L43",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -43898,7 +43833,95 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L68",
+      "source_location": "L127",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_09_23_scope_decision_extensions_and_the_store_documents_only",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L211",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_09_23_integrated_terminal_defect_hunt",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_08_23t00_41_22z_brand_integration_baseline",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L289",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L314",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L326",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L365",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L391",
+      "weight": 1.0
+    },
+    {
+      "source": "review_verification_history",
+      "target": "review_2026_09_24_phase_3_close_out_c1_c10",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "REVIEW.md",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -45911,7 +45934,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L52",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -46132,5 +46155,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "80d6392d536c714698be7670b368ce70a52d692f"
+  "built_at_commit": "61dfc5e88b8bae2a592fff1a1db5f0669c406fe9"
 }
