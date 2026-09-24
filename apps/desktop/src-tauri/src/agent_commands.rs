@@ -1105,3 +1105,120 @@ pub fn cancel_task<R: Runtime>(app: AppHandle<R>, task_id: String) -> Result<(),
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use anycode_security::RiskLevel;
+    use std::fs;
+
+    /// A directory under the OS temp dir that no other test can collide with, cleaned up
+    /// on drop. Zero-dependency, matching the pattern already used by `anycode-fs`'s tests.
+    struct TempDir(std::path::PathBuf);
+
+    impl TempDir {
+        fn new() -> Self {
+            let path = std::env::temp_dir().join(format!("agent-commands-test-{}", Uuid::new_v4()));
+            fs::create_dir_all(&path).unwrap();
+            Self(path)
+        }
+
+        fn path(&self) -> &Path {
+            &self.0
+        }
+    }
+
+    impl Drop for TempDir {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    // ── load_workspace_policy ──────────────────────────────────────────────────
+
+    #[test]
+    fn a_workspace_with_no_policy_file_restricts_nothing() {
+        let dir = TempDir::new();
+        let policy = match load_workspace_policy(dir.path()) {
+            Ok(policy) => policy,
+            Err(_) => panic!("expected an empty policy, not an error"),
+        };
+        // The property under test: a missing file behaves as an unrestricted policy,
+        // never as a load failure.
+        assert_eq!(
+            policy.apply("shell.execute", None, RiskLevel::Low).0,
+            RiskLevel::Low
+        );
+    }
+
+    #[test]
+    fn a_valid_policy_file_is_loaded_and_applied() {
+        let dir = TempDir::new();
+        fs::create_dir_all(dir.path().join(".anycode")).unwrap();
+        fs::write(
+            dir.path().join(POLICY_FILE),
+            "approval_required:\n  - shell.execute\n",
+        )
+        .unwrap();
+        let policy = match load_workspace_policy(dir.path()) {
+            Ok(policy) => policy,
+            Err(_) => panic!("expected the policy to load"),
+        };
+        // Proves the file's own restriction was actually parsed, not just defaulted.
+        assert_eq!(
+            policy.apply("shell.execute", None, RiskLevel::Low).0,
+            RiskLevel::High
+        );
+    }
+
+    #[test]
+    fn a_policy_file_that_exists_but_is_invalid_yaml_fails_closed() {
+        let dir = TempDir::new();
+        fs::create_dir_all(dir.path().join(".anycode")).unwrap();
+        fs::write(dir.path().join(POLICY_FILE), "protected: [unclosed").unwrap();
+        assert!(
+            load_workspace_policy(dir.path()).is_err(),
+            "a workspace rule that failed to parse must not be silently ignored"
+        );
+    }
+
+    // ── workspace_relative ─────────────────────────────────────────────────────
+
+    #[test]
+    fn a_relative_path_is_returned_as_is() {
+        let dir = TempDir::new();
+        let root = anycode_fs::WorkspaceRoot::new(dir.path()).unwrap();
+        assert_eq!(
+            workspace_relative(&root, "src/lib.rs"),
+            Some("src/lib.rs".to_string())
+        );
+    }
+
+    #[test]
+    fn an_absolute_path_inside_the_root_resolves_to_its_relative_form() {
+        let dir = TempDir::new();
+        let root = anycode_fs::WorkspaceRoot::new(dir.path()).unwrap();
+        // Built with `Path::join` — not a hardcoded `/` — so this passes on Windows CI too.
+        let absolute = root.path().join("src").join("lib.rs");
+        assert_eq!(
+            workspace_relative(&root, absolute.to_str().unwrap()),
+            Some("src/lib.rs".to_string())
+        );
+    }
+
+    #[test]
+    fn a_path_that_escapes_the_root_resolves_to_none() {
+        let dir = TempDir::new();
+        let root = anycode_fs::WorkspaceRoot::new(dir.path()).unwrap();
+        assert_eq!(workspace_relative(&root, "../etc/passwd"), None);
+        assert_eq!(workspace_relative(&root, "a/../../b"), None);
+    }
+
+    // `TaskRun::apply_workspace_policy` needs a live `AppHandle<R>`, an `EventScope`, and a
+    // `TaskMachine` to construct — disproportionate scaffolding for a thin wrapper around
+    // `WorkspacePolicy::apply` plus the shell-command name scan above it. The risk-raising
+    // logic itself (`WorkspacePolicy::apply`) is already exercised directly and thoroughly
+    // in `crates/anycode-security/src/workspace_policy.rs`'s own tests
+    // (`writing_a_protected_path_is_refused_and_reading_one_is_asked`,
+    // `a_policy_can_never_lower_risk`, etc.), so skipped here per the task's own note.
+}

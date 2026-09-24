@@ -252,3 +252,44 @@ export const historyCommands = {
   taskEvents: (taskId: string) =>
     invoke<import("./history").AuditEvent[]>("task_events", { taskId }),
 };
+
+/** Why a passage is in a context package (anycode_context::Reason). */
+export type ContextReason =
+  | { kind: "named_in_instruction" }
+  | { kind: "defines_symbol"; symbol: string }
+  | { kind: "matches_terms"; terms: string[] }
+  | { kind: "imported_by"; path: string }
+  | { kind: "changed_in_working_tree" };
+
+export interface ContextItem {
+  path: string;
+  startLine: number;
+  endLine: number;
+  /** For an outline item, the file's symbol list rather than its text. */
+  text: string;
+  outline: boolean;
+  reasons: ContextReason[];
+  score: number;
+  /** Estimated (bytes ÷ 4), never measured. */
+  estTokens: number;
+}
+
+export interface ContextExcluded {
+  path: string;
+  startLine: number;
+  endLine: number;
+  reasons: ContextReason[];
+  estTokens: number;
+  why: string;
+}
+
+/** Payload of `task:context:{taskId}` — what the agent was given, and what it was not. */
+export interface ContextPackage {
+  intent: { paths: string[]; identifiers: string[]; terms: string[] };
+  items: ContextItem[];
+  excluded: ContextExcluded[];
+  estTokens: number;
+  budgetTokens: number;
+  repoEstTokens: number;
+  repoFiles: number;
+}

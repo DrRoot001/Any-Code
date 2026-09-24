@@ -3,6 +3,7 @@ import { commands } from "../lib/tauri";
 import { useWorkbenchStore } from "../state/workbenchStore";
 import { useState } from "react";
 import { Icon } from "./Icons";
+import MemorySection from "./MemorySection";
 import ProvidersSection from "./ProvidersSection";
 import { useDialogFocus } from "../hooks/useDialogFocus";
 
@@ -72,6 +73,11 @@ export default function SettingsPanel({
         <section>
           <h3>Providers</h3>
           <ProvidersSection />
+        </section>
+
+        <section>
+          <h3>Memory</h3>
+          <MemorySection />
         </section>
 
         <section>

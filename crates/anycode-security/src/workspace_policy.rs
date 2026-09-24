@@ -114,7 +114,9 @@ impl WorkspacePolicy {
             if access == PathAccess::Write && path.trim_start_matches("./") == POLICY_FILE {
                 return (
                     RiskLevel::Critical,
-                    Some(format!("{POLICY_FILE} holds this workspace's permission rules")),
+                    Some(format!(
+                        "{POLICY_FILE} holds this workspace's permission rules"
+                    )),
                 );
             }
             if self.is_protected(path) {
@@ -178,7 +180,10 @@ approval_required:
 
     #[test]
     fn the_agent_cannot_rewrite_its_own_rules() {
-        for policy in [WorkspacePolicy::default(), WorkspacePolicy::parse(POLICY).unwrap()] {
+        for policy in [
+            WorkspacePolicy::default(),
+            WorkspacePolicy::parse(POLICY).unwrap(),
+        ] {
             let (risk, reason) = policy.apply(
                 "filesystem.write.workspace",
                 Some((POLICY_FILE, PathAccess::Write)),

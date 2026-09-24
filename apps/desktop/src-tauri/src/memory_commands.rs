@@ -203,3 +203,140 @@ pub fn task_events(state: State<AppState>, task_id: String) -> Result<Vec<Value>
         .map(|e| serde_json::to_value(e).map_err(|e| e.to_string()))
         .collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::workspace::WorkspaceState;
+    use anycode_tools::ToolRegistry;
+    use std::collections::HashMap;
+    use std::fs;
+    use std::path::Path;
+    use std::sync::Mutex;
+    use tauri::{Manager, Runtime};
+    use uuid::Uuid;
+
+    /// A directory under the OS temp dir, cleaned up on drop. Zero-dependency, matching
+    /// the pattern `anycode-fs`'s own tests use.
+    struct TempDir(std::path::PathBuf);
+
+    impl TempDir {
+        fn new() -> Self {
+            let path =
+                std::env::temp_dir().join(format!("memory-commands-test-{}", Uuid::new_v4()));
+            fs::create_dir_all(&path).unwrap();
+            Self(path)
+        }
+
+        fn path(&self) -> &Path {
+            &self.0
+        }
+    }
+
+    impl Drop for TempDir {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    /// A mock Tauri app with a fresh in-memory store, optionally with a workspace already
+    /// open at `workspace`. Never touches the user's real keychain, network, or home
+    /// directory — the store is in-memory and the workspace is a throwaway temp dir.
+    fn test_app(workspace: Option<&Path>) -> (tauri::App<impl Runtime>, Uuid) {
+        let app = tauri::test::mock_builder()
+            .build(tauri::test::mock_context(tauri::test::noop_assets()))
+            .unwrap();
+        let session_id = Uuid::new_v4();
+        app.manage(AppState {
+            store: Mutex::new(anycode_store::Store::open_in_memory().unwrap()),
+            workspace: Mutex::new(None),
+            terminals: Mutex::new(HashMap::new()),
+            tools: ToolRegistry::standard(),
+            pending_approvals: Mutex::new(HashMap::new()),
+            running_tasks: Mutex::new(HashMap::new()),
+            session_id,
+        });
+        if let Some(path) = workspace {
+            let fs_root = anycode_fs::WorkspaceRoot::new(path).unwrap();
+            let state = app.state::<AppState>();
+            *state.workspace.lock().unwrap() = Some(WorkspaceState { fs_root });
+        }
+        (app, session_id)
+    }
+
+    #[test]
+    fn adopt_instruction_refuses_a_path_not_in_instruction_files() {
+        let dir = TempDir::new();
+        fs::write(dir.path().join("CLAUDE.md"), "rules").unwrap();
+        fs::create_dir_all(dir.path().join("src")).unwrap();
+        fs::write(dir.path().join("src/main.rs"), "fn main() {}").unwrap();
+        let (app, _) = test_app(Some(dir.path()));
+
+        assert!(adopt_instruction(app.state(), "../../etc/passwd".into()).is_err());
+        assert!(adopt_instruction(app.state(), "src/main.rs".into()).is_err());
+    }
+
+    #[test]
+    fn adopt_instruction_refuses_a_file_over_64_kib() {
+        let dir = TempDir::new();
+        let oversized = "a".repeat(MAX_INSTRUCTION_BYTES as usize + 1);
+        fs::write(dir.path().join("CLAUDE.md"), &oversized).unwrap();
+        let (app, _) = test_app(Some(dir.path()));
+
+        let err = adopt_instruction(app.state(), "CLAUDE.md".into())
+            .expect_err("an oversized instruction file must be refused");
+        assert!(err.contains("65536"), "{err}");
+    }
+
+    #[test]
+    fn adopting_claude_md_creates_a_workspace_memory_and_is_then_reported_adopted() {
+        let dir = TempDir::new();
+        let content = "Follow these rules on every task.";
+        fs::write(dir.path().join("CLAUDE.md"), content).unwrap();
+        let (app, _) = test_app(Some(dir.path()));
+
+        let memory = adopt_instruction(app.state(), "CLAUDE.md".into()).unwrap();
+        assert_eq!(memory.scope, MemoryScope::Workspace);
+        assert_eq!(memory.source, Some("adopted:CLAUDE.md".to_string()));
+        assert_eq!(memory.content, content);
+
+        let listed = repository_instructions(app.state()).unwrap();
+        let claude = listed
+            .iter()
+            .find(|f| f.path == "CLAUDE.md")
+            .expect("CLAUDE.md should be listed: it exists in the workspace");
+        assert!(claude.adopted);
+    }
+
+    #[test]
+    fn add_memory_at_workspace_scope_without_an_open_workspace_is_an_error() {
+        let (app, _) = test_app(None);
+        assert!(add_memory(app.state(), MemoryScope::Workspace, "note".into()).is_err());
+    }
+
+    #[test]
+    fn memory_audit_events_never_contain_the_memorys_content() {
+        let dir = TempDir::new();
+        let secret_added = "the user's private note about the deploy key";
+        let secret_adopted = "instructions nobody else should see verbatim in a log";
+        fs::write(dir.path().join("CLAUDE.md"), secret_adopted).unwrap();
+        let (app, session_id) = test_app(Some(dir.path()));
+
+        add_memory(app.state(), MemoryScope::Global, secret_added.into()).unwrap();
+        adopt_instruction(app.state(), "CLAUDE.md".into()).unwrap();
+
+        let state = app.state::<AppState>();
+        let events = state
+            .store
+            .lock()
+            .unwrap()
+            .session_events(session_id)
+            .unwrap();
+        let kinds: Vec<&str> = events.iter().map(|e| e.kind.as_str()).collect();
+        assert_eq!(kinds, ["memory.added", "memory.adopted"]);
+
+        let logged = serde_json::to_string(&events).unwrap();
+        assert!(!logged.contains(secret_added), "{logged}");
+        assert!(!logged.contains(secret_adopted), "{logged}");
+    }
+}

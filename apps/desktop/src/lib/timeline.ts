@@ -2,7 +2,14 @@
  * The Agent Dock's timeline logic, kept free of React so it can be tested directly
  * (timeline.test.ts). The component only wires events to these functions.
  */
-import type { RiskLevel, TaskEvidence, TaskPlan, TaskUsage, TaskVerdict } from "./tauri";
+import type {
+  ContextPackage,
+  RiskLevel,
+  TaskEvidence,
+  TaskPlan,
+  TaskUsage,
+  TaskVerdict,
+} from "./tauri";
 
 export type Entry =
   | { kind: "instruction"; text: string }
@@ -25,6 +32,8 @@ export type Entry =
       verdict: TaskVerdict;
       usage: TaskUsage;
     }
+  /** What the context builder gave the agent — the Context Inspector (PRD §37). */
+  | { kind: "context"; package: ContextPackage }
   | { kind: "error"; message: string }
   | { kind: "cancelled" }
   /** A past task with no terminal event in the log: the app closed while it ran. */

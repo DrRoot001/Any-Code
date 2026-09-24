@@ -7,13 +7,10 @@ import {
   type ApprovalResponse,
   type TaskApprovalRequest,
   type TaskDone,
-  type TaskEvidence,
   type TaskPlan,
   type TaskState,
   type TaskToolCall,
   type TaskToolResult,
-  type TaskUsage,
-  type TaskVerdict,
 } from "../lib/tauri";
 import {
   appendPlanText,
@@ -27,6 +24,8 @@ import { useWorkbenchStore } from "../state/workbenchStore";
 import ApprovalDialog from "./ApprovalDialog";
 import { Icon } from "./Icons";
 import ModelPicker from "./ModelPicker";
+import TaskHistoryPanel from "./TaskHistoryPanel";
+import { TimelineEntry } from "./TimelineEntry";
 
 /** What the task is doing right now, in words — never just a colour or a spinner. */
 const STATE_LABEL: Record<TaskState, string> = {
@@ -54,6 +53,10 @@ export default function AgentPanel() {
   const [startError, setStartError] = useState<string | null>(null);
   const [approval, setApproval] = useState<TaskApprovalRequest | null>(null);
   const [taskState, setTaskState] = useState<TaskState | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  // Bumped whenever a task finishes, and passed as TaskHistoryPanel's `key` — remounting
+  // it forces a fresh fetch, so a task that just finished shows up in its own list.
+  const [historyVersion, setHistoryVersion] = useState(0);
   const sessionId = useMemo(() => crypto.randomUUID(), []);
   const scrollRef = useRef<HTMLDivElement>(null);
   const unlistenRef = useRef<UnlistenFn[]>([]);
@@ -84,6 +87,7 @@ export default function AgentPanel() {
       setApproval(null);
       setTaskId(null);
       detach();
+      setHistoryVersion((v) => v + 1);
       // The agent may have created or edited files. Drop the cached directory listings
       // and git status so the Explorer and Source Control show what's actually there.
       queryClient.invalidateQueries();
@@ -176,6 +180,12 @@ export default function AgentPanel() {
     agentCommands.cancelTask(taskId).catch((error) => setStartError(String(error)));
   }, [taskId]);
 
+  // Past tasks are only reachable between runs — there's nowhere to show them while the
+  // live timeline above is doing something.
+  if (historyOpen) {
+    return <TaskHistoryPanel key={historyVersion} onClose={() => setHistoryOpen(false)} />;
+  }
+
   if (picker.providersError) {
     return (
       <div className="empty-state">
@@ -210,6 +220,16 @@ export default function AgentPanel() {
         onModelChange={picker.setModel}
         disabled={!!taskId}
       />
+
+      {/* Past tasks make no sense to open mid-run: nothing here would be live. */}
+      {!taskId && (
+        <div className="agent-toolbar">
+          <button className="button" onClick={() => setHistoryOpen(true)}>
+            <Icon name="history" size={14} />
+            Past tasks
+          </button>
+        </div>
+      )}
 
       <div className="panel-scroll agent-timeline" ref={scrollRef}>
         {entries.length === 0 && (
@@ -275,151 +295,3 @@ export default function AgentPanel() {
   );
 }
 
-function TimelineEntry({ entry }: { entry: Entry }) {
-  switch (entry.kind) {
-    case "instruction":
-      return (
-        <div className="agent-entry agent-entry--instruction">
-          <span className="chat-role">you</span>
-          <p>{entry.text}</p>
-        </div>
-      );
-    case "plan":
-      return (
-        <div className="agent-entry agent-plan">
-          <h4>Plan</h4>
-          {entry.steps && entry.steps.length > 0 ? (
-            <ol>
-              {entry.steps.map((step, i) => (
-                <li key={i}>{step}</li>
-              ))}
-            </ol>
-          ) : (
-            <p>{entry.text}</p>
-          )}
-        </div>
-      );
-    case "replan":
-      return (
-        <div className="agent-entry agent-replan" role="status">
-          <span className="chat-role">runtime</span>
-          <p>{entry.reason}</p>
-        </div>
-      );
-    case "text":
-      return (
-        <div className="agent-entry">
-          <p>{entry.text}</p>
-        </div>
-      );
-    case "tool_call":
-      return (
-        <div className="agent-entry agent-step">
-          <span className={`risk risk--${entry.risk}`}>{entry.risk}</span>
-          <code>{entry.name}</code>
-          {entry.summary && <span className="agent-step-detail">{entry.summary}</span>}
-          {entry.reason && <span className="agent-step-reason">{entry.reason}</span>}
-        </div>
-      );
-    case "tool_result":
-      return (
-        <div className={`agent-entry agent-step ${entry.ok ? "" : "danger"}`}>
-          <span aria-hidden="true">{entry.ok ? "✓" : "✕"}</span>
-          <span className="visually-hidden">{entry.ok ? "succeeded" : "failed"}</span>
-          <code>{entry.name}</code>
-          {entry.detail && <span className="agent-step-detail">{entry.detail}</span>}
-        </div>
-      );
-    case "done":
-      // The final message already streamed in as text entries; rendering `entry.text`
-      // again here would show it twice.
-      return (
-        <div className="agent-entry">
-          <Evidence evidence={entry.evidence} verdict={entry.verdict} usage={entry.usage} />
-        </div>
-      );
-    case "error":
-      return (
-        <p className="danger" role="alert">
-          {entry.message}
-        </p>
-      );
-    case "cancelled":
-      return <p className="muted">Task stopped.</p>;
-    case "interrupted":
-      return <p className="muted">Did not finish — the app closed while this task was running.</p>;
-  }
-}
-
-/**
- * What the runtime measured. The verdict is the runtime's (anycode_agent::verdict),
- * judged from each check's latest exit code — displayed here, never recomputed, so the
- * UI cannot disagree with the audit log. Nothing verified is said plainly (PRD §8.6).
- */
-function Evidence({
-  evidence,
-  verdict,
-  usage,
-}: {
-  evidence: TaskEvidence;
-  verdict: TaskVerdict;
-  usage: TaskUsage;
-}) {
-  const { filesChanged, commands } = evidence;
-
-  return (
-    <section className="evidence" aria-label="Evidence">
-      <h4>Evidence</h4>
-
-      {verdict.kind === "unverified" ? (
-        <p className="evidence-verdict evidence-verdict--unverified">
-          Not verified — the agent ran no checks.
-        </p>
-      ) : verdict.kind === "failed" ? (
-        <p className="evidence-verdict evidence-verdict--failed" role="alert">
-          Verification failed —{" "}
-          {verdict.failing
-            .map((c) => `${c.command} ${c.exitCode === null ? "was killed" : `exited ${c.exitCode}`}`)
-            .join("; ")}
-          .
-        </p>
-      ) : (
-        <p className="evidence-verdict evidence-verdict--passed">
-          Verified — {verdict.checks.length} check{verdict.checks.length === 1 ? "" : "s"} passed
-          on {verdict.checks.length === 1 ? "its" : "their"} latest run.
-        </p>
-      )}
-
-      {commands.length > 0 && (
-        <ul className="evidence-list">
-          {commands.map((c, i) => (
-            <li key={i} className={c.exitCode === 0 ? "" : c.verification ? "danger" : "muted"}>
-              {c.verification && <span className="evidence-tag">check</span>}
-              <code>{c.command}</code>
-              <span className="muted"> exit {c.exitCode ?? "—"}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <h5>
-        {filesChanged.length === 0
-          ? "No files changed"
-          : `${filesChanged.length} file${filesChanged.length === 1 ? "" : "s"} changed`}
-      </h5>
-      {filesChanged.length > 0 && (
-        <ul className="evidence-list">
-          {filesChanged.map((path) => (
-            <li key={path}>
-              <code>{path}</code>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <p className="muted evidence-usage">
-        {usage.inputTokens.toLocaleString()} in · {usage.outputTokens.toLocaleString()} out tokens
-      </p>
-    </section>
-  );
-}

@@ -501,6 +501,8 @@ input:focus-visible {
   border-left: 1px solid var(--ac-border);
   background: var(--ac-surface);
   box-shadow: -12px 0 35px #0002;
+  /* Memory adds enough content that the panel can exceed the window's height. */
+  overflow-y: auto;
 }
 .settings-heading {
   display: flex;
@@ -625,6 +627,91 @@ input:focus-visible {
   border-radius: 4px;
   padding: 6px 10px;
   font-size: 13px;
+}
+
+/* --- Memory (ADR 0004 "Memory", PRD §38) -------------------------------- */
+.memory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+.memory-row {
+  padding: 8px 10px;
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-canvas);
+}
+.memory-row-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+.memory-scope {
+  color: var(--ac-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.memory-row p {
+  margin: 0;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+.memory-row-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.memory-textarea {
+  width: 100%;
+  background: var(--ac-canvas);
+  color: var(--ac-text-primary);
+  border: 1px solid var(--ac-border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 13px;
+  resize: vertical;
+}
+.memory-add {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid var(--ac-border);
+}
+.memory-scope-choice {
+  display: flex;
+  gap: 14px;
+}
+.memory-export {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ac-border);
+}
+.instruction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.instruction-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.instruction-row code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --- Agent dock (PRD §54/§55) ------------------------------------------- */
@@ -783,6 +870,73 @@ input:focus-visible {
 .agent-replan {
   border-left: 3px solid var(--ac-border);
   padding-left: 8px;
+}
+.agent-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--ac-border);
+}
+
+/* --- Task history (ADR 0004 "Session resume") --------------------------- */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.history-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-surface);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.history-row:hover {
+  background: var(--ac-elevated);
+}
+.history-row-instruction {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.history-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--ac-text-muted);
+  font-size: 11px;
+}
+/* Outcome is always spelled out in the label; colour is a reinforcement, not the meaning. */
+.history-outcome--completed {
+  color: var(--ac-success);
+}
+.history-outcome--failed {
+  color: var(--ac-danger);
+}
+.history-outcome--cancelled,
+.history-outcome--unfinished {
+  color: var(--ac-warning);
+}
+.history-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--ac-border);
+  background: var(--ac-elevated);
+  color: var(--ac-text-secondary);
+  font-size: 12px;
 }
 
 /* --- Approval dialog (PRD §50) ------------------------------------------ */
