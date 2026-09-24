@@ -10363,7 +10363,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:41:22z \u2014 brand integration baseline",
       "source_file": "REVIEW.md",
-      "source_location": "L289"
+      "source_location": "L307"
     },
     {
       "id": "review_2026_08_23t00_45_09z_github_ci_after_branding_and_governance_push",
@@ -10375,7 +10375,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-23t00:45:09z \u2014 github ci after branding and governance push",
       "source_file": "REVIEW.md",
-      "source_location": "L314"
+      "source_location": "L332"
     },
     {
       "id": "review_2026_08_24_phase_1_workbench_review_and_ux_remediation",
@@ -10387,7 +10387,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 phase 1 workbench review and ux remediation",
       "source_file": "REVIEW.md",
-      "source_location": "L326"
+      "source_location": "L344"
     },
     {
       "id": "review_2026_08_24_second_pass_ui_ux_and_ledger_audit",
@@ -10399,7 +10399,7 @@
       "node_kind": "heading",
       "norm_label": "2026-08-24 \u2014 second-pass ui/ux and ledger audit",
       "source_file": "REVIEW.md",
-      "source_location": "L365"
+      "source_location": "L383"
     },
     {
       "id": "review_2026_09_23_integrated_terminal_defect_hunt",
@@ -10411,7 +10411,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 integrated terminal defect hunt",
       "source_file": "REVIEW.md",
-      "source_location": "L224"
+      "source_location": "L242"
     },
     {
       "id": "review_2026_09_23_phase_3_completion_planner_state_machine_audit_log_live_exit_condition",
@@ -10423,7 +10423,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 completion: planner, state machine, audit log, live exit condition",
       "source_file": "REVIEW.md",
-      "source_location": "L127"
+      "source_location": "L145"
     },
     {
       "id": "review_2026_09_23_phase_3_mvp_agent_dock_approvals_cancellation_evidence",
@@ -10435,7 +10435,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 phase 3 mvp: agent dock, approvals, cancellation, evidence",
       "source_file": "REVIEW.md",
-      "source_location": "L391"
+      "source_location": "L409"
     },
     {
       "id": "review_2026_09_23_scope_decision_extensions_and_the_store_documents_only",
@@ -10447,7 +10447,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-23 \u2014 scope decision: extensions and the store (documents only)",
       "source_file": "REVIEW.md",
-      "source_location": "L211"
+      "source_location": "L229"
     },
     {
       "id": "review_2026_09_24_full_project_audit",
@@ -10459,7 +10459,7 @@
       "node_kind": "heading",
       "norm_label": "2026-09-24 \u2014 full project audit",
       "source_file": "REVIEW.md",
-      "source_location": "L102"
+      "source_location": "L120"
     },
     {
       "id": "review_2026_09_24_phase_3_close_out_c1_c10",
@@ -10495,7 +10495,7 @@
       "node_kind": "heading",
       "norm_label": "open qa risks",
       "source_file": "REVIEW.md",
-      "source_location": "L456"
+      "source_location": "L474"
     },
     {
       "id": "review_qa_and_review_ledger",
@@ -11006,7 +11006,7 @@
       "node_kind": "heading",
       "norm_label": "assigned by the 2026-09-24 audit",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L222"
+      "source_location": "L224"
     },
     {
       "id": "docs_roadmap_current_phase_3_close_out",
@@ -11030,7 +11030,7 @@
       "node_kind": "heading",
       "norm_label": "distribution gate",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L231"
+      "source_location": "L233"
     },
     {
       "id": "docs_roadmap_phase_0_foundation",
@@ -11090,7 +11090,7 @@
       "node_kind": "heading",
       "norm_label": "phase 4 \u00b7 code intelligence (next)",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L185"
+      "source_location": "L187"
     },
     {
       "id": "docs_roadmap_roadmap",
@@ -11114,7 +11114,7 @@
       "node_kind": "heading",
       "norm_label": "v1 success criterion",
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L256"
+      "source_location": "L258"
     },
     {
       "id": "crates_anycode_git_build",
@@ -41534,7 +41534,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L185",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -41545,7 +41545,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L222",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -41556,7 +41556,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L231",
+      "source_location": "L233",
       "weight": 1.0
     },
     {
@@ -41567,7 +41567,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/ROADMAP.md",
-      "source_location": "L256",
+      "source_location": "L258",
       "weight": 1.0
     },
     {
@@ -43800,7 +43800,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L456",
+      "source_location": "L474",
       "weight": 1.0
     },
     {
@@ -43822,7 +43822,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L102",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -43833,7 +43833,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L127",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -43844,7 +43844,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L211",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -43855,7 +43855,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L224",
+      "source_location": "L242",
       "weight": 1.0
     },
     {
@@ -43866,7 +43866,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L289",
+      "source_location": "L307",
       "weight": 1.0
     },
     {
@@ -43877,7 +43877,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L314",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -43888,7 +43888,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L326",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -43899,7 +43899,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L365",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -43910,7 +43910,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L391",
+      "source_location": "L409",
       "weight": 1.0
     },
     {
@@ -45934,7 +45934,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "REVIEW.md",
-      "source_location": "L111",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -46155,5 +46155,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "61dfc5e88b8bae2a592fff1a1db5f0669c406fe9"
+  "built_at_commit": "972da362cfcf49a468a0bfa996ea51f6a0b3ba80"
 }

@@ -1,7 +1,7 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~246,141 words
+- 138 files · ~246,485 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `61dfc5e8`
+- Built from commit: `972da362`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -529,11 +529,11 @@ Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `AppState` connect `AppState` to `Store`, `anycode-tools/src/lib.rs`, `provider_commands.rs`, `agent_commands.rs`?**
-  _High betweenness centrality (0.094) - this node is a cross-community bridge._
+  _High betweenness centrality (0.083) - this node is a cross-community bridge._
 - **Why does `ToolRegistry` connect `anycode-tools/src/lib.rs` to `AppState`, `provider_commands.rs`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
-- **Why does `replan_prompt()` connect `verdict.rs` to `agent_commands.rs`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `Store` connect `Store` to `AppState`, `provider_commands.rs`?**
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **What connects `Current quality status`, `Review protocol`, `2026-09-24 — Phase 3 close-out (C1–C10)` to the rest of the system?**
   _516 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
