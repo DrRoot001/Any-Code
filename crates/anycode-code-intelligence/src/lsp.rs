@@ -434,6 +434,8 @@ impl Drop for LspClient {
 /// in a path component, and there is no dependency worth adding for that.
 fn path_to_uri(path: &Path) -> String {
     let path_str = path.to_string_lossy();
+    // A canonical Windows path is verbatim (`\\?\C:\…`); a URI names the plain form.
+    let path_str = path_str.strip_prefix(r"\\?\").unwrap_or(&path_str);
     let path_str = path_str.replace('\\', "/");
     let mut out = String::from("file://");
     for segment in path_str.split('/') {
@@ -473,6 +475,18 @@ fn uri_to_path(uri: &str) -> Option<PathBuf> {
         i += 1;
     }
     let decoded = String::from_utf8(decoded).ok()?;
+    // `file:///C:/x` names `C:\x` on Windows: drop the slash before the drive letter.
+    #[cfg(windows)]
+    {
+        let bytes = decoded.as_bytes();
+        let drive = bytes.len() >= 3
+            && bytes[0] == b'/'
+            && bytes[1].is_ascii_alphabetic()
+            && bytes[2] == b':';
+        let plain = if drive { &decoded[1..] } else { &decoded[..] };
+        return Some(PathBuf::from(plain.replace('/', "\\")));
+    }
+    #[cfg(not(windows))]
     Some(PathBuf::from(decoded))
 }
 

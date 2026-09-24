@@ -184,6 +184,11 @@ the earlier failure.
     a debug build. Not measured in release.
   - **Not re-probed after these last fixes:** the regression tests above cover each case
     instead.
+- **Fail, then fixed: Windows CI on `c5b8ff4`.** `lsp::tests::path_to_uri_round_trips` got
+  `/C:/Users/.../f.rs` back where it expected `C:\Users\...\f.rs`. On Windows, `uri_to_path`
+  now drops the slash before the drive letter and uses backslashes, and `path_to_uri` strips
+  the verbatim `\\?\` prefix. That branch can only be checked in Windows CI; see the next
+  run. Every other job passed, including macOS, Ubuntu and the desktop runtime.
 - **Known limitations:**
   - notify 7's inotify backend follows symlinks when adding recursive watches (Linux). It has
     no option to stop until notify 8; content is still refused by canonicalisation.
