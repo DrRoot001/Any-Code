@@ -19,7 +19,7 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | macOS bundle | Pass | CI universal `.dmg` (x86_64 + arm64) launched on an Intel Mac, 2026-09-24; unsigned |
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
 | Windows installer | Built, **not launched** | `.exe` + `.msi` in draft release `app-v0.1.0` (run `35937745006`); nobody has run it on Windows |
-| GitHub CI | Pass | `d0c89cb`: all 7 jobs, Windows included |
+| GitHub CI | Pass | `8196b39`: all 7 jobs, Windows included, 2026-09-25 (after Windows and macOS failures on `c5b8ff4` and `8b6b1bf`) |
 | Credential vault | Pass | Real macOS Keychain round trip, 2026-09-24. **Before that date it never persisted a key** (in-memory mock) |
 | Security review | Pass — S1–S3 fixed | Fixed and tested 2026-09-24; CSP checked in a browser, not yet in the native WebView |
 | Frontend tests | Pass | 45 Vitest tests, 2026-09-25; no component or end-to-end suite yet |

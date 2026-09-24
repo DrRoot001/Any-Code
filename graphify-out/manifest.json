@@ -361,8 +361,8 @@
   },
   "Cargo.toml": {
     "mtime": 1787443015.7690716,
-    "seen": 1790285772.232217,
-    "ast_hash": "",
+    "seen": 1790286565.951811,
+    "ast_hash": "f8a8d096772be2003724b1e497046162",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/Cargo.toml": {
