@@ -77,7 +77,7 @@
   "75": "AppState",
   "76": "WorkspaceRoot",
   "77": "shell.rs",
-  "78": "PtySession",
+  "78": "terminal_commands.rs",
   "79": "default.json",
   "80": "vite-env.d.ts",
   "81": "anycode-store/src/lib.rs",
@@ -104,7 +104,7 @@
   "102": "Value",
   "103": "event.rs",
   "104": "anycode-security/src/lib.rs",
-  "105": "terminal_commands.rs",
+  "105": "require_root",
   "106": "Send",
   "107": "3. VS Code extension compatibility and the package registry",
   "108": "ApprovalDialog.tsx",
@@ -146,5 +146,8 @@
   "144": "Role",
   "145": "ToolCallRequest",
   "146": "ToolDefinition",
-  "147": "Verdict"
+  "147": "Verdict",
+  "148": "agent_live_test.rs",
+  "149": "current_path",
+  "150": "git_status"
 }

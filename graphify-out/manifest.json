@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "docs/ROADMAP.md": {
-    "mtime": 1790214788.972491,
-    "seen": 1790219794.367342,
-    "ast_hash": "f88d0d308e41bcde39bf8e274f913412",
+    "mtime": 1790221534.7033343,
+    "seen": 1790221543.810831,
+    "ast_hash": "32cd678991e5bd676fdaaeb471436d7c",
     "semantic_hash": ""
   },
   "docs/SECURITY.md": {
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "REVIEW.md": {
-    "mtime": 1790209818.3300877,
-    "seen": 1790209835.438457,
-    "ast_hash": "625e67eca1739bd4e35888d9d72ff46e",
+    "mtime": 1790221534.704703,
+    "seen": 1790221543.810784,
+    "ast_hash": "83f350cbe8ea40f69948d8f51db1fb41",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/capabilities/default.json": {

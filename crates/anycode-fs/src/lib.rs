@@ -48,15 +48,29 @@ impl WorkspaceRoot {
     pub fn resolve(&self, relative: &str) -> Result<PathBuf, FsError> {
         let given = Path::new(relative);
         let relative_part = if given.is_absolute() {
+            // Windows canonicalises the root to a verbatim path (`\\?\C:\…`); a caller
+            // naming the same place writes `C:\…`, so both spellings are recognised.
+            let plain_root = strip_verbatim_prefix(&self.root);
             given
                 .strip_prefix(&self.root)
-                .map_err(|_| FsError::EscapesRoot(relative.to_string()))?
+                .ok()
+                .or_else(|| {
+                    plain_root
+                        .as_deref()
+                        .and_then(|r| given.strip_prefix(r).ok())
+                })
+                .ok_or_else(|| FsError::EscapesRoot(relative.to_string()))?
         } else {
             given
         };
         let mut resolved = self.root.clone();
         for component in relative_part.components() {
             match component {
+                // In a verbatim Windows path `..` is not parsed as a parent — it arrives as
+                // an ordinary component — so it is refused by name, not only by kind.
+                Component::Normal(part) if part == ".." || part == "." => {
+                    return Err(FsError::EscapesRoot(relative.to_string()));
+                }
                 Component::Normal(part) => resolved.push(part),
                 Component::CurDir => {}
                 Component::ParentDir | Component::RootDir | Component::Prefix(_) => {
@@ -66,6 +80,13 @@ impl WorkspaceRoot {
         }
         Ok(resolved)
     }
+}
+
+/// `\\?\C:\x` → `C:\x`. `None` when there is no verbatim prefix (every non-Windows path)
+/// and for verbatim UNC paths, which have no simple plain spelling.
+fn strip_verbatim_prefix(path: &Path) -> Option<PathBuf> {
+    let rest = path.to_str()?.strip_prefix(r"\\?\")?;
+    (!rest.starts_with(r"UNC\")).then(|| PathBuf::from(rest))
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -142,15 +163,16 @@ mod tests {
             Err(FsError::EscapesRoot(_))
         ));
         // A sibling whose name merely starts with the root's is not inside it.
-        let sibling = format!("{}2/x", root.path().display());
+        let sibling = Path::new(&format!("{}2", root.path().display())).join("x");
         assert!(matches!(
-            root.resolve(&sibling),
+            root.resolve(sibling.to_str().unwrap()),
             Err(FsError::EscapesRoot(_))
         ));
-        // Traversal is refused after the prefix is stripped, too.
-        let climbing = format!("{}/../etc", root.path().display());
+        // Traversal is refused after the prefix is stripped, too — including in a
+        // verbatim Windows path, where `..` is an ordinary component.
+        let climbing = root.path().join("..").join("etc");
         assert!(matches!(
-            root.resolve(&climbing),
+            root.resolve(climbing.to_str().unwrap()),
             Err(FsError::EscapesRoot(_))
         ));
     }
@@ -158,11 +180,28 @@ mod tests {
     #[test]
     fn accepts_an_absolute_path_inside_the_root() {
         let (_dir, root) = workspace();
-        let absolute = format!("{}/src/calc.py", root.path().display());
+        let expected = root.resolve("src/calc.py").unwrap();
+        // Built with native separators: in a verbatim Windows path `/` is not one.
+        let native = root.path().join("src").join("calc.py");
+        assert_eq!(root.resolve(native.to_str().unwrap()).unwrap(), expected);
+        // On Windows the root is verbatim; the plain spelling of the same path works too.
+        if let Some(plain) = strip_verbatim_prefix(root.path()) {
+            let plain = plain.join("src").join("calc.py");
+            assert_eq!(root.resolve(plain.to_str().unwrap()).unwrap(), expected);
+        }
+    }
+
+    #[test]
+    fn strips_only_a_plain_verbatim_prefix() {
         assert_eq!(
-            root.resolve(&absolute).unwrap(),
-            root.resolve("src/calc.py").unwrap()
+            strip_verbatim_prefix(Path::new(r"\\?\C:\ws")),
+            Some(PathBuf::from(r"C:\ws"))
         );
+        assert_eq!(
+            strip_verbatim_prefix(Path::new(r"\\?\UNC\server\share")),
+            None
+        );
+        assert_eq!(strip_verbatim_prefix(Path::new("/home/ws")), None);
     }
 
     #[test]
