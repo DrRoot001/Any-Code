@@ -100,7 +100,8 @@ export interface TaskToolCall {
   id: string;
   name: string;
   arguments: Record<string, unknown>;
-  risk: RiskLevel;
+  /** `rejected`: refused before the permission gate (unknown tool, missing argument). */
+  risk: RiskLevel | "rejected";
   /** Why this call is riskier than the tool usually is, e.g. a secret-bearing path. */
   reason: string | null;
 }

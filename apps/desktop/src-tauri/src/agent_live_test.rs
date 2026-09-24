@@ -117,6 +117,8 @@ fn suite_passes(dir: &Path) -> bool {
     Command::new("python3")
         .args(["-m", "unittest", "-q"])
         .current_dir(dir)
+        // The harness's own runs must not leave __pycache__ in the repo the agent inspects.
+        .env("PYTHONDONTWRITEBYTECODE", "1")
         .output()
         .map(|out| out.status.success())
         .unwrap_or(false)
@@ -130,6 +132,8 @@ fn original_suite_passes(dir: &Path) -> bool {
     let passed = Command::new("python3")
         .args(["-m", "unittest", "-q", "anycode_original_tests"])
         .current_dir(dir)
+        // The harness's own runs must not leave __pycache__ in the repo the agent inspects.
+        .env("PYTHONDONTWRITEBYTECODE", "1")
         .output()
         .map(|out| out.status.success())
         .unwrap_or(false);

@@ -65,6 +65,11 @@ const SHELL_TOOL: &str = "shell.execute";
 /// Largest tool argument or result kept verbatim in the audit log. A whole file written
 /// by the agent belongs in git, not duplicated into every event row.
 const AUDIT_VALUE_LIMIT: usize = 4096;
+/// Most tokens one model turn may produce. A plan is a short list; a working turn may write
+/// a whole file into a tool call. Without a cap, a degenerate turn in a live run generated
+/// for half an hour (invariant #11); with one, it ends and the loop carries on.
+const PLAN_OUTPUT_TOKENS: u32 = 1024;
+const TURN_OUTPUT_TOKENS: u32 = 4096;
 /// Top-level entries shown to the planner. It needs the shape of the repository, not
 /// an inventory of it (Phase 4's context builder does targeted retrieval).
 const PLANNER_LISTING_LIMIT: usize = 200;
@@ -404,6 +409,7 @@ impl<R: Runtime> TaskRun<R> {
                     )),
                 ],
                 None,
+                PLAN_OUTPUT_TOKENS,
                 "plan_delta",
             )
             .await?;
@@ -432,7 +438,13 @@ impl<R: Runtime> TaskRun<R> {
         for _round in 0..MAX_TOOL_ROUNDS {
             self.check_cancelled()?;
             let turn = self
-                .complete(adapter, messages.clone(), Some(tool_defs.clone()), "delta")
+                .complete(
+                    adapter,
+                    messages.clone(),
+                    Some(tool_defs.clone()),
+                    TURN_OUTPUT_TOKENS,
+                    "delta",
+                )
                 .await?;
 
             if turn.tool_calls.is_empty() {
@@ -515,7 +527,9 @@ impl<R: Runtime> TaskRun<R> {
                         commands.push(CommandRecord {
                             command: command.to_string(),
                             exit_code: result["exitCode"].as_i64(),
-                            verification: call.arguments["verify"].as_bool() == Some(true),
+                            // The model's flag can add checks; it cannot remove one.
+                            verification: call.arguments["verify"].as_bool() == Some(true)
+                                || anycode_agent::is_known_check(command),
                         });
                     }
                 }
@@ -555,10 +569,12 @@ impl<R: Runtime> TaskRun<R> {
         adapter: &dyn ModelProvider,
         messages: Vec<Message>,
         tools: Option<Vec<ToolDefinition>>,
+        max_output_tokens: u32,
         delta_channel: &str,
     ) -> Result<Turn, Stop> {
         let request = ModelRequest {
             model: self.model.clone(),
+            max_output_tokens: Some(max_output_tokens),
             messages,
             temperature: None,
             tools,
@@ -628,6 +644,18 @@ impl<R: Runtime> TaskRun<R> {
                         "arguments": for_audit(&call.arguments),
                         "reason": reason,
                     }),
+                );
+                // Shown too: otherwise the timeline would carry a result for a call it
+                // never displayed.
+                self.emit(
+                    "tool_call",
+                    TaskToolCallEvent {
+                        id: call.id.clone(),
+                        name: call.name.clone(),
+                        arguments: call.arguments.clone(),
+                        risk: "rejected",
+                        reason: Some(reason.clone()),
+                    },
                 );
                 return Ok((json!({ "error": reason }), false));
             }

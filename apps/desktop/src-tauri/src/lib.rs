@@ -77,6 +77,13 @@ fn set_theme(state: State<AppState>, theme: String) -> Result<(), String> {
         .map_err(|e| e.to_string())
 }
 
+/// The app's compiled-in configuration and assets. One function because the macro can
+/// only be expanded once per crate (it embeds Info.plist), and the tests need to inspect
+/// exactly what `run()` ships.
+fn app_context() -> tauri::Context<tauri::Wry> {
+    tauri::generate_context!()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -138,6 +145,45 @@ pub fn run() {
             agent_commands::respond_to_approval,
             agent_commands::cancel_task,
         ])
-        .run(tauri::generate_context!())
+        .run(app_context())
         .expect("error while running Any Code");
+}
+
+#[cfg(test)]
+mod tests {
+    /// Audit S3. Tauri serves every page with a `Content-Security-Policy` header built at
+    /// runtime from the embedded config (tauri `protocol/tauri.rs`), so what matters is
+    /// that the context compiled into the app — the same `generate_context!` `run()`
+    /// uses — carries the policy. `"csp": null` would fail this.
+    #[test]
+    fn the_app_ships_a_strict_content_security_policy() {
+        let context = super::app_context();
+        let csp = context
+            .config()
+            .app
+            .security
+            .csp
+            .as_ref()
+            .expect("a Content-Security-Policy must be configured")
+            .to_string();
+        for directive in [
+            "default-src 'self'",
+            "script-src 'self'",
+            "object-src 'none'",
+            "frame-ancestors 'none'",
+            "connect-src 'self' ipc: http://ipc.localhost",
+        ] {
+            assert!(csp.contains(directive), "missing `{directive}` in: {csp}");
+        }
+        // Script execution is the thing a CSP exists to restrict here; neither escape
+        // hatch may creep back in.
+        let scripts = csp
+            .split(';')
+            .find(|d| d.trim_start().starts_with("script-src"))
+            .unwrap();
+        assert!(
+            !scripts.contains("unsafe-inline") && !scripts.contains("unsafe-eval"),
+            "{scripts}"
+        );
+    }
 }

@@ -39,9 +39,23 @@ impl WorkspaceRoot {
 
     /// Resolves a `/`-separated relative path against the root, rejecting anything
     /// that would climb above it. The empty string resolves to the root itself.
+    ///
+    /// An absolute path is accepted only when it names something inside the root: the
+    /// root prefix is stripped (component-wise, so `/ws2` is not inside `/ws`) and the
+    /// remainder goes through the same rules, so `/ws/../etc` is still refused. Models
+    /// often write absolute paths; refusing an in-root one as an "escape" was both wrong
+    /// and a dead end for them.
     pub fn resolve(&self, relative: &str) -> Result<PathBuf, FsError> {
+        let given = Path::new(relative);
+        let relative_part = if given.is_absolute() {
+            given
+                .strip_prefix(&self.root)
+                .map_err(|_| FsError::EscapesRoot(relative.to_string()))?
+        } else {
+            given
+        };
         let mut resolved = self.root.clone();
-        for component in Path::new(relative).components() {
+        for component in relative_part.components() {
             match component {
                 Component::Normal(part) => resolved.push(part),
                 Component::CurDir => {}
@@ -121,12 +135,34 @@ mod tests {
     }
 
     #[test]
-    fn rejects_absolute_path() {
+    fn rejects_an_absolute_path_outside_the_root() {
         let (_dir, root) = workspace();
         assert!(matches!(
             root.resolve("/etc/passwd"),
             Err(FsError::EscapesRoot(_))
         ));
+        // A sibling whose name merely starts with the root's is not inside it.
+        let sibling = format!("{}2/x", root.path().display());
+        assert!(matches!(
+            root.resolve(&sibling),
+            Err(FsError::EscapesRoot(_))
+        ));
+        // Traversal is refused after the prefix is stripped, too.
+        let climbing = format!("{}/../etc", root.path().display());
+        assert!(matches!(
+            root.resolve(&climbing),
+            Err(FsError::EscapesRoot(_))
+        ));
+    }
+
+    #[test]
+    fn accepts_an_absolute_path_inside_the_root() {
+        let (_dir, root) = workspace();
+        let absolute = format!("{}/src/calc.py", root.path().display());
+        assert_eq!(
+            root.resolve(&absolute).unwrap(),
+            root.resolve("src/calc.py").unwrap()
+        );
     }
 
     #[test]

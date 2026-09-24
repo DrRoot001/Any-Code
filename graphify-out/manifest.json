@@ -774,9 +774,9 @@
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/src/terminal_commands.rs": {
-    "mtime": 1790174884.6091287,
-    "seen": 1790183402.1813672,
-    "ast_hash": "a58671c198fdd7443c00a69cc0704cac",
+    "mtime": 1790212595.8281078,
+    "seen": 1790212841.762512,
+    "ast_hash": "a66de7f443683349b8f41daa09ddbbda",
     "semantic_hash": ""
   },
   "apps/desktop/src-tauri/src/workspace.rs": {

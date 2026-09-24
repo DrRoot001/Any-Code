@@ -114,7 +114,10 @@ fn message_to_json(m: &crate::types::Message) -> Value {
     obj
 }
 
-fn build_chat_request(request: &ModelRequest) -> Value {
+/// `limit_field` is where the output cap goes: OpenAI's current models reject the legacy
+/// `max_tokens` in favour of `max_completion_tokens`; compatible servers (Ollama, LM
+/// Studio, OpenRouter, Gemini) take `max_tokens`.
+fn build_chat_request(request: &ModelRequest, limit_field: &str) -> Value {
     let messages: Vec<Value> = request.messages.iter().map(message_to_json).collect();
     let mut body = json!({
         "model": request.model,
@@ -124,6 +127,9 @@ fn build_chat_request(request: &ModelRequest) -> Value {
     });
     if let Some(temperature) = request.temperature {
         body["temperature"] = json!(temperature);
+    }
+    if let Some(limit) = request.max_output_tokens {
+        body[limit_field] = json!(limit);
     }
     if let Some(tools) = &request.tools {
         body["tools"] = json!(tools
@@ -247,7 +253,12 @@ impl ModelProvider for OpenAiProvider {
     }
 
     async fn stream(&self, request: ModelRequest) -> Result<ModelStream, ProviderError> {
-        let body = build_chat_request(&request);
+        let limit_field = if self.id == "openai" {
+            "max_completion_tokens"
+        } else {
+            "max_tokens"
+        };
+        let body = build_chat_request(&request, limit_field);
         let response = self.post("/chat/completions").json(&body).send().await?;
 
         if !response.status().is_success() {
@@ -334,15 +345,36 @@ mod tests {
     }
 
     #[test]
+    fn the_output_cap_uses_the_field_each_endpoint_accepts() {
+        let request = ModelRequest {
+            model: "m".into(),
+            max_output_tokens: Some(321),
+            messages: vec![Message::user("hi")],
+            temperature: None,
+            tools: None,
+            metadata: RequestMetadata::default(),
+        };
+        // OpenAI's current models reject the legacy field; compatible servers expect it.
+        let openai = build_chat_request(&request, "max_completion_tokens");
+        assert_eq!(openai["max_completion_tokens"], 321);
+        assert!(openai.get("max_tokens").is_none());
+        assert_eq!(
+            build_chat_request(&request, "max_tokens")["max_tokens"],
+            321
+        );
+    }
+
+    #[test]
     fn builds_a_streaming_chat_request() {
         let request = ModelRequest {
             model: "gpt-5".into(),
+            max_output_tokens: None,
             messages: vec![Message::user("hi")],
             temperature: Some(0.5),
             tools: None,
             metadata: RequestMetadata::default(),
         };
-        let body = build_chat_request(&request);
+        let body = build_chat_request(&request, "max_tokens");
         assert_eq!(body["model"], "gpt-5");
         assert_eq!(body["messages"][0]["role"], "user");
         assert_eq!(body["stream"], true);
@@ -353,6 +385,7 @@ mod tests {
     fn includes_tool_definitions_when_present() {
         let request = ModelRequest {
             model: "gpt-5".into(),
+            max_output_tokens: None,
             messages: vec![Message::user("hi")],
             temperature: None,
             tools: Some(vec![ToolDefinition {
@@ -362,7 +395,7 @@ mod tests {
             }]),
             metadata: RequestMetadata::default(),
         };
-        let body = build_chat_request(&request);
+        let body = build_chat_request(&request, "max_tokens");
         assert_eq!(body["tools"][0]["type"], "function");
         // OpenAI rejects any function name outside [a-zA-Z0-9_-] with a 400, so the dotted
         // capability name must never reach the wire as-is.

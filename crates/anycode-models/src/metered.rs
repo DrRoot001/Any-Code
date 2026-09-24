@@ -204,6 +204,7 @@ mod tests {
     fn request() -> ModelRequest {
         ModelRequest {
             model: "m1".into(),
+            max_output_tokens: None,
             messages: vec![Message::user("hi")],
             temperature: None,
             tools: None,

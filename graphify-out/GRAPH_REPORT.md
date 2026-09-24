@@ -1,16 +1,16 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~246,485 words
+- 138 files · ~246,815 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1508 nodes · 2505 edges · 123 communities (94 shown, 29 thin omitted)
+- 1515 nodes · 2513 edges · 127 communities (94 shown, 33 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `972da362`
+- Built from commit: `820fb2f6`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -89,7 +89,7 @@
 - AppState
 - WorkspaceRoot
 - shell.rs
-- PtySession
+- terminal_commands.rs
 - default.json
 - Store
 - Project audit — 2026-09-24
@@ -133,9 +133,13 @@
 - TempDir
 - Sync
 - TempDir
+- AppHandle
+- Result
+- State
+- String
 
 ## God Nodes (most connected - your core abstractions)
-1. `AppState` - 41 edges
+1. `AppState` - 36 edges
 2. `useWorkbenchStore` - 20 edges
 3. `Store` - 18 edges
 4. `compilerOptions` - 15 edges
@@ -162,7 +166,7 @@
 - 2-file cycle: `apps/desktop/src-tauri/src/agent_commands.rs -> apps/desktop/src-tauri/src/lib.rs -> apps/desktop/src-tauri/src/agent_commands.rs`
 - 2-file cycle: `crates/anycode-tools/src/filesystem.rs -> crates/anycode-tools/src/lib.rs -> crates/anycode-tools/src/filesystem.rs`
 
-## Communities (123 total, 29 thin omitted)
+## Communities (127 total, 33 thin omitted)
 
 ### Community 0 - "PRD.md"
 Cohesion: 0.02
@@ -321,8 +325,8 @@ Cohesion: 0.12
 Nodes (17): @anycode/design-tokens, dependencies, @anycode/design-tokens, monaco-editor, react, @tanstack/react-query, @tauri-apps/api, @tauri-apps/plugin-dialog (+9 more)
 
 ### Community 53 - "verdict.rs"
-Cohesion: 0.12
-Nodes (20): parse_plan(), String, Vec, a_check_that_failed_then_passed_has_passed(), a_check_that_passed_then_failed_has_failed(), check(), CommandRecord, exploration_never_counts_either_way() (+12 more)
+Cohesion: 0.20
+Nodes (17): a_check_that_failed_then_passed_has_passed(), a_check_that_passed_then_failed_has_failed(), check(), CommandRecord, exploration_never_counts_either_way(), explore(), failing_checks_are_pushed_back_and_an_empty_delta_is_named(), Observed (+9 more)
 
 ### Community 54 - "compilerOptions"
 Cohesion: 0.10
@@ -393,8 +397,8 @@ Cohesion: 0.20
 Nodes (10): Assigned by the 2026-09-24 audit, Current phase: 3 close-out, Distribution gate, Phase 0 · Foundation, Phase 1 · Workbench, Phase 2 · Provider layer, Phase 3 · Agent runtime, Phase 4 · Code intelligence (next) (+2 more)
 
 ### Community 75 - "AppState"
-Cohesion: 0.06
-Nodes (68): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+60 more)
+Cohesion: 0.07
+Nodes (57): an_agent_implements_and_verifies_a_repository_task(), git(), make_repo(), one_line(), original_suite_passes(), Path, PathBuf, String (+49 more)
 
 ### Community 76 - "WorkspaceRoot"
 Cohesion: 0.16
@@ -404,17 +408,17 @@ Nodes (21): Entry, FsError, list_dir(), read_file(), rejects_absolute_path(), re
 Cohesion: 0.15
 Nodes (11): a_failing_command_is_a_result_not_an_error(), a_grant_covers_only_the_command_it_was_given_for(), captures_stdout_and_exit_code(), context(), Option, Result, RiskLevel, String (+3 more)
 
-### Community 78 - "PtySession"
-Cohesion: 0.16
-Nodes (19): Child, default_shell(), login_shell_path(), login_shell_path_is_the_shells_own(), PtySession, resolve_login_shell_path(), Box, Error (+11 more)
+### Community 78 - "terminal_commands.rs"
+Cohesion: 0.10
+Nodes (33): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+25 more)
 
 ### Community 79 - "default.json"
 Cohesion: 0.22
 Nodes (8): description, identifier, permissions, $schema, windows, core:default, dialog:default, main
 
 ### Community 81 - "Store"
-Cohesion: 0.14
-Nodes (21): AsRef, a_tasks_events_come_back_in_order_and_only_for_that_task(), granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), Error, Option, Path, Result (+13 more)
+Cohesion: 0.15
+Nodes (20): AsRef, a_tasks_events_come_back_in_order_and_only_for_that_task(), granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), Error, Option, Path, Result (+12 more)
 
 ### Community 82 - "Project audit — 2026-09-24"
 Cohesion: 0.15
@@ -425,8 +429,8 @@ Cohesion: 0.35
 Nodes (8): DiffPane(), EditorArea(), MonacoPane(), EXTENSION_LANGUAGE, languageForPath(), loadMonaco(), Monaco, useWorkbenchStore
 
 ### Community 85 - "agent_commands.rs"
-Cohesion: 0.09
-Nodes (64): ApprovalContext, ApprovalResponse, cancel_task(), changed_since(), dirty_paths(), execute_tool(), for_audit(), GateFacts (+56 more)
+Cohesion: 0.08
+Nodes (65): ApprovalContext, ApprovalResponse, cancel_task(), changed_since(), dirty_paths(), execute_tool(), for_audit(), GateFacts (+57 more)
 
 ### Community 87 - "devDependencies"
 Cohesion: 0.13
@@ -469,8 +473,8 @@ Cohesion: 0.08
 Nodes (35): Client, a_compatible_provider_keeps_its_own_identity(), accumulates_argument_fragments_across_chunks(), build_chat_request(), builds_a_streaming_chat_request(), extract_tool_call_fragments(), extracts_tool_call_fragments_by_index(), finish_reason() (+27 more)
 
 ### Community 98 - "state.rs"
-Cohesion: 0.17
-Nodes (8): InvalidTransition, Default, Result, Self, run(), TaskMachine, TaskState, TaskState
+Cohesion: 0.10
+Nodes (11): parse_plan(), String, Vec, InvalidTransition, Default, Result, Self, run() (+3 more)
 
 ### Community 99 - "live_openai.rs"
 Cohesion: 0.52
@@ -521,20 +525,20 @@ Cohesion: 0.20
 Nodes (6): FilesystemReadTool, Result, Error, ToolError, FsError, GitError
 
 ## Knowledge Gaps
-- **516 isolated node(s):** `Current quality status`, `Review protocol`, `2026-09-24 — Phase 3 close-out (C1–C10)`, `2026-09-24 — Full project audit`, `2026-09-23 — Phase 3 completion: planner, state machine, audit log, live exit condition` (+511 more)
+- **516 isolated node(s):** `PtyExitEvent`, `IconName`, `ChatRole`, `CommandRecord`, `FileDiff` (+511 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **29 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **33 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `AppState` connect `AppState` to `Store`, `anycode-tools/src/lib.rs`, `provider_commands.rs`, `agent_commands.rs`?**
-  _High betweenness centrality (0.083) - this node is a cross-community bridge._
+  _High betweenness centrality (0.082) - this node is a cross-community bridge._
 - **Why does `ToolRegistry` connect `anycode-tools/src/lib.rs` to `AppState`, `provider_commands.rs`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
-- **Why does `Store` connect `Store` to `AppState`, `provider_commands.rs`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **What connects `Current quality status`, `Review protocol`, `2026-09-24 — Phase 3 close-out (C1–C10)` to the rest of the system?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+- **Why does `Tool` connect `anycode-tools/src/lib.rs` to `anycode-security/src/lib.rs`, `ToolError`, `shell.rs`, `Value`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **What connects `PtyExitEvent`, `IconName`, `ChatRole` to the rest of the system?**
   _516 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._

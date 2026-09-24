@@ -317,6 +317,8 @@ pub fn send_chat<R: Runtime>(
         let request = ModelRequest {
             model,
             messages,
+            // Chat is interactive and user-driven; the provider's own default applies.
+            max_output_tokens: None,
             temperature: None,
             tools: None,
             metadata: RequestMetadata {

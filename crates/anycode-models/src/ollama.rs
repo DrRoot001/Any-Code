@@ -14,6 +14,7 @@ use serde_json::{json, Value};
 use std::collections::HashMap;
 
 const DEFAULT_BASE_URL: &str = "http://localhost:11434";
+const OLLAMA_CONTEXT_TOKENS: u32 = 8192;
 
 pub struct OllamaProvider {
     base_url: String,
@@ -70,10 +71,22 @@ fn build_chat_request(request: &ModelRequest) -> Value {
             obj
         })
         .collect();
-    let mut body = json!({ "model": request.model, "messages": messages, "stream": true });
+    // Ollama's default context is 4096 tokens and it silently drops the *start* of a longer
+    // conversation — the system prompt first. A live agent run overflowed it and
+    // degenerated. 8192 holds an agent task on a small model without much more memory.
+    let mut options = json!({ "num_ctx": OLLAMA_CONTEXT_TOKENS });
     if let Some(temperature) = request.temperature {
-        body["options"] = json!({ "temperature": temperature });
+        options["temperature"] = json!(temperature);
     }
+    if let Some(limit) = request.max_output_tokens {
+        options["num_predict"] = json!(limit);
+    }
+    let mut body = json!({
+        "model": request.model,
+        "messages": messages,
+        "stream": true,
+        "options": options,
+    });
     if let Some(tools) = &request.tools {
         body["tools"] = json!(tools
             .iter()
@@ -222,6 +235,21 @@ mod tests {
     use crate::types::{Message, RequestMetadata, ToolCallRequest, ToolDefinition};
 
     #[test]
+    fn caps_output_and_widens_the_context_window() {
+        let body = build_chat_request(&ModelRequest {
+            model: "m".into(),
+            max_output_tokens: Some(321),
+            messages: vec![Message::user("hi")],
+            temperature: None,
+            tools: None,
+            metadata: RequestMetadata::default(),
+        });
+        assert_eq!(body["options"]["num_predict"], 321);
+        // Ollama's 4096 default silently drops the start of a long agent conversation.
+        assert_eq!(body["options"]["num_ctx"], OLLAMA_CONTEXT_TOKENS);
+    }
+
+    #[test]
     fn parses_a_content_line() {
         let events = parse_line(r#"{"message":{"content":"hi"},"done":false}"#).unwrap();
         assert_eq!(events, vec![StreamEvent::TextDelta { text: "hi".into() }]);
@@ -288,6 +316,7 @@ mod tests {
     fn request_carries_tools_and_links_results_to_their_call_by_name() {
         let request = ModelRequest {
             model: "qwen2.5:3b".into(),
+            max_output_tokens: None,
             messages: vec![
                 Message::user("read it"),
                 Message {

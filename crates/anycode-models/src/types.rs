@@ -137,6 +137,11 @@ pub struct ModelRequest {
     pub temperature: Option<f32>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tools: Option<Vec<ToolDefinition>>,
+    /// Most tokens the model may generate in this turn. `None` leaves the provider's
+    /// default. The agent loop always sets it: without a cap, one degenerate turn ran for
+    /// half an hour in a live run (docs/ARCHITECTURE.md invariant #11).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max_output_tokens: Option<u32>,
     #[serde(default)]
     pub metadata: RequestMetadata,
 }

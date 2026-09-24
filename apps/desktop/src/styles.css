@@ -709,6 +709,11 @@ input:focus-visible {
   color: var(--ac-danger);
   border-color: var(--ac-danger);
 }
+/* Refused before the gate: it never ran and was never offered for approval. */
+.risk--rejected {
+  border-style: dashed;
+  color: var(--ac-text-secondary);
+}
 
 /* --- Evidence (PRD §8.6 / §33) ------------------------------------------ */
 .evidence {

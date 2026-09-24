@@ -45,6 +45,7 @@ async fn a_real_response_produces_a_tool_call() {
     let provider = OpenAiProvider::new(api_key());
     let request = ModelRequest {
         model: model(),
+        max_output_tokens: None,
         messages: vec![Message::user(
             "Read the file README.md using the provided tool. Call the tool; do not answer \
              from memory.",
@@ -82,6 +83,7 @@ async fn a_real_response_reports_usage() {
     let provider = OpenAiProvider::new(api_key());
     let request = ModelRequest {
         model: model(),
+        max_output_tokens: None,
         messages: vec![Message::user("Reply with exactly: ok")],
         temperature: Some(0.0),
         tools: None,

@@ -47,7 +47,8 @@ fn build_messages_request(request: &ModelRequest) -> Value {
     let mut body = json!({
         "model": request.model,
         "messages": messages,
-        "max_tokens": MAX_TOKENS,
+        // Anthropic requires a cap; the caller's, when it gave one.
+        "max_tokens": request.max_output_tokens.unwrap_or(MAX_TOKENS),
         "stream": true,
     });
     if let Some(system) = system {
@@ -183,9 +184,23 @@ mod tests {
     use crate::types::{Message, RequestMetadata};
 
     #[test]
+    fn a_callers_output_cap_replaces_the_default() {
+        let request = ModelRequest {
+            model: "m".into(),
+            max_output_tokens: Some(321),
+            messages: vec![Message::user("hi")],
+            temperature: None,
+            tools: None,
+            metadata: RequestMetadata::default(),
+        };
+        assert_eq!(build_messages_request(&request)["max_tokens"], 321);
+    }
+
+    #[test]
     fn splits_system_message_from_the_transcript() {
         let request = ModelRequest {
             model: "claude-opus-5".into(),
+            max_output_tokens: None,
             messages: vec![Message::system("be terse"), Message::user("hi")],
             temperature: None,
             tools: None,

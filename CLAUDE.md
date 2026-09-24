@@ -1,7 +1,20 @@
+
 # Any Code — agent operating instructions
 
 The product specification is [PRD.md](PRD.md). It is the source of truth for *what* to build.
 This file governs *how*.
+
+# Agent Routing Policy
+
+When a task matches one of the categories below, delegate to the named subagent instead of doing the work in the main thread. Default to the cheapest model that can reliably do the job; escalate only when a cheaper attempt fails or the task is inherently ambiguous.
+
+•⁠  ⁠*Bug fixes involving unclear root cause, race conditions, auth/session logic, or cross-file state* + 'debugger' subagent (opus) - *Schema design, migrations, well-specified data modeling* + 'schema-designer subagent (sonnet) - *Writing unit/integration tests against an already-defined interface* → 'test-writer' subagent (sonnet, falls back to
+
+haiku for pure boilerplate) - *Codebase search / "where is X defined"* → built-in Explore subagent (haiku)
+
+•⁠  ⁠*Code review of a diff* → `code-reviewer' subagent (sonnet)
+
+Never do heavy multi-file debugging in the main thread if the debugger subagent is available - dispatch it and review its patch instead.
 
 ## Before writing code
 

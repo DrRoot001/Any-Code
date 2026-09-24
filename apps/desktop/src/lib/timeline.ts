@@ -14,7 +14,7 @@ export type Entry =
       kind: "tool_call";
       id: string;
       name: string;
-      risk: RiskLevel;
+      risk: RiskLevel | "rejected";
       summary: string;
       reason: string | null;
     }

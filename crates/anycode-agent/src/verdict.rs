@@ -37,6 +37,68 @@ pub enum Verdict {
     Unverified,
 }
 
+/// Build, lint and test runners the runtime recognises as checks whether or not the model
+/// flagged them. Observed live: a model ran `python3 -m unittest`, it exited 1, and — not
+/// having set `verify` — the task was reported "not verified" instead of "failed". A
+/// failing check must not be hideable by leaving a flag off, or by setting it to false.
+/// Matched on whole leading words, after any `VAR=value` prefixes.
+const KNOWN_CHECKS: &[&str] = &[
+    "npm test",
+    "npm run test",
+    "npm run lint",
+    "npm run build",
+    "npm run typecheck",
+    "pnpm test",
+    "pnpm run test",
+    "pnpm lint",
+    "pnpm run lint",
+    "pnpm build",
+    "pnpm run build",
+    "yarn test",
+    "yarn lint",
+    "yarn build",
+    "npx vitest",
+    "npx jest",
+    "npx tsc",
+    "npx eslint",
+    "cargo test",
+    "cargo build",
+    "cargo check",
+    "cargo clippy",
+    "pytest",
+    "python -m pytest",
+    "python3 -m pytest",
+    "python -m unittest",
+    "python3 -m unittest",
+    "ruff",
+    "mypy",
+    "go test",
+    "go build",
+    "go vet",
+    "make test",
+    "make check",
+    "make lint",
+    "mvn test",
+    "gradle test",
+    "./gradlew test",
+    "dotnet test",
+    "dotnet build",
+    "tsc",
+    "eslint",
+];
+
+/// Whether `command` is a recognised build, lint or test run (see [`KNOWN_CHECKS`]).
+pub fn is_known_check(command: &str) -> bool {
+    let words: Vec<&str> = command
+        .split_whitespace()
+        .skip_while(|w| w.contains('=') && !w.starts_with('-'))
+        .collect();
+    KNOWN_CHECKS.iter().any(|check| {
+        let check: Vec<&str> = check.split_whitespace().collect();
+        words.len() >= check.len() && words[..check.len()] == check[..]
+    })
+}
+
 /// Judges verification by each check's *latest* run: a test that failed, was fixed, and
 /// then passed has passed. Judging by any failure would mark the ordinary
 /// fix-and-rerun loop as failed.
@@ -145,6 +207,30 @@ mod tests {
         CommandRecord {
             verification: false,
             ..check(command, exit_code)
+        }
+    }
+
+    #[test]
+    fn recognises_checks_by_their_leading_words() {
+        for c in [
+            "python3 -m unittest",
+            "python3 -m unittest test_calc.py",
+            "CI=1 npm test -- --watch=false",
+            "cargo test -p anycode-agent",
+            "pytest -q",
+            "go test ./...",
+        ] {
+            assert!(is_known_check(c), "{c}");
+        }
+        for c in [
+            "ls",
+            "cat pytest.ini",
+            "echo cargo test",
+            "npm install",
+            "python3 calc.py",
+            "pytestify",
+        ] {
+            assert!(!is_known_check(c), "{c}");
         }
     }
 

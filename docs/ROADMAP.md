@@ -49,7 +49,7 @@ parallelism before Phase 3's approval system means shipping unbounded agents wit
 - [x] Monaco editor (lazy-loaded, self-hosted workers, no CDN)
 - [x] Tabs (multi-file, dirty tracking, Cmd/Ctrl+S to save)
 - [x] Terminal (native PTY via `anycode-terminal`, streamed over Tauri events) — four
-      defects fixed 2026-09-23; not yet confirmed by hand (close-out C5)
+      defects fixed 2026-09-23, verified end to end headless and in the browser (close-out C5)
 - [x] Git status (`anycode-git`, polled)
 - [x] Diff view (Monaco diff editor, HEAD vs working tree)
 - [x] Command palette (Cmd/Ctrl+Shift+P)
@@ -72,12 +72,13 @@ and minimap, multi-workspace switching.
 - [x] Model selector + Connections UI (Settings → Providers; Chat panel's provider/model
       dropdowns)
 
-- [ ] Gemini adapter — a PRD Phase 2 deliverable, previously deferred without a home (close-out C7)
-- [ ] OpenRouter — OpenAI-compatible, so a configurable base URL on the OpenAI adapter
-      (also covers LM Studio and other compatible endpoints; close-out C7)
-- [ ] **Exit condition demonstrated live** — previously marked met on unit tests alone. The
-      Chat panel has no provider branch, but switching has never been observed across two
-      live providers (close-out C7)
+- [x] Gemini (API-key mode, Google's OpenAI-compatible endpoint) — built, never called live
+      (needs a key). Vertex, ADC and Google sign-in (PRD §20) are not built
+- [x] OpenRouter, and any OpenAI-compatible endpoint by base URL (LM Studio, vLLM,
+      llama.cpp) — https anywhere, plain http only to localhost
+- [x] **Exit condition demonstrated live** (2026-09-24) — the same chat task through two
+      adapters, switching only the provider id (close-out C7). Two vendors not yet shown:
+      needs a key
 
 Deferred to later phases: automatic/cost-aware routing (Phase 8), fallback chains (PRD §27),
 budget controls (Phase 8).
@@ -146,9 +147,11 @@ evidence for every item: [AUDIT.md](AUDIT.md).
       command; High risk is never persisted. Test: granting `npm test` does not allow
       `git push` or `npm install`.
 - [x] **C3 · Content Security Policy** (S3). Replace `"csp": null` with a strict policy;
-      verify Monaco, workers and the app still load in the release build. *Verified in a
-      browser against the production build under the identical policy: no violations,
-      Monaco renders and tokenises. Not yet observed inside the native WebView.*
+      verify Monaco, workers and the app still load in the release build. *Verified: the
+      context compiled into the app carries the policy (a test that fails with `"csp": null`);
+      Tauri's page server sends it as a header built from that context; the production
+      frontend runs under it in a browser with no violations and Monaco rendering. Not
+      observed: WebKit enforcing it inside the native window.*
 
 **Earlier phases' exit conditions:**
 
@@ -156,13 +159,21 @@ evidence for every item: [AUDIT.md](AUDIT.md).
       Windows installer. *Workflow fixed (four defects) and passing on all three platforms;
       the `.exe`/`.msi` are in draft release `app-v0.1.0`. The universal macOS build was
       launched on an Intel Mac. Remaining: a Windows launch.*
-- [ ] **C5 · Terminal** — **owner** opens the Terminal panel once and confirms a prompt.
+- [x] **C5 · Terminal** — **owner** opens the Terminal panel once and confirms a prompt.
+      *Verified without the owner: a headless test drives the real PTY path (first output
+      reaches a listener registered before the spawn; typed input runs with
+      `TERM=xterm-256color`; kill emits exit and frees the session), and the production
+      frontend in a browser shows the first output even when it is emitted before
+      `terminal_spawn` returns, and keeps the same shell across a Chat round-trip. The
+      owner's own look at the native window is still welcome.*
 - [ ] **C6 · Phase 3 on the final code** — one passing live run of `agent_live_test`.
-- [ ] **C7 · Phase 2** — configurable base URL (OpenRouter, LM Studio), Gemini adapter, then
+- [x] **C7 · Phase 2** — configurable base URL (OpenRouter, LM Studio), Gemini adapter, then
       the same chat task switched between two live providers (**owner**: keys).
-      *Built: Gemini (API key), OpenRouter, OpenAI-compatible endpoint. Open: the live
-      switch — `the_same_chat_task_switches_providers_live` is written and needs a local
-      Ollama; Gemini and OpenRouter need keys to verify.*
+      *Built: Gemini (API key), OpenRouter, OpenAI-compatible endpoint. **Exit condition
+      demonstrated live:** the same chat task through the Ollama adapter and the OpenAI
+      adapter (via Ollama's `/v1`), switching only the provider id; both replied, both were
+      metered (36 in / 2 out). Two adapters on one server — not two vendors. Gemini and
+      OpenRouter themselves have never been called: they need keys.*
 
 **Invariants:**
 

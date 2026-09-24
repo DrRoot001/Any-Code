@@ -13,4 +13,4 @@ mod verdict;
 
 pub use plan::{parse_plan, PLANNER_INSTRUCTION};
 pub use state::{InvalidTransition, TaskMachine, TaskState};
-pub use verdict::{replan_prompt, verdict, CommandRecord, Observed, Verdict};
+pub use verdict::{is_known_check, replan_prompt, verdict, CommandRecord, Observed, Verdict};
