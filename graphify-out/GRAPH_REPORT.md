@@ -1,16 +1,16 @@
 # Graph Report - Any Code  (2026-09-24)
 
 ## Corpus Check
-- 138 files · ~248,829 words
+- 138 files · ~249,022 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1535 nodes · 2535 edges · 151 communities (100 shown, 51 thin omitted)
+- 1544 nodes · 2546 edges · 159 communities (100 shown, 59 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 18 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1fce33d0`
+- Built from commit: `d0c89cbb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -87,9 +87,9 @@
 - Repository knowledge graph
 - Roadmap
 - AppState
-- WorkspaceRoot
+- anycode-fs/src/lib.rs
 - shell.rs
-- terminal_commands.rs
+- PtySession
 - default.json
 - anycode-store/src/lib.rs
 - Project audit — 2026-09-24
@@ -113,7 +113,7 @@
 - filesystem.rs
 - anycode-tools/src/lib.rs
 - Value
-- event.rs
+- trust.rs
 - anycode-security/src/lib.rs
 - require_root
 - Send
@@ -161,14 +161,22 @@
 - agent_live_test.rs
 - current_path
 - git_status
+- Drop
+- Error
+- Path
+- PathBuf
+- Result
+- Self
+- String
+- Vec
 
 ## God Nodes (most connected - your core abstractions)
 1. `AppState` - 36 edges
 2. `useWorkbenchStore` - 20 edges
 3. `ProviderError` - 17 edges
 4. `ModelRequest` - 16 edges
-5. `compilerOptions` - 15 edges
-6. `WorkspaceRoot` - 15 edges
+5. `WorkspaceRoot` - 15 edges
+6. `compilerOptions` - 15 edges
 7. `Store` - 15 edges
 8. `StoreError` - 15 edges
 9. `Metered` - 15 edges
@@ -177,20 +185,20 @@
 ## Surprising Connections (you probably didn't know these)
 - `Store` --references--> `Connection`  [EXTRACTED]
   crates/anycode-store/src/lib.rs → apps/desktop/src-tauri/src/provider_commands.rs
+- `execute_tool()` --references--> `WorkspaceRoot`  [EXTRACTED]
+  apps/desktop/src-tauri/src/agent_commands.rs → crates/anycode-fs/src/lib.rs
+- `to_info()` --references--> `WorkspaceRoot`  [EXTRACTED]
+  apps/desktop/src-tauri/src/workspace.rs → crates/anycode-fs/src/lib.rs
+- `WorkspaceState` --references--> `WorkspaceRoot`  [EXTRACTED]
+  apps/desktop/src-tauri/src/workspace.rs → crates/anycode-fs/src/lib.rs
 - `App()` --calls--> `applyTheme()`  [EXTRACTED]
   apps/desktop/src/App.tsx → packages/design-tokens/src/index.ts
-- `provider_error_message()` --references--> `ProviderError`  [EXTRACTED]
-  apps/desktop/src-tauri/src/provider_commands.rs → crates/anycode-models/src/types.rs
-- `send_chat()` --references--> `Message`  [EXTRACTED]
-  apps/desktop/src-tauri/src/provider_commands.rs → crates/anycode-models/src/types.rs
-- `TaskDoneEvent` --references--> `Verdict`  [EXTRACTED]
-  apps/desktop/src-tauri/src/agent_commands.rs → crates/anycode-agent/src/verdict.rs
 
 ## Import Cycles
 - 2-file cycle: `apps/desktop/src-tauri/src/agent_commands.rs -> apps/desktop/src-tauri/src/lib.rs -> apps/desktop/src-tauri/src/agent_commands.rs`
 - 2-file cycle: `crates/anycode-tools/src/filesystem.rs -> crates/anycode-tools/src/lib.rs -> crates/anycode-tools/src/filesystem.rs`
 
-## Communities (151 total, 51 thin omitted)
+## Communities (159 total, 59 thin omitted)
 
 ### Community 0 - "PRD.md"
 Cohesion: 0.02
@@ -424,25 +432,25 @@ Nodes (10): Assigned by the 2026-09-24 audit, Current phase: 4 · Code intellige
 Cohesion: 0.14
 Nodes (21): app_context(), AppState, get_theme(), Arc, AtomicBool, Context, Mutex, Option (+13 more)
 
-### Community 76 - "WorkspaceRoot"
-Cohesion: 0.16
-Nodes (21): AsRef, accepts_an_absolute_path_inside_the_root(), Entry, FsError, list_dir(), read_file(), rejects_an_absolute_path_outside_the_root(), rejects_parent_dir_traversal() (+13 more)
+### Community 76 - "anycode-fs/src/lib.rs"
+Cohesion: 0.11
+Nodes (34): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+26 more)
 
 ### Community 77 - "shell.rs"
 Cohesion: 0.15
 Nodes (11): a_failing_command_is_a_result_not_an_error(), a_grant_covers_only_the_command_it_was_given_for(), captures_stdout_and_exit_code(), context(), Option, Result, RiskLevel, String (+3 more)
 
-### Community 78 - "terminal_commands.rs"
-Cohesion: 0.10
-Nodes (33): AppHandle, a_terminal_session_streams_from_the_first_byte_runs_input_and_cleans_up(), PtyDataEvent, PtyExitEvent, terminal_kill(), terminal_resize(), terminal_spawn(), terminal_write() (+25 more)
+### Community 78 - "PtySession"
+Cohesion: 0.15
+Nodes (20): Child, default_shell(), login_shell_path(), login_shell_path_is_the_shells_own(), PtySession, resolve_login_shell_path(), Box, Error (+12 more)
 
 ### Community 79 - "default.json"
 Cohesion: 0.22
 Nodes (8): description, identifier, permissions, $schema, windows, core:default, dialog:default, main
 
 ### Community 81 - "anycode-store/src/lib.rs"
-Cohesion: 0.15
-Nodes (20): a_tasks_events_come_back_in_order_and_only_for_that_task(), granting_twice_does_not_error(), permission_grants_are_scoped_per_workspace(), Error, Option, Path, Result, Self (+12 more)
+Cohesion: 0.09
+Nodes (32): Event, EventScope, omits_empty_scope_and_payload(), roundtrips_through_json(), Into, Option, Self, String (+24 more)
 
 ### Community 82 - "Project audit — 2026-09-24"
 Cohesion: 0.15
@@ -524,9 +532,9 @@ Nodes (22): every_tool_name_survives_wire_encoding(), every_tool_produces_a_non_
 Cohesion: 0.22
 Nodes (8): FilesystemEditTool, FilesystemWriteTool, reason_for_path(), risk_for_path(), Option, RiskLevel, String, Value
 
-### Community 103 - "event.rs"
-Cohesion: 0.10
-Nodes (22): Event, EventScope, omits_empty_scope_and_payload(), roundtrips_through_json(), Into, Option, Self, String (+14 more)
+### Community 103 - "trust.rs"
+Cohesion: 0.18
+Nodes (10): Into, Self, String, Tagged, Tagged<String>, Tagged<T>, Trust, untrusted_content_cannot_close_its_own_envelope() (+2 more)
 
 ### Community 104 - "anycode-security/src/lib.rs"
 Cohesion: 0.09
@@ -573,20 +581,20 @@ Cohesion: 0.36
 Nodes (9): git_branch(), git_diff(), git_status(), Option, Result, State, String, Vec (+1 more)
 
 ## Knowledge Gaps
-- **518 isolated node(s):** `Current quality status`, `Review protocol`, `2026-09-24 — Close-out, continued: C3, C5, C6, C7 verified live`, `2026-09-24 — Phase 3 close-out (C1–C10)`, `2026-09-24 — Full project audit` (+513 more)
+- **518 isolated node(s):** `IconName`, `ChatRole`, `CommandRecord`, `FileDiff`, `GitStatusEntry` (+513 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **51 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **59 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `AppState` connect `AppState` to `provider_commands.rs`, `require_root`, `agent_live_test.rs`, `agent_commands.rs`, `git_status`, `current_path`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Why does `Tool` connect `anycode-tools/src/lib.rs` to `anycode-security/src/lib.rs`, `ToolError`, `shell.rs`, `Value`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
-- **Why does `decide()` connect `anycode-security/src/lib.rs` to `agent_commands.rs`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
-- **What connects `Current quality status`, `Review protocol`, `2026-09-24 — Close-out, continued: C3, C5, C6, C7 verified live` to the rest of the system?**
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+- **Why does `AppState` connect `AppState` to `provider_commands.rs`, `require_root`, `agent_live_test.rs`, `agent_commands.rs`, `git_status`, `current_path`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+- **Why does `ToolCallRequest` connect `agent_commands.rs` to `types.rs`?**
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+- **What connects `IconName`, `ChatRole`, `CommandRecord` to the rest of the system?**
   _518 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `PRD.md` be split into smaller, more focused modules?**
   _Cohesion score 0.021052631578947368 - nodes in this community are weakly interconnected._

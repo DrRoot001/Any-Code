@@ -876,9 +876,9 @@
     "semantic_hash": ""
   },
   "crates/anycode-fs/src/lib.rs": {
-    "mtime": 1790216559.9052534,
-    "seen": 1790219794.3670201,
-    "ast_hash": "bd9e7396184137d251dbd2ddbdd5959d",
+    "mtime": 1790221759.8488374,
+    "seen": 1790221776.536217,
+    "ast_hash": "1f7ca6e1080403dc4ac2719559776be6",
     "semantic_hash": ""
   },
   "crates/anycode-git/Cargo.toml": {

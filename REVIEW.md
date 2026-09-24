@@ -19,7 +19,7 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | macOS bundle | Pass | CI universal `.dmg` (x86_64 + arm64) launched on an Intel Mac, 2026-09-24; unsigned |
 | Accessibility/static UI | Pass with limitations | Second-pass keyboard-source review completed on 2026-08-24; automated accessibility, screen-reader, and captured native-app walkthrough remain |
 | Windows installer | Built, **not launched** | `.exe` + `.msi` in draft release `app-v0.1.0` (run `35937745006`); nobody has run it on Windows |
-| GitHub CI | Pass | Run `35934057203`: all 7 jobs |
+| GitHub CI | Pass | `d0c89cb`: all 7 jobs, Windows included |
 | Credential vault | Pass | Real macOS Keychain round trip, 2026-09-24. **Before that date it never persisted a key** (in-memory mock) |
 | Security review | Pass — S1–S3 fixed | Fixed and tested 2026-09-24; CSP checked in a browser, not yet in the native WebView |
 | Frontend tests | Pass | 15 Vitest tests (timeline, approval), in CI since 2026-09-24; no component or end-to-end suite yet |
@@ -99,6 +99,11 @@ anyone should expect the agent to succeed routinely.
 - **Pass — gates:** 109 Rust tests at the root (3 ignored); the desktop crate 3 passed (2
   ignored, live); 15 frontend tests; clippy and fmt clean in both cargo workspaces.
 - **Not run:** C4 (no Windows machine). Gemini and OpenRouter live (no keys).
+- **Fail found by CI, fixed:** Windows `Test` failed
+  `accepts_an_absolute_path_inside_the_root`. Windows canonicalises the root to a verbatim
+  `\\?\C:\…` path: `/` is not a separator there, and a plain `C:\…` spelling never
+  matched. In that form `..` also arrives as an ordinary component. Both spellings are now
+  recognised, and `..` and `.` are refused by name. CI run on `d0c89cb` passed all 7 jobs.
 
 ### 2026-09-24 — Phase 3 close-out (C1–C10)
 
