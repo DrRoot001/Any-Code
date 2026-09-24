@@ -41,3 +41,6 @@ graphify-out/20*/
 
 # Playwright MCP scratch output (screenshots, console logs) from UI verification
 .playwright-mcp/
+
+# Agent worktrees (Claude Code isolation) — local only
+.claude/worktrees/
