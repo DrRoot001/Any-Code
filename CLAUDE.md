@@ -16,6 +16,17 @@ haiku for pure boilerplate) - *Codebase search / "where is X defined"* → built
 
 Never do heavy multi-file debugging in the main thread if the debugger subagent is available - dispatch it and review its patch instead.
 
+Specialists defined in [.claude/agents/](.claude/agents/) (each carries this repo's rules):
+
+- *Security-relevant changes* — permission engine, tools, secrets, paths, trust boundary, CSP, IPC, new network access → `security-reviewer` (opus, read-only)
+- *UI implementation* — React components, design tokens, accessibility, Monaco/xterm → `ui-engineer` (sonnet)
+- *UX review* — flows, copy, approval and evidence presentation against PRD §53-69 → `ux-reviewer` (sonnet, read-only)
+- *Performance* — PRD §70 targets, measuring launch/latency/memory/indexing → `performance-engineer` (sonnet)
+- *Cross-platform* — Windows/macOS/Linux paths, shells, PTY, keychain, CI matrix, release builds → `compatibility-engineer` (sonnet)
+- *Code intelligence (Phase 4)* — indexing, tree-sitter, search, FTS5, LSP, context builder → `code-intelligence-engineer` (sonnet)
+
+Subagents report back; the main thread reviews their work, runs the gates, updates REVIEW.md and commits.
+
 ## Before writing code
 
 1. Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). The invariants there are not style
