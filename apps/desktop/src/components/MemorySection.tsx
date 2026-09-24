@@ -72,10 +72,28 @@ export default function MemorySection() {
     }
   };
 
-  const adopt = async (path: string) => {
+  // Adopting turns repository text into standing instructions, so the user reads the
+  // exact text first, and only that text is adopted.
+  const [preview, setPreview] = useState<{ path: string; content: string } | null>(null);
+
+  const review = async (path: string) => {
     setBusy(path);
+    setFilesError(null);
     try {
-      await memoryCommands.adoptInstruction(path);
+      setPreview({ path, content: await memoryCommands.previewInstruction(path) });
+    } catch (reason) {
+      setFilesError(String(reason));
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const adopt = async () => {
+    if (!preview) return;
+    setBusy(preview.path);
+    try {
+      await memoryCommands.adoptInstruction(preview.path, preview.content);
+      setPreview(null);
       refreshMemories();
       refreshFiles();
     } catch (reason) {
@@ -205,13 +223,37 @@ export default function MemorySection() {
               {file.adopted ? (
                 <span className="muted">Adopted</span>
               ) : (
-                <button className="button" onClick={() => adopt(file.path)} disabled={busy === file.path}>
-                  Adopt
+                <button
+                  className="button"
+                  onClick={() => review(file.path)}
+                  disabled={busy === file.path || preview?.path === file.path}
+                >
+                  Review to adopt
                 </button>
               )}
             </li>
           ))}
         </ul>
+      )}
+      {preview && (
+        <section className="instruction-preview" aria-label={`Contents of ${preview.path}`}>
+          <p>
+            Adopting <code>{preview.path}</code> makes this text your instructions to the agent
+            on every task in this workspace:
+          </p>
+          {/* Repository text: a plain text child, never rendered as markup. */}
+          <pre className="context-passage">
+            <code>{preview.content}</code>
+          </pre>
+          <div className="instruction-preview-actions">
+            <button className="button button--primary" onClick={adopt} disabled={busy === preview.path}>
+              Adopt this text
+            </button>
+            <button className="button" onClick={() => setPreview(null)}>
+              Cancel
+            </button>
+          </div>
+        </section>
       )}
     </div>
   );

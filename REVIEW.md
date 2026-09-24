@@ -8,7 +8,7 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 
 | Area | Last result | Evidence |
 |------|-------------|----------|
-| Rust workspace | Pass | 109 passed, 0 failed, 3 ignored (live/keychain) on 2026-09-24 |
+| Rust workspace | Pass | 184 passed, 0 failed, 3 ignored (live/keychain) on 2026-09-25 |
 | Desktop runtime crate | Pass | fmt + clippy clean; 1 ignored live test; now gated in CI (new job) |
 | Integrated terminal | Pass | Real PTY path tested end to end headless, and the panel checked in the browser, 2026-09-24; native window not seen |
 | Rust lint | Pass | Clippy with warnings denied, both cargo workspaces, 2026-09-23 |
@@ -22,8 +22,10 @@ from fail to pass; a later rerun gets its own row so the history remains inspect
 | GitHub CI | Pass | `d0c89cb`: all 7 jobs, Windows included |
 | Credential vault | Pass | Real macOS Keychain round trip, 2026-09-24. **Before that date it never persisted a key** (in-memory mock) |
 | Security review | Pass — S1–S3 fixed | Fixed and tested 2026-09-24; CSP checked in a browser, not yet in the native WebView |
-| Frontend tests | Pass | 15 Vitest tests (timeline, approval), in CI since 2026-09-24; no component or end-to-end suite yet |
+| Frontend tests | Pass | 45 Vitest tests, 2026-09-25; no component or end-to-end suite yet |
 | Agent runtime (live model) | Pass on final code, low reliability | Passed on `9c96cea`; 2 passes in 13 live runs with a 3B local model; verdict correct in every run |
+| Code intelligence (Phase 4) | Pass with limitations | Index, code tools, context builder, memory and adoption tested; code-review blocker and 8 security findings fixed with regression tests, 2026-09-25; Context Inspector not seen in the native window |
+| Phase 4 exit test | Partly met | ~1% of repo tokens per package on this repo; live agent run timed out (see 2026-09-25 entry) |
 | Provider switch (Phase 2 exit) | Pass | Same chat task through two adapters live, 2026-09-24 |
 
 ## Review protocol
@@ -41,6 +43,158 @@ A failed test remains visible. Fixing it requires a new passing entry with a lin
 the earlier failure.
 
 ## Verification history
+
+### 2026-09-25 — Phase 4: index in the app, context in the agent loop, reviews
+
+- **Scope:** uncommitted work on `591f376`.
+  - The index is built in the background when a workspace opens and kept fresh by a debounced
+    watcher (`index_commands.rs`, `index:status`).
+  - Three code tools: `code.search`, `code.definition`, `code.references`.
+  - A context package goes into both prompts (`task:context`, `task.context` audit).
+  - Memories go into the system prompt (`task.memories`, ids only).
+  - LSP client (not wired).
+  - Context Inspector and the StatusBar index badge.
+  - The context-builder tests.
+- **Environment:** macOS 12 (Intel), Ollama with `qwen2.5:3b`, shared `target-agents/`.
+- **Pass — gates:**
+  - `cargo test --workspace`: 184 passed, 0 failed (after the re-verification fixes).
+  - Desktop crate `cargo test --lib`: 19 passed, 2 ignored (live).
+  - Clippy `-D warnings` and fmt clean in both cargo workspaces.
+  - `pnpm test`: 45 passed; `tsc -b --noEmit` clean.
+- **Exit-test measurement (`cargo run -p anycode-context --example measure --release -- . "<instruction>"`):**
+  - **Repository:** 148 files, ~299,052 tokens (estimated as bytes ÷ 4). Indexing in memory
+    took 2.0–2.6 s; building a package took 1–7 ms.
+  - **"Add a bytes field to the index status that `index_status` reports to the frontend"**:
+    9 items, ~2,934 of 3,000 tokens (0.98%). It included the definition in `index_commands.rs`,
+    the `IndexStatus` type in `tauri.ts`, and `indexStatus.ts`. Noise: `openai.rs` and
+    `anycode-git`. `StatusBar.tsx` was excluded as over budget.
+  - **"Make `parse_plan` accept steps numbered like 1) …"**: 9 items, ~2,987 tokens (1.00%).
+    It included `crates/anycode-agent/src/plan.rs` (definition and the parse loop) and the
+    caller. The rest was term noise on "steps".
+  - **"The `code.search` tool should let the agent restrict results to one directory"**:
+    - **First run (fail):** the backticked dotted name was dropped from the intent entirely, so
+      no identifier was extracted.
+    - **The fix:** `intent.rs` now keeps backticked qualified names as a phrase, and gains
+      stopwords `let`, `one`, `well`. Test: `a_backticked_dotted_name_is_kept_as_a_phrase`.
+    - **Second run:** 8 items, 0.93%. It includes `crates/anycode-tools/src/code.rs` lines 1–50
+      and 101–150, **but not 51–100**, where `CodeSearchTool::execute` lives. That is a
+      partial miss.
+- **Fail — live agent run** (`ANYCODE_LIVE_MODEL=qwen2.5:3b cargo test --lib agent_live -- --ignored`):
+  - **What the test now requires:** the real index is built first (`index:status` building →
+    ready: 3 files, 5 symbols, 71 ms), and a global memory exists. It asserts the
+    `task.context` and `task.memories` audit events, and that the package contains `calc.py`.
+  - **Observed:** the context was emitted before planning. It contained `calc.py`
+    (named in the instruction), `README.md` and `test_calc.py`, ~134 of ~134 tokens (the
+    fixture is tiny).
+  - **Timeline:** planning took 252 s. The agent read `calc.py` at 778 s, and the suite failed
+    at 779 s. It wrote `multiply` at 1027 s, and the suite passed.
+  - **Result:** the task **did not reach `done` within the 45-minute deadline**. The model was
+    still producing its final turn, so the test failed at 2,700 s.
+  - **Not rerun.** A 3B model on this CPU is too slow for this loop to be a dependable
+    signal; a faster model is needed.
+- **Code review (code-reviewer)**, fixed:
+  - **Blocker:** re-opening workspace A during its first build started a second concurrent
+    build on the same SQLite file. The result was `SQLITE_BUSY` and a stale index winning.
+    Fixed with a generation counter in `IndexSlot` and a 30 s `busy_timeout` in `Index::open`.
+  - `code.definition` and `select_context` held the index mutex on async threads. They now run
+    under `spawn_blocking`.
+  - The LSP client allocated whatever `Content-Length` a server sent. It is now capped at 16 MiB
+    (test: `an_oversized_content_length_is_refused_without_allocating`), and its doc comment no
+    longer claims that writes time out.
+  - The audit payload for `task.context` is now a tested function. Test:
+    `the_context_audit_records_the_choice_but_never_the_passages`.
+  - A poisoned store lock is now logged.
+- **Security review (security-reviewer, reproduced with a probe against the real crates)**,
+  fixed with regression tests:
+  1. **High:** the Low-risk code tools and the automatic context returned `secrets.yaml`,
+     `prod.env` and `server.key`. Anything `path_risk` classifies is now neither indexed nor
+     searched (`walk::is_sensitive`). Hits in `.anycode/permissions.yaml`-protected paths are
+     withheld from code-tool results and the context package, and the model is told how many.
+     Tests: `secret_files_are_neither_indexed_nor_searched` and
+     `code_tool_hits_in_protected_paths_are_withheld_and_counted`.
+  2. **High:** the watcher indexed `.env.local` and nested-gitignored files that the full scan
+     skips. `walk::is_excluded` now applies hidden-component, sensitive, ancestor
+     `.gitignore`/`.ignore` and `.git/info/exclude` rules. Test:
+     `the_watcher_skips_what_the_full_scan_skips`.
+  3. **Medium:** a file swapped for a symlink out of the workspace stayed indexed, and its
+     target was read into the prompt. `update_paths` now names paths lexically and drops links.
+     The context builder refuses to read through a link out. Tests:
+     `a_file_swapped_for_a_symlink_leaves_the_index` and
+     `a_file_swapped_for_a_symlink_out_of_the_workspace_is_not_read`.
+  4. **Medium:** a file name containing a newline put text on its own prompt line outside the
+     envelope. The new `trust::prompt_label` escapes paths and origins. Tests:
+     `a_path_with_a_newline_cannot_put_text_on_a_line_of_its_own` and
+     `an_origin_cannot_break_out_of_its_attribute_or_line`.
+  5. **Medium:** adoption followed symlinks and adopted text the user never saw. Now:
+     - symlinks are refused and not listed;
+     - "Review to adopt" shows the exact text;
+     - `adopt_instruction(path, content)` refuses if the file changed since the preview.
+
+     Tests: `a_file_changed_after_its_preview_is_not_adopted` and
+     `a_symlinked_instruction_file_is_neither_listed_nor_adopted`.
+  6. **Low-medium:** `</UNTRUSTED>` and `< /untrusted>` were not defused. Defusal is now
+     case- and space-insensitive. Test:
+     `closing_tags_in_any_case_or_spacing_cannot_end_the_envelope`.
+  7. **High once wired (LSP):**
+     - Relative PATH entries are skipped.
+     - Binaries resolving inside the workspace are refused.
+     - The canonical path is spawned.
+
+     Test: `a_server_inside_the_workspace_is_never_found`. Starting a server runs repository
+     code, so it needs its own capability before it is wired (ROADMAP 4.8).
+  8. **Low:** search limits:
+     - lines truncated to 400 characters;
+     - files over 1 MiB skipped;
+     - regex size limit of 10 MiB;
+     - patterns of at most 1,000 characters.
+
+     Test: `search_truncates_long_lines_and_skips_oversized_files`.
+  - **Not fixed:** the reviewer reported an off-by-one in `uri_to_path`, but `i + 2 < len`
+    already guarantees both hex digits exist, so the finding was wrong and nothing changed.
+- **Security re-verification (security-reviewer, same probe, updated):**
+  - **All eight fixes hold.** Among the evidence:
+    - `search_live` finds no secret fixtures.
+    - A symlink swap removes the file's row and reads nothing from outside.
+    - Every closing-tag variant is defused, including tabs, newlines and upper case.
+    - A 200 KB line comes back as 401 characters.
+  - **New issues found:**
+    - **A (medium):** the watcher ignored `.gitignore` files above the workspace root (a
+      workspace opened at `monorepo/apps`), and let `.gitignore` override `.ignore`. The probe
+      showed two such files reaching the prompt.
+    - **B (low-medium):** the context builder followed a symlink that points inside the
+      workspace, such as a link to `.env`. One unreadable file failed a whole `update_paths`
+      batch or `refresh`, which rolled back the deletion of that link's row, so the window
+      could become permanent.
+    - **D (low):** when a directory was swapped for a symlink, the rows under it stayed.
+    - **E (low):** `prompt_label` let U+2028/U+2029 and the bidi controls through.
+  - **Fixed:**
+    - A: `is_excluded` now climbs to the repository's top level and reads its
+      `.git/info/exclude`, and `.ignore` now outranks `.gitignore`.
+    - B: `read_lines` requires the resolved path to equal the lexical path. An unreadable file
+      is now skipped (and its rows dropped) instead of failing the batch.
+    - D: new `delete_tree_rows`.
+    - E: those characters are now escaped.
+  - **Tests added:**
+    - `the_watcher_honours_ignore_files_above_the_root_and_ignore_over_gitignore`
+    - `a_file_swapped_for_a_symlink_inside_the_workspace_is_not_read_either`
+    - `one_unreadable_file_does_not_fail_the_batch`
+    - `a_directory_swapped_for_a_symlink_takes_its_rows_along`
+    - a U+2028/U+202E assertion in `an_origin_cannot_break_out_of_its_attribute_or_line`
+  - **Not fixed (C, low):** the regex engine takes about 2.5 s to refuse `(\w{100}){100}` in
+    a debug build. Not measured in release.
+  - **Not re-probed after these last fixes:** the regression tests above cover each case
+    instead.
+- **Known limitations:**
+  - notify 7's inotify backend follows symlinks when adding recursive watches (Linux). It has
+    no option to stop until notify 8; content is still refused by canonicalisation.
+  - The watcher path does not read the user's global git `excludesFile`.
+  - When the index is not ready, no `task:context` event is sent. The model is told, but the
+    timeline shows nothing.
+  - A past task's replay (`history.ts`) does not show its context package, because the audit
+    log keeps no passage text.
+  - The Context Inspector, StatusBar badge and adoption preview were never seen in the native
+    window.
+  - Memory scopes are global and workspace only.
 
 ### 2026-09-24 — Close-out, continued: C3, C5, C6, C7 verified live
 

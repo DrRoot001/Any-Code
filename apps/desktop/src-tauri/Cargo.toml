@@ -31,6 +31,9 @@ anycode-security = { path = "../../../crates/anycode-security" }
 anycode-tools = { path = "../../../crates/anycode-tools" }
 anycode-agent = { path = "../../../crates/anycode-agent" }
 anycode-core = { path = "../../../crates/anycode-core" }
+anycode-code-intelligence = { path = "../../../crates/anycode-code-intelligence" }
+anycode-context = { path = "../../../crates/anycode-context" }
+notify-debouncer-mini = "0.5"
 
 [dev-dependencies]
 # The mock runtime drives the real agent loop without a webview (src/agent_live_test.rs).

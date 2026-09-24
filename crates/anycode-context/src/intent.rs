@@ -74,6 +74,9 @@ const STOPWORDS: &[&str] = &[
     "via",
     "like",
     "just",
+    "let",
+    "one",
+    "well",
 ];
 
 #[derive(Debug, Clone, Default, PartialEq, Serialize)]
@@ -118,8 +121,18 @@ pub fn extract_intent(instruction: &str, known: &BTreeSet<&str>) -> Intent {
     // `backticked` spans are the strongest signal of a code name.
     for (i, part) in instruction.split('`').enumerate() {
         let part = part.trim().trim_end_matches("()");
-        if i % 2 == 1 && looks_like_identifier(part) {
+        if i % 2 == 0 {
+            continue;
+        }
+        if looks_like_identifier(part) {
             push(&mut identifiers, part.to_string());
+        } else if part.len() >= 3
+            && !part.contains(char::is_whitespace)
+            && !known.contains(part.trim_start_matches("./"))
+        {
+            // A dotted or qualified name (`code.search`, `serde::Serialize`) is no single
+            // symbol, but as a phrase it finds the text that names it.
+            push(&mut terms, part.to_lowercase());
         }
     }
 
@@ -203,6 +216,19 @@ mod tests {
         }
         // A backticked identifier is not also a plain term.
         assert!(!intent.terms.contains(&"multiply".to_string()));
+    }
+
+    #[test]
+    fn a_backticked_dotted_name_is_kept_as_a_phrase() {
+        let intent = extract_intent("The `code.search` tool should take a directory.", &known());
+        assert_eq!(
+            intent.terms.first().map(String::as_str),
+            Some("code.search")
+        );
+        // A backticked path is still a path, not a phrase.
+        let intent = extract_intent("Fix `src/lib.rs`.", &known());
+        assert_eq!(intent.paths, ["src/lib.rs"]);
+        assert!(intent.terms.is_empty(), "{:?}", intent.terms);
     }
 
     #[test]

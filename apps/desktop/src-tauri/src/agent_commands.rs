@@ -274,7 +274,7 @@ fn system_prompt(workspace_path: &Path) -> String {
     )
 }
 
-/// Starts an agent task. Progress arrives as `task:state:{id}`, `task:plan_delta:{id}`,
+/// Starts an agent task. Progress arrives as `task:state:{id}`, `task:context:{id}`, `task:plan_delta:{id}`,
 /// `task:plan:{id}`, `task:delta:{id}`, `task:tool_call:{id}`,
 /// `task:approval_requested:{id}`, `task:tool_result:{id}`, `task:replan:{id}`, and
 /// exactly one of `task:done:{id}` / `task:error:{id}` / `task:cancelled:{id}`.
@@ -398,6 +398,14 @@ impl<R: Runtime> TaskRun<R> {
         self.policy = load_workspace_policy(workspace_path)?;
         let tool_defs = tool_definitions(&self.app);
         let dirty_before = dirty_paths(workspace_path);
+        let system = format!(
+            "{}{}",
+            system_prompt(workspace_path),
+            self.memory_prompt(workspace_path)
+        );
+        let context = self
+            .select_context(workspace_path, &instruction, &dirty_before)
+            .await;
 
         // ── Plan ────────────────────────────────────────────────────────────────
         self.enter(TaskState::Planning)?;
@@ -406,9 +414,9 @@ impl<R: Runtime> TaskRun<R> {
             .complete(
                 adapter,
                 vec![
-                    Message::system(system_prompt(workspace_path)),
+                    Message::system(system.clone()),
                     Message::user(format!(
-                        "{instruction}\n\nThe repository's top level:\n{}\n\n{PLANNER_INSTRUCTION}",
+                        "{instruction}\n\nThe repository's top level:\n{}\n\n{context}\n\n{PLANNER_INSTRUCTION}",
                         listing.to_prompt_text()
                     )),
                 ],
@@ -430,8 +438,8 @@ impl<R: Runtime> TaskRun<R> {
         // ── Act ─────────────────────────────────────────────────────────────────
         self.enter(TaskState::Running)?;
         let mut messages = vec![
-            Message::system(system_prompt(workspace_path)),
-            Message::user(instruction),
+            Message::system(system),
+            Message::user(format!("{instruction}\n\n{context}")),
             Message::assistant(format!("My plan:\n{}", plan.text.trim())),
             Message::user("Any Code runtime: carry out the plan now, using the tools."),
         ];
@@ -779,7 +787,10 @@ impl<R: Runtime> TaskRun<R> {
             .await
             .ok()
             .flatten();
-        let result = execute_tool(&self.app, workspace_path, fs_root, call, path_env).await;
+        let mut result = execute_tool(&self.app, workspace_path, fs_root, call, path_env).await;
+        if call.name.starts_with("code.") {
+            withhold_protected(&self.policy, &mut result);
+        }
         Ok((result, true))
     }
 
@@ -822,6 +833,91 @@ impl<R: Runtime> TaskRun<R> {
             }
         }
         (risk_after, why.or(reason))
+    }
+
+    /// PRD §37: the passages this task is most likely about, chosen before the model sees
+    /// anything. The package goes to the user as `task:context`; the audit log records
+    /// what was chosen and why, but not the passages themselves — they are in the repo.
+    async fn select_context(
+        &self,
+        workspace_path: &Path,
+        instruction: &str,
+        dirty: &BTreeSet<String>,
+    ) -> String {
+        let index = crate::index_commands::handle(&self.app.state::<AppState>(), workspace_path);
+        let Some(index) = index else {
+            self.audit("task.context", json!({ "available": false }));
+            return "The workspace index is still being built, so no repository context was \
+                    selected in advance. Use code.search to find what you need."
+                .into();
+        };
+        let changed: Vec<String> = dirty.iter().cloned().collect();
+        let instruction = instruction.to_string();
+        // The watcher may hold the index while it re-indexes; wait off the async threads.
+        let built = tauri::async_runtime::spawn_blocking(move || {
+            let index = index.lock().map_err(|e| e.to_string())?;
+            let request = anycode_context::ContextRequest {
+                instruction: &instruction,
+                budget_tokens: anycode_context::DEFAULT_BUDGET_TOKENS,
+                changed_paths: &changed,
+            };
+            anycode_context::build(&index, &request).map_err(|e| e.to_string())
+        })
+        .await
+        .unwrap_or_else(|e| Err(e.to_string()));
+        let package = match built {
+            Ok(mut package) => {
+                // Reading a protected path is asked every time; nothing pre-selected may
+                // carry one past that question.
+                package.items.retain(|i| !self.policy.is_protected(&i.path));
+                package
+                    .excluded
+                    .retain(|i| !self.policy.is_protected(&i.path));
+                package.est_tokens = package.items.iter().map(|i| i.est_tokens).sum();
+                package
+            }
+            Err(error) => {
+                self.audit(
+                    "task.context",
+                    json!({ "available": false, "error": error }),
+                );
+                return format!("Selecting repository context failed ({error}); use code.search.");
+            }
+        };
+        self.audit("task.context", context_audit(&package));
+        self.emit("context", package.clone());
+        if package.items.is_empty() {
+            return "No indexed repository content matched the instruction.".into();
+        }
+        anycode_context::render(&package)
+    }
+
+    /// The user's memories (global and this workspace's) as standing instructions. They are
+    /// the user's own words or files the user chose to adopt, so they instruct; which ones
+    /// were used is audited by id, never by content.
+    fn memory_prompt(&self, workspace_path: &Path) -> String {
+        let state = self.app.state::<AppState>();
+        let memories = match state.store.lock() {
+            Ok(store) => store
+                .list_memories(Some(&workspace_path.to_string_lossy()))
+                .unwrap_or_default(),
+            Err(e) => {
+                eprintln!("memories unavailable for this task: {e}");
+                Vec::new()
+            }
+        };
+        if memories.is_empty() {
+            return String::new();
+        }
+        let ids: Vec<&str> = memories.iter().map(|m| m.id.as_str()).collect();
+        self.audit("task.memories", json!({ "ids": ids }));
+        let mut out =
+            "\n\nThe user's standing instructions (from their memory in Any Code):".to_string();
+        for memory in &memories {
+            out.push_str("\n- ");
+            out.push_str(memory.content.trim());
+        }
+        out
     }
 
     /// The single way a task changes state: validated by `anycode-agent`, then shown
@@ -876,6 +972,53 @@ impl<R: Runtime> TaskRun<R> {
 /// Loads `.anycode/permissions.yaml` if the workspace has one. A file that exists but does
 /// not parse fails the task: silently ignoring restrictions the user wrote would be worse
 /// than refusing to start.
+/// Drops code-tool hits in paths `.anycode/permissions.yaml` protects. Those tools run
+/// without asking, and reading a protected path must be asked every time, so its lines
+/// are withheld — and the model told how many, rather than shown a silently short list.
+fn withhold_protected(policy: &WorkspacePolicy, result: &mut Value) {
+    let mut withheld = 0;
+    for key in ["matches", "references", "definitions"] {
+        if let Some(hits) = result.get_mut(key).and_then(Value::as_array_mut) {
+            let before = hits.len();
+            hits.retain(|hit| !hit["path"].as_str().is_some_and(|p| policy.is_protected(p)));
+            withheld += before - hits.len();
+        }
+    }
+    if withheld > 0 {
+        result["withheld"] = json!(format!(
+            "{withheld} result(s) in paths protected by {POLICY_FILE}; read them with \
+             filesystem.read, which asks the user"
+        ));
+    }
+}
+
+/// What the audit log keeps of a context package: what was chosen and why, never the
+/// passages themselves — those are in the repository.
+fn context_audit(package: &anycode_context::ContextPackage) -> Value {
+    let items: Vec<Value> = package
+        .items
+        .iter()
+        .map(|item| {
+            json!({
+                "path": item.path,
+                "startLine": item.start_line,
+                "endLine": item.end_line,
+                "outline": item.outline,
+                "reasons": item.reasons,
+                "estTokens": item.est_tokens,
+            })
+        })
+        .collect();
+    json!({
+        "available": true,
+        "items": items,
+        "excluded": package.excluded.len(),
+        "estTokens": package.est_tokens,
+        "budgetTokens": package.budget_tokens,
+        "repoEstTokens": package.repo_est_tokens,
+    })
+}
+
 fn load_workspace_policy(workspace_path: &Path) -> Result<WorkspacePolicy, Stop> {
     match std::fs::read_to_string(workspace_path.join(POLICY_FILE)) {
         Ok(text) => WorkspacePolicy::parse(&text).map_err(|e| Stop::Failed(e.to_string())),
@@ -971,13 +1114,14 @@ async fn execute_tool<R: Runtime>(
     call: &ToolCallRequest,
     path_env: Option<String>,
 ) -> Value {
+    // Re-looked-up rather than held across the await: `State` must not outlive a yield.
+    let state = app.state::<AppState>();
     let ctx = ToolContext {
         fs_root: fs_root.clone(),
         workspace_path: workspace_path.to_path_buf(),
         path_env,
+        index: crate::index_commands::handle(&state, fs_root.path()),
     };
-    // Re-looked-up rather than held across the await: `State` must not outlive a yield.
-    let state = app.state::<AppState>();
     let Some(tool) = state.tools.get(&call.name) else {
         return json!({ "error": format!("unknown tool: {}", call.name) });
     };
@@ -1132,6 +1276,68 @@ mod tests {
         fn drop(&mut self) {
             let _ = fs::remove_dir_all(&self.0);
         }
+    }
+
+    // ── withhold_protected ─────────────────────────────────────────────────────
+
+    #[test]
+    fn code_tool_hits_in_protected_paths_are_withheld_and_counted() {
+        let policy =
+            WorkspacePolicy::parse("protected:\n  files:\n    - \"secrets/**\"\n").unwrap();
+        let mut result = json!({ "matches": [
+            { "path": "secrets/prod.txt", "line": 1, "text": "key" },
+            { "path": "src/main.rs", "line": 2, "text": "key" },
+        ]});
+        withhold_protected(&policy, &mut result);
+        let paths: Vec<&str> = result["matches"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|m| m["path"].as_str().unwrap())
+            .collect();
+        assert_eq!(paths, ["src/main.rs"]);
+        assert!(result["withheld"].as_str().unwrap().starts_with("1 result"));
+    }
+
+    // ── context_audit ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn the_context_audit_records_the_choice_but_never_the_passages() {
+        let dir = TempDir::new();
+        let secret_line = "UNIQUE_PASSAGE_TEXT = 1";
+        fs::write(
+            dir.path().join("calc.py"),
+            format!("def multiply(a, b):\n    {secret_line}\n"),
+        )
+        .unwrap();
+        let mut index = anycode_code_intelligence::Index::open_in_memory(dir.path()).unwrap();
+        index.refresh().unwrap();
+        let package = anycode_context::build(
+            &index,
+            &anycode_context::ContextRequest {
+                instruction: "Implement `multiply` in calc.py",
+                budget_tokens: anycode_context::DEFAULT_BUDGET_TOKENS,
+                changed_paths: &[],
+            },
+        )
+        .unwrap();
+        assert!(
+            package.items[0].text.contains(secret_line),
+            "fixture sanity"
+        );
+
+        let audit = context_audit(&package);
+        assert_eq!(audit["available"], true);
+        assert_eq!(audit["items"][0]["path"], "calc.py");
+        assert_eq!(
+            audit["items"][0]["reasons"][0]["kind"],
+            "named_in_instruction"
+        );
+        assert!(audit["estTokens"].as_u64().unwrap() > 0);
+        assert!(
+            !audit.to_string().contains(secret_line),
+            "passage text leaked into the audit log: {audit}"
+        );
     }
 
     // ── load_workspace_policy ──────────────────────────────────────────────────

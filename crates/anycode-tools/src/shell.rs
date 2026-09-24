@@ -105,6 +105,7 @@ mod tests {
             fs_root,
             workspace_path: dir.path().to_path_buf(),
             path_env: None,
+            index: None,
         }
     }
 

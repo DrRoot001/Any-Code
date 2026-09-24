@@ -409,6 +409,7 @@ mod tests {
             tools: ToolRegistry::standard(),
             pending_approvals: Mutex::new(HashMap::new()),
             running_tasks: Mutex::new(HashMap::new()),
+            index: Mutex::new(Default::default()),
             session_id,
         });
 
@@ -461,6 +462,7 @@ mod tests {
             tools: ToolRegistry::standard(),
             pending_approvals: Mutex::new(HashMap::new()),
             running_tasks: Mutex::new(HashMap::new()),
+            index: Mutex::new(Default::default()),
             session_id: Uuid::new_v4(),
         });
         set_provider_endpoint(

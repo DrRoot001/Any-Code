@@ -1,4 +1,6 @@
-import type { TaskEvidence, TaskUsage, TaskVerdict } from "../lib/tauri";
+import { useState } from "react";
+import { describeReason, describeScale, lineRange } from "../lib/context";
+import type { ContextItem, ContextPackage, TaskEvidence, TaskUsage, TaskVerdict } from "../lib/tauri";
 import type { Entry } from "../lib/timeline";
 
 /**
@@ -69,6 +71,8 @@ export function TimelineEntry({ entry }: { entry: Entry }) {
           <Evidence evidence={entry.evidence} verdict={entry.verdict} usage={entry.usage} />
         </div>
       );
+    case "context":
+      return <ContextInspector package={entry.package} />;
     case "error":
       return (
         <p className="danger" role="alert">
@@ -152,5 +156,93 @@ function Evidence({
         {usage.inputTokens.toLocaleString()} in · {usage.outputTokens.toLocaleString()} out tokens
       </p>
     </section>
+  );
+}
+
+/**
+ * What the context builder gave the agent, and what it left out (PRD §37). Collapsed by
+ * default — a scale line the runtime computed, never a claim we made up. Expanding shows
+ * exactly why each passage was included or excluded, with the passage text itself opt-in
+ * per item so the timeline doesn't dump the whole prompt on screen.
+ */
+function ContextInspector({ package: pkg }: { package: ContextPackage }) {
+  const [open, setOpen] = useState(false);
+  const hasDetail = pkg.items.length > 0 || pkg.excluded.length > 0;
+
+  return (
+    <section className="agent-context" aria-label="Context">
+      <button
+        type="button"
+        className="context-summary"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        disabled={!hasDetail}
+      >
+        <span aria-hidden="true">{hasDetail ? (open ? "▾" : "▸") : ""}</span>
+        <span>{describeScale(pkg)}</span>
+      </button>
+
+      {open && hasDetail && (
+        <div className="context-details">
+          {pkg.items.length > 0 && (
+            <ul className="context-list">
+              {pkg.items.map((item, i) => (
+                <ContextItemRow key={`${item.path}:${item.startLine}:${i}`} item={item} />
+              ))}
+            </ul>
+          )}
+
+          {pkg.excluded.length > 0 && (
+            <>
+              <h5>Excluded</h5>
+              <ul className="context-list">
+                {pkg.excluded.map((ex, i) => (
+                  <li key={`${ex.path}:${ex.startLine}:${i}`} className="context-item-row">
+                    <div className="context-item-head">
+                      <code>{ex.path}</code>
+                      <span className="muted">{lineRange(ex.startLine, ex.endLine)}</span>
+                      <span className="muted">~{ex.estTokens.toLocaleString()} tokens</span>
+                    </div>
+                    <p className="context-item-reasons muted">{ex.why}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/** One included passage: where it came from, why, and its text (collapsed by default). */
+function ContextItemRow({ item }: { item: ContextItem }) {
+  const [showText, setShowText] = useState(false);
+
+  return (
+    <li className="context-item-row">
+      <div className="context-item-head">
+        <code>{item.path}</code>
+        <span className="muted">{item.outline ? "outline" : lineRange(item.startLine, item.endLine)}</span>
+        <span className="muted">~{item.estTokens.toLocaleString()} tokens</span>
+      </div>
+      <p className="context-item-reasons muted">
+        {item.reasons.length > 0 ? item.reasons.map(describeReason).join(" · ") : "no reason given"}
+      </p>
+      <button
+        type="button"
+        className="context-toggle-text"
+        onClick={() => setShowText((s) => !s)}
+        aria-expanded={showText}
+      >
+        {showText ? "Hide passage" : "Show passage"}
+      </button>
+      {/* Repository text is untrusted data — a plain text child, never dangerouslySetInnerHTML. */}
+      {showText && (
+        <pre className="context-passage">
+          <code>{item.text}</code>
+        </pre>
+      )}
+    </li>
   );
 }

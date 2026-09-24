@@ -852,6 +852,94 @@ input:focus-visible {
   font-size: 11px;
   color: var(--ac-text-secondary);
 }
+/* --- Context Inspector (PRD §37) ----------------------------------------- */
+.agent-context {
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-canvas);
+}
+.context-summary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.context-summary:disabled {
+  cursor: default;
+}
+.context-summary:hover:not(:disabled) {
+  background: var(--ac-elevated);
+}
+.context-details {
+  padding: 0 10px 10px;
+  font-size: 12px;
+}
+.context-details h5 {
+  margin: 10px 0 6px;
+  color: var(--ac-text-secondary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.context-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.context-item-row {
+  padding: 6px 8px;
+  border: 1px solid var(--ac-border);
+  border-radius: 5px;
+  background: var(--ac-surface);
+}
+.context-item-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 7px;
+}
+.context-item-head code {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.context-item-reasons {
+  margin: 4px 0 0;
+}
+.context-toggle-text {
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ac-accent);
+  font-size: 11px;
+  cursor: pointer;
+}
+.context-passage {
+  margin: 6px 0 0;
+  padding: 8px;
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid var(--ac-border);
+  border-radius: 5px;
+  background: var(--ac-canvas);
+  font-family: var(--ac-font-code);
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .agent-plan {
   padding: 8px 10px;
   border: 1px solid var(--ac-border);
@@ -1003,4 +1091,18 @@ input:focus-visible {
    cancel button; only its layout box goes away. */
 .agent-dock[hidden] {
   display: none;
+}
+
+.instruction-preview {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--ac-border);
+  border-radius: 6px;
+  background: var(--ac-surface);
+}
+
+.instruction-preview-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }

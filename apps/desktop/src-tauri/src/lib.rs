@@ -8,6 +8,7 @@ mod agent_commands;
 mod agent_live_test;
 mod fs_commands;
 mod git_commands;
+mod index_commands;
 mod memory_commands;
 mod provider_commands;
 mod terminal_commands;
@@ -30,6 +31,8 @@ pub(crate) struct AppState {
     pending_approvals: Mutex<HashMap<String, PendingApproval>>,
     /// Cancellation flag per running agent task, keyed by task id.
     running_tasks: Mutex<HashMap<String, Arc<AtomicBool>>>,
+    /// The open workspace's code index and its watcher (index_commands.rs).
+    index: Mutex<index_commands::IndexSlot>,
     /// Scopes audit events that belong to the app rather than to one agent task, such as
     /// a provider being connected. One per launch.
     session_id: uuid::Uuid,
@@ -101,6 +104,7 @@ pub fn run() {
                 tools: ToolRegistry::standard(),
                 pending_approvals: Mutex::new(HashMap::new()),
                 running_tasks: Mutex::new(HashMap::new()),
+                index: Mutex::new(Default::default()),
                 session_id: uuid::Uuid::new_v4(),
             });
             // Sourcing the user's shell profile can take seconds; do it now, off the UI,
@@ -151,9 +155,11 @@ pub fn run() {
             memory_commands::delete_memory,
             memory_commands::export_memories,
             memory_commands::repository_instructions,
+            memory_commands::preview_instruction,
             memory_commands::adopt_instruction,
             memory_commands::list_tasks,
             memory_commands::task_events,
+            index_commands::index_status,
         ])
         .run(app_context())
         .expect("error while running Any Code");

@@ -9,11 +9,13 @@
 //! repository".
 
 mod fts;
+mod lsp;
 mod path_util;
 mod search;
 mod symbols;
 mod walk;
 
+pub use lsp::{server_for, Location as LspLocation, LspClient, LspError, ServerCommand};
 pub use search::{references, search_live};
 
 use rusqlite::{params, Connection};
@@ -278,13 +280,21 @@ fn delete_file_rows(conn: &Connection, rel: &str) -> Result<(), IndexError> {
     Ok(())
 }
 
-fn row_exists(conn: &Connection, rel: &str) -> Result<bool, IndexError> {
-    let count: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM files WHERE path = ?1",
-        params![rel],
-        |r| r.get(0),
-    )?;
-    Ok(count > 0)
+/// Deletes `rel` and, if it was a directory, everything indexed under it. Returns how
+/// many files were removed.
+fn delete_tree_rows(conn: &Connection, rel: &str) -> Result<usize, IndexError> {
+    let prefix = format!("{rel}/");
+    let under = "path = ?1 OR substr(path, 1, length(?2)) = ?2";
+    for table in ["chunks", "symbols", "imports"] {
+        conn.execute(
+            &format!("DELETE FROM {table} WHERE {under}"),
+            params![rel, prefix],
+        )?;
+    }
+    Ok(conn.execute(
+        &format!("DELETE FROM files WHERE {under}"),
+        params![rel, prefix],
+    )?)
 }
 
 fn fetch_file_meta(conn: &Connection, rel: &str) -> Result<Option<(i64, i64, String)>, IndexError> {
@@ -355,7 +365,13 @@ fn index_one(
         }
     }
 
-    let bytes = std::fs::read(fs_path)?;
+    // One unreadable file (permissions, vanished mid-scan) is skipped, never allowed to
+    // fail the batch: a failed batch rolls back every other change in it, including the
+    // removal of a file that just became a link to a secret.
+    let Ok(bytes) = std::fs::read(fs_path) else {
+        delete_file_rows(conn, rel)?;
+        return Ok(Outcome::Skipped);
+    };
     if walk::is_probably_binary(&bytes) {
         delete_file_rows(conn, rel)?;
         return Ok(Outcome::Skipped);
@@ -429,6 +445,9 @@ impl Index {
             std::fs::create_dir_all(parent)?;
         }
         let conn = Connection::open(db_path)?;
+        // Two builds of one workspace can overlap briefly (re-opening a folder while its
+        // first build runs); the second waits for the writer instead of failing at once.
+        conn.busy_timeout(std::time::Duration::from_secs(30))?;
         conn.pragma_update(None, "journal_mode", "WAL")?;
         conn.execute_batch(SCHEMA)?;
         Ok(Self {
@@ -517,21 +536,24 @@ impl Index {
 
         for input in paths {
             scanned += 1;
-            let Some(rel) = path_util::to_workspace_relative(&root, input) else {
+            let Some(rel) = path_util::lexical_relative(&root, input) else {
                 skipped += 1;
                 continue;
             };
             let fs_path = path_util::to_fs_path(&root, &rel);
+            let is_link = fs_path
+                .symlink_metadata()
+                .is_ok_and(|m| m.file_type().is_symlink());
 
-            if !fs_path.exists() {
-                if row_exists(&tx, &rel)? {
-                    delete_file_rows(&tx, &rel)?;
-                    removed += 1;
+            // Gone, a symlink (the walk never follows one — it may point out of the
+            // workspace), or excluded by the same rules as the full scan: either way, not
+            // indexed under this name any more.
+            if !fs_path.exists() || is_link || walk::is_excluded(&root, &fs_path) {
+                // A directory that became a link takes everything indexed under it along.
+                match delete_tree_rows(&tx, &rel)? {
+                    0 => skipped += 1,
+                    n => removed += n,
                 }
-                continue;
-            }
-            if walk::is_ignored_or_outside_root(&root, &fs_path) {
-                skipped += 1;
                 continue;
             }
             if fs_path.is_dir() {
@@ -551,7 +573,11 @@ impl Index {
                 }
                 continue;
             }
-            let metadata = std::fs::metadata(&fs_path)?;
+            let Ok(metadata) = std::fs::metadata(&fs_path) else {
+                delete_file_rows(&tx, &rel)?;
+                skipped += 1;
+                continue;
+            };
             match index_one(
                 &tx,
                 &rel,

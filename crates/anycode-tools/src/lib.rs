@@ -10,6 +10,7 @@
 //! store, which belong to the orchestration layer (src-tauri), not here. A tool answers
 //! two questions: "what's the risk of running with this input?" and "run it."
 
+mod code;
 mod filesystem;
 mod git;
 mod shell;
@@ -19,6 +20,7 @@ use async_trait::async_trait;
 use serde_json::Value;
 use std::path::PathBuf;
 
+pub use code::{CodeDefinitionTool, CodeReferencesTool, CodeSearchTool};
 pub use filesystem::{FilesystemEditTool, FilesystemReadTool, FilesystemWriteTool};
 pub use git::GitStatusTool;
 pub use shell::ShellExecuteTool;
@@ -46,6 +48,9 @@ pub struct ToolContext {
     /// `anycode_terminal::login_shell_path`). `None` inherits this process's, which for
     /// an app opened from Finder is only the system directories.
     pub path_env: Option<String>,
+    /// The workspace's code index, once built. `None` while it is building; tools that
+    /// need it say so rather than pretending there is nothing to find.
+    pub index: Option<std::sync::Arc<std::sync::Mutex<anycode_code_intelligence::Index>>>,
 }
 
 #[async_trait]
@@ -110,6 +115,9 @@ impl ToolRegistry {
                 Box::new(FilesystemWriteTool),
                 Box::new(FilesystemEditTool),
                 Box::new(GitStatusTool),
+                Box::new(CodeSearchTool),
+                Box::new(CodeDefinitionTool),
+                Box::new(CodeReferencesTool),
                 Box::new(ShellExecuteTool),
             ],
         }
@@ -198,6 +206,9 @@ mod tests {
         assert!(names.contains(&"filesystem.edit.workspace"));
         assert!(names.contains(&"git.status"));
         assert!(names.contains(&"shell.execute"));
+        for code_tool in ["code.search", "code.definition", "code.references"] {
+            assert!(names.contains(&code_tool), "{code_tool}");
+        }
     }
 
     #[test]

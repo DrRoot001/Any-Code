@@ -243,7 +243,11 @@ export const memoryCommands = {
   /** `path` comes from the native save dialog. */
   exportMemories: (path: string) => invoke<void>("export_memories", { path }),
   repositoryInstructions: () => invoke<InstructionFile[]>("repository_instructions"),
-  adoptInstruction: (path: string) => invoke<Memory>("adopt_instruction", { path }),
+  /** The text adopting `path` would add — shown to the user before they adopt it. */
+  previewInstruction: (path: string) => invoke<string>("preview_instruction", { path }),
+  /** Adopts exactly `content`, the text the user was shown; refused if the file changed since. */
+  adoptInstruction: (path: string, content: string) =>
+    invoke<Memory>("adopt_instruction", { path, content }),
 };
 
 export const historyCommands = {

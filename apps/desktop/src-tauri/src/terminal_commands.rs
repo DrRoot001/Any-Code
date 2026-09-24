@@ -150,6 +150,7 @@ mod tests {
             tools: ToolRegistry::standard(),
             pending_approvals: Mutex::new(HashMap::new()),
             running_tasks: Mutex::new(HashMap::new()),
+            index: Mutex::new(Default::default()),
             session_id: uuid::Uuid::new_v4(),
         });
 

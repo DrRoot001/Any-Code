@@ -66,8 +66,9 @@ const INSTRUCTION: &str = "Implement the `multiply` function in calc.py so that 
     suite passes. The tests run with `python3 -m unittest`.";
 
 /// Channels the test watches, in the order a reader would want them explained.
-const CHANNELS: [&str; 9] = [
+const CHANNELS: [&str; 10] = [
     "state",
+    "context",
     "plan",
     "replan",
     "tool_call",
@@ -179,6 +180,7 @@ fn an_agent_implements_and_verifies_a_repository_task() {
         tools: ToolRegistry::standard(),
         pending_approvals: Mutex::new(HashMap::new()),
         running_tasks: Mutex::new(HashMap::new()),
+        index: Mutex::new(Default::default()),
         session_id: Uuid::new_v4(),
     });
     if provider == "openai_compatible" {
@@ -194,6 +196,42 @@ fn an_agent_implements_and_verifies_a_repository_task() {
             .unwrap();
     }
     let handle = app.handle().clone();
+
+    // Phase 4: a memory the user wrote, and the real index, built the way opening the
+    // workspace builds it. The task must not start until the index is ready, or the run
+    // would test the "not ready" path instead.
+    {
+        let state = app.state::<AppState>();
+        let store = state.store.lock().unwrap();
+        store
+            .add_memory(
+                anycode_store::MemoryScope::Global,
+                None,
+                "Keep changes minimal; do not add dependencies.",
+                None,
+            )
+            .unwrap();
+    }
+    let root = anycode_fs::WorkspaceRoot::new(&repo)
+        .unwrap()
+        .path()
+        .to_path_buf();
+    let (index_tx, index_rx) = mpsc::channel::<Value>();
+    handle.listen("index:status", move |event| {
+        let _ = index_tx.send(serde_json::from_str(event.payload()).unwrap_or(Value::Null));
+    });
+    crate::index_commands::start(&handle, root);
+    loop {
+        let status = index_rx
+            .recv_timeout(Duration::from_secs(120))
+            .expect("the index never reported ready");
+        println!("index:     {status}");
+        match status["state"].as_str() {
+            Some("ready") => break,
+            Some("failed") => panic!("indexing failed: {status}"),
+            _ => {}
+        }
+    }
 
     let task_uuid = Uuid::new_v4();
     let task_id = task_uuid.to_string();
@@ -219,6 +257,7 @@ fn an_agent_implements_and_verifies_a_repository_task() {
 
     let deadline = started + Duration::from_secs(45 * 60);
     let mut approvals = 0;
+    let mut context: Option<Value> = None;
     let (outcome, payload) = loop {
         let remaining = deadline.saturating_duration_since(Instant::now());
         let (channel, payload) = rx
@@ -237,6 +276,22 @@ fn an_agent_implements_and_verifies_a_repository_task() {
                 {
                     println!("         {}. {}", i + 1, step.as_str().unwrap_or_default());
                 }
+            }
+            "context" => {
+                println!(
+                    "[{t:>4}s] context    ~{} of ~{} repository tokens (estimated)",
+                    payload["estTokens"], payload["repoEstTokens"]
+                );
+                for item in payload["items"].as_array().into_iter().flatten() {
+                    println!(
+                        "         {}:{}-{} {}",
+                        item["path"].as_str().unwrap_or_default(),
+                        item["startLine"],
+                        item["endLine"],
+                        one_line(&item["reasons"], 100)
+                    );
+                }
+                context = Some(payload);
             }
             "replan" => println!("[{t:>4}s] replan     {}", one_line(&payload["reason"], 160)),
             "tool_call" => println!(
@@ -276,6 +331,8 @@ fn an_agent_implements_and_verifies_a_repository_task() {
     let kinds: Vec<&str> = events.iter().map(|e| e.kind.as_str()).collect();
     for required in [
         "task.created",
+        "task.context",
+        "task.memories",
         "task.plan",
         "task.tool.call",
         "task.approval",
@@ -287,6 +344,18 @@ fn an_agent_implements_and_verifies_a_repository_task() {
             "audit log is missing {required}: {kinds:?}"
         );
     }
+
+    let context = context.expect("the task emitted no context package");
+    let paths: Vec<&str> = context["items"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|i| i["path"].as_str())
+        .collect();
+    assert!(
+        paths.contains(&"calc.py"),
+        "context lacks calc.py: {paths:?}"
+    );
 
     assert_eq!(
         payload["verdict"]["kind"], "passed",

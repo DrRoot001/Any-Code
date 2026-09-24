@@ -6,7 +6,7 @@
 use crate::{AppState, LAST_WORKSPACE_KEY};
 use serde::Serialize;
 use std::path::PathBuf;
-use tauri::State;
+use tauri::{AppHandle, Runtime, State};
 
 pub(crate) struct WorkspaceState {
     pub fs_root: anycode_fs::WorkspaceRoot,
@@ -42,7 +42,10 @@ fn to_info(root: &anycode_fs::WorkspaceRoot) -> WorkspaceInfo {
 /// The workspace open at the end of the previous session, if its folder still exists.
 /// Phase 1 has no multi-workspace switcher yet — one workspace open at a time.
 #[tauri::command]
-pub fn get_last_workspace(state: State<AppState>) -> Result<Option<WorkspaceInfo>, String> {
+pub fn get_last_workspace<R: Runtime>(
+    app: AppHandle<R>,
+    state: State<AppState>,
+) -> Result<Option<WorkspaceInfo>, String> {
     let path = {
         let store = state.store.lock().map_err(|e| e.to_string())?;
         store
@@ -50,12 +53,16 @@ pub fn get_last_workspace(state: State<AppState>) -> Result<Option<WorkspaceInfo
             .map_err(|e| e.to_string())?
     };
     let Some(path) = path else { return Ok(None) };
-    open_workspace_at(&state, &path).map(Some)
+    open_workspace_at(&app, &state, &path).map(Some)
 }
 
 #[tauri::command]
-pub fn open_workspace(state: State<AppState>, path: String) -> Result<WorkspaceInfo, String> {
-    let info = open_workspace_at(&state, &path)?;
+pub fn open_workspace<R: Runtime>(
+    app: AppHandle<R>,
+    state: State<AppState>,
+    path: String,
+) -> Result<WorkspaceInfo, String> {
+    let info = open_workspace_at(&app, &state, &path)?;
     let store = state.store.lock().map_err(|e| e.to_string())?;
     store
         .set_setting(LAST_WORKSPACE_KEY, &info.path)
@@ -63,11 +70,18 @@ pub fn open_workspace(state: State<AppState>, path: String) -> Result<WorkspaceI
     Ok(info)
 }
 
-fn open_workspace_at(state: &State<AppState>, path: &str) -> Result<WorkspaceInfo, String> {
+fn open_workspace_at<R: Runtime>(
+    app: &AppHandle<R>,
+    state: &State<AppState>,
+    path: &str,
+) -> Result<WorkspaceInfo, String> {
     let fs_root =
         anycode_fs::WorkspaceRoot::new(path).map_err(|e| format!("cannot open '{path}': {e}"))?;
     let info = to_info(&fs_root);
     let mut workspace = state.workspace.lock().map_err(|e| e.to_string())?;
+    let root = fs_root.path().to_path_buf();
     *workspace = Some(WorkspaceState { fs_root });
+    drop(workspace);
+    crate::index_commands::start(app, root);
     Ok(info)
 }

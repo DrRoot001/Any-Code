@@ -43,6 +43,9 @@ pub fn walk(root: &Path, start: &Path) -> Vec<WalkEntry> {
         let Some(rel) = to_workspace_relative(root, &fs_path) else {
             continue;
         };
+        if is_sensitive(&rel) {
+            continue;
+        }
         let Ok(metadata) = entry.metadata() else {
             continue;
         };
@@ -73,31 +76,61 @@ pub fn is_probably_binary(bytes: &[u8]) -> bool {
     bytes[..bytes.len().min(BINARY_SNIFF_BYTES)].contains(&0)
 }
 
-/// Whether `fs_path` is covered by `root`'s `.gitignore`/`.ignore`, or lives
-/// outside `root` entirely.
+/// Files never indexed or searched, whatever the ignore files say: everything
+/// `anycode_security::path_risk` classifies — keys, credentials, env files. The code tools
+/// are Low risk and run without asking, so they must never hand the model what
+/// `filesystem.read` would have had to ask for.
+pub fn is_sensitive(rel: &str) -> bool {
+    anycode_security::path_risk(rel).is_some()
+}
+
+/// Whether `fs_path` must stay out of the index — the watcher's single-path twin of
+/// [`walk`], applying the same rules so a file the full scan skips is never indexed
+/// just because it changed: outside `root`, under `.git`, hidden (as the walker's
+/// default skips), sensitive, or ignored by any `.gitignore`/`.ignore` between the
+/// repository's top level and the file, or by `.git/info/exclude`.
 ///
-/// ponytail: only the root-level `.gitignore`/`.ignore` are consulted here —
-/// `update_paths` gets one explicit path at a time from a file watcher, not a
-/// tree to walk, so there is no cheap way to discover nested `.gitignore`
-/// files without walking. `refresh()` uses the full recursive `ignore` walker
-/// above, which already honours nested `.gitignore` files correctly. Upgrade
-/// this to consult ancestor directories between `root` and the file if a
-/// project's `.gitignore` files stop being root-only in practice.
-pub fn is_ignored_or_outside_root(root: &Path, fs_path: &Path) -> bool {
-    if to_workspace_relative(root, fs_path).is_none() {
+/// ponytail: the user's global git excludes file is not consulted here (the full walk
+/// honours it); read `core.excludesFile` if a project relies on it for secrets.
+pub fn is_excluded(root: &Path, fs_path: &Path) -> bool {
+    let Some(rel) = to_workspace_relative(root, fs_path) else {
         return true;
-    }
-    if has_git_component(fs_path) {
-        return true;
-    }
-    let mut builder = ignore::gitignore::GitignoreBuilder::new(root);
-    let _ = builder.add(root.join(".gitignore"));
-    let _ = builder.add(root.join(".ignore"));
-    let Ok(matcher) = builder.build() else {
-        return false;
     };
+    if has_git_component(fs_path) || rel.split('/').any(|part| part.starts_with('.')) {
+        return true;
+    }
+    if is_sensitive(&rel) {
+        return true;
+    }
     let is_dir = fs_path.is_dir();
-    matcher.matched(fs_path, is_dir).is_ignore()
+    // Deepest directory first: as in git, its rules override its parents'. The climb goes
+    // past `root` to the enclosing repository's top level, as the full walk does — a
+    // workspace opened at `monorepo/apps` still honours `monorepo/.gitignore`.
+    let mut dir = fs_path.parent();
+    while let Some(d) = dir {
+        let mut builder = ignore::gitignore::GitignoreBuilder::new(d);
+        // Later files take precedence in one matcher; `.ignore` outranks `.gitignore`.
+        let _ = builder.add(d.join(".gitignore"));
+        let _ = builder.add(d.join(".ignore"));
+        let top_level = d.join(".git").exists();
+        if top_level {
+            let _ = builder.add(d.join(".git").join("info").join("exclude"));
+        }
+        if let Ok(matcher) = builder.build() {
+            let hit = matcher.matched_path_or_any_parents(fs_path, is_dir);
+            if hit.is_ignore() {
+                return true;
+            }
+            if hit.is_whitelist() {
+                return false;
+            }
+        }
+        if top_level {
+            break;
+        }
+        dir = d.parent();
+    }
+    false
 }
 
 #[cfg(test)]

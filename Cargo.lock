@@ -47,11 +47,13 @@ dependencies = [
 name = "anycode-code-intelligence"
 version = "0.1.0"
 dependencies = [
+ "anycode-security",
  "grep-regex",
  "grep-searcher",
  "ignore",
  "rusqlite",
  "serde",
+ "serde_json",
  "sha2",
  "tempfile",
  "thiserror 2.0.20",
@@ -160,6 +162,7 @@ dependencies = [
 name = "anycode-tools"
 version = "0.1.0"
 dependencies = [
+ "anycode-code-intelligence",
  "anycode-fs",
  "anycode-git",
  "anycode-security",

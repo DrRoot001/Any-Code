@@ -208,32 +208,50 @@ stopgap this phase replaces.
 
 In build order — each step is usable, and tested, before the next starts:
 
-- [ ] **4.1 · Index foundation** — gitignore-aware walk; SQLite `files`, `symbols`,
+- [x] **4.1 · Index foundation** — gitignore-aware walk; SQLite `files`, `symbols`,
       `symbol_edges`, `imports`, `search_index` (FTS5); incremental re-index on filesystem
       events, changed files only. Target (PRD §70): a changed file re-indexed in ≤ 1 s.
-- [ ] **4.2 · Lexical search** — ripgrep's library as the `code.search` tool (already Low risk
+      *Done 2026-09-25:* `files`, `chunks` + `chunks_fts`, `symbols`, `imports`; no
+      `symbol_edges` table — imports are the structural edge for now. One changed file
+      re-indexed in 111–196 ms. Secrets (`path_risk`), hidden and gitignored files are never
+      indexed, on the full scan and on the watcher path alike.
+- [x] **4.2 · Lexical search** — ripgrep's library as the `code.search` tool (already Low risk
       in the permission table).
-- [ ] **4.3 · Symbols** — tree-sitter for TypeScript/JavaScript, Rust and Python first;
+- [x] **4.3 · Symbols** — tree-sitter for TypeScript/JavaScript, Rust and Python first;
       `code.definition` and `code.references` tools (already in the permission table).
-- [ ] **4.4 · Context builder** — PRD §37 stages: intent → symbols → lexical → structural →
+- [x] **4.4 · Context builder** — PRD §37 stages: intent → symbols → lexical → structural →
       git → rerank → token budget, producing a context package where every item records why it
       was included. Token counts are labelled estimates, never presented as exact.
-- [ ] **4.5 · Context Inspector** — for each task: which files the agent saw, why, what was
+- [x] **4.5 · Context Inspector** — for each task: which files the agent saw, why, what was
       excluded, estimated tokens (PRD §37). Built on `Tagged.origin`, which exists for this.
+      *Not yet seen in the native window* — compiled, typed and unit-tested only.
 - [ ] **4.6 · Memory and workspace rules** — scopes: global, workspace, repository, session,
       task; every memory visible, editable, deletable, exportable (PRD §38). `.anycode/`
       rules (§39); protected paths and approval-required actions feed the permission engine.
       Import CLAUDE.md, AGENTS.md and similar as repository memory, originals untouched (§40).
-- [ ] **4.7 · Session resume** — V1 contract #7: after a restart the dock shows past tasks,
+      *Partial:* global and workspace scopes exist; repository, session and task scopes do not.
+      Adoption shows the exact text first and adopts only that text; symlinks are refused.
+- [x] **4.7 · Session resume** — V1 contract #7: after a restart the dock shows past tasks,
       read back from the `events` audit log.
 - [ ] **4.8 · LSP client** — spawn language servers found on the user's `PATH`; hover,
       definition and diagnostics for Monaco and the agent. Then ADR 0003 rung B: `.vsix`
       themes, TextMate grammars and bundled language servers from Open VSX.
+      *Partial:* the client exists (`lsp.rs`: definition, references, hover; PATH-only,
+      refuses binaries inside the workspace) but is wired to nothing. Starting a server runs
+      repository code (build scripts, proc macros, the workspace's own TypeScript), so it
+      needs its own capability in the permission engine before it is wired. Rung B not started.
 
 **Exit test:** on a real repository larger than the model's context window (this one), an
 agent task's context package contains the files the change needs and a small, measured
 fraction of the repository's tokens. The Context Inspector shows why each file was
 included. Measured and recorded in REVIEW.md, not asserted.
+
+*Status 2026-09-25 — partly met.* On this repository (148 files, ~299k estimated tokens)
+three real instructions produced packages of ~1% of the repository, each including the file
+that defines what the instruction names; one missed the function body it needed (REVIEW.md).
+The live agent run was on a small fixture repository, where the package was emitted and
+correct, but the 3B CPU model did not finish the task within its deadline. Still to do: an
+agent task on this repository, with a model fast enough to finish.
 
 ## Assigned by the 2026-09-24 audit
 

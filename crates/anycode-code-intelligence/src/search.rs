@@ -11,6 +11,39 @@ use grep_searcher::Searcher;
 use ignore::WalkBuilder;
 use std::path::Path;
 
+/// Longest line returned. A minified bundle is one enormous line; fifty of them would fill
+/// the model's context with nothing it can use.
+const MAX_LINE_CHARS: usize = 400;
+/// Longest pattern accepted, and the compiled-regex memory it may use.
+const MAX_PATTERN_CHARS: usize = 1000;
+const REGEX_SIZE_LIMIT: usize = 10 * 1024 * 1024;
+
+fn truncate_line(line: &str) -> String {
+    match line.char_indices().nth(MAX_LINE_CHARS) {
+        Some((cut, _)) => format!("{}…", &line[..cut]),
+        None => line.to_string(),
+    }
+}
+
+fn matcher(
+    pattern: &str,
+    literal: bool,
+    word: bool,
+) -> Result<grep_regex::RegexMatcher, IndexError> {
+    if pattern.chars().count() > MAX_PATTERN_CHARS {
+        return Err(IndexError::Search(format!(
+            "pattern is longer than {MAX_PATTERN_CHARS} characters"
+        )));
+    }
+    RegexMatcherBuilder::new()
+        .fixed_strings(literal)
+        .word(word)
+        .size_limit(REGEX_SIZE_LIMIT)
+        .dfa_size_limit(REGEX_SIZE_LIMIT)
+        .build(pattern)
+        .map_err(|e| IndexError::Search(e.to_string()))
+}
+
 fn walk_and_search(
     root: &Path,
     matcher: &grep_regex::RegexMatcher,
@@ -38,6 +71,15 @@ fn walk_and_search(
         let Some(rel) = crate::path_util::to_workspace_relative(root, path) else {
             continue;
         };
+        // The same files the index leaves out (walk.rs): secrets, and anything too large
+        // to be source.
+        if crate::walk::is_sensitive(&rel)
+            || entry
+                .metadata()
+                .map_or(true, |m| m.len() > crate::walk::MAX_FILE_BYTES)
+        {
+            continue;
+        }
         // A single unreadable file (binary, permissions, vanished mid-walk)
         // should not fail the whole search.
         let _: Result<(), std::io::Error> = Searcher::new().search_path(
@@ -47,7 +89,7 @@ fn walk_and_search(
                 out.push(LineMatch {
                     path: rel.clone(),
                     line: line_number as u32,
-                    text: line.trim_end_matches(['\n', '\r']).to_string(),
+                    text: truncate_line(line.trim_end_matches(['\n', '\r'])),
                 });
                 Ok(out.len() < limit)
             }),
@@ -71,11 +113,7 @@ pub fn search_live(
     if limit == 0 || pattern.is_empty() {
         return Ok(Vec::new());
     }
-    let matcher = RegexMatcherBuilder::new()
-        .fixed_strings(!regex)
-        .build(pattern)
-        .map_err(|e| IndexError::Search(e.to_string()))?;
-    walk_and_search(root, &matcher, limit)
+    walk_and_search(root, &matcher(pattern, !regex, false)?, limit)
 }
 
 /// Whole-word occurrences of `identifier` — a literal, word-bounded search,
@@ -88,10 +126,5 @@ pub fn references(
     if limit == 0 || identifier.is_empty() {
         return Ok(Vec::new());
     }
-    let matcher = RegexMatcherBuilder::new()
-        .fixed_strings(true)
-        .word(true)
-        .build(identifier)
-        .map_err(|e| IndexError::Search(e.to_string()))?;
-    walk_and_search(root, &matcher, limit)
+    walk_and_search(root, &matcher(identifier, true, true)?, limit)
 }

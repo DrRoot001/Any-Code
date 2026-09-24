@@ -5,6 +5,7 @@ import { useProviderModel } from "../hooks/useProviderModel";
 import {
   agentCommands,
   type ApprovalResponse,
+  type ContextPackage,
   type TaskApprovalRequest,
   type TaskDone,
   type TaskPlan,
@@ -109,6 +110,11 @@ export default function AgentPanel() {
     // terminal event into a channel nobody is listening on yet.
     const offs = await Promise.all([
       listen<{ state: TaskState }>(`task:state:${id}`, (e) => setTaskState(e.payload.state)),
+      // Not emitted at all when the index isn't ready, so this entry is genuinely
+      // optional — never a placeholder standing in for context that wasn't built.
+      listen<ContextPackage>(`task:context:${id}`, (e) =>
+        setEntries((current) => [...current, { kind: "context", package: e.payload }]),
+      ),
       listen<{ text: string }>(`task:plan_delta:${id}`, (e) => setEntries((c) => appendPlanText(c, e.payload.text))),
       listen<TaskPlan>(`task:plan:${id}`, (e) => setEntries((c) => completePlan(c, e.payload))),
       listen<{ reason: string }>(`task:replan:${id}`, (e) =>

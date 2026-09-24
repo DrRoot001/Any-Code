@@ -15,6 +15,7 @@ tokio = { version = "1", features = ["process", "time", "rt"] }
 anycode-fs = { path = "../anycode-fs" }
 anycode-git = { path = "../anycode-git" }
 anycode-security = { path = "../anycode-security" }
+anycode-code-intelligence = { path = "../anycode-code-intelligence" }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

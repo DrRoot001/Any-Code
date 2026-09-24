@@ -191,6 +191,7 @@ mod tests {
                 fs_root,
                 workspace_path,
                 path_env: None,
+                index: None,
             },
         )
     }

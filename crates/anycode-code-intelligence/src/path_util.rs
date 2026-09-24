@@ -34,7 +34,24 @@ pub fn to_workspace_relative(root: &Path, input: &Path) -> Option<String> {
     } else {
         root.join(input)
     };
-    let normalized = lexically_normalize(&absolute);
+    relative_to(root, &absolute)
+}
+
+/// The name `input` has inside `root` without resolving symlinks — what a file watcher
+/// calls a path. Used to drop the rows of a file that became a symlink: resolving it
+/// would name the link's target instead, or nothing when it points outside the root.
+pub fn lexical_relative(root: &Path, input: &Path) -> Option<String> {
+    let absolute = root.join(input);
+    // Resolve the directory (so `/var/…` and `/private/var/…` agree), never the file.
+    let absolute = match (absolute.parent(), absolute.file_name()) {
+        (Some(parent), Some(name)) => best_effort_canonical(parent).join(name),
+        _ => absolute,
+    };
+    relative_to(root, &absolute)
+}
+
+fn relative_to(root: &Path, absolute: &Path) -> Option<String> {
+    let normalized = lexically_normalize(absolute);
     let root_normalized = lexically_normalize(root);
     let rel = normalized.strip_prefix(&root_normalized).ok()?;
     if rel.as_os_str().is_empty() {

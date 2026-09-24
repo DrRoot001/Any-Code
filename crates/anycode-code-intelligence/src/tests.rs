@@ -425,3 +425,153 @@ fn assert_send<T: Send>() {}
 fn index_is_send() {
     assert_send::<Index>();
 }
+
+// --- security review, 2026-09-24: what the Low-risk code tools and the automatic
+// context can reach. Each test reproduces a finding against the real index.
+
+fn indexed(index: &Index) -> Vec<String> {
+    index.files().unwrap().into_iter().map(|f| f.path).collect()
+}
+
+#[test]
+fn secret_files_are_neither_indexed_nor_searched() {
+    let dir = tempdir().unwrap();
+    let root = dir.path();
+    write(root, "app.py", "TOKEN_NAME = 'SECRETWORD'\n");
+    write(root, "secrets.yaml", "password: SECRETWORD\n");
+    write(root, "prod.env", "API_KEY=SECRETWORD\n");
+    write(root, "server.key", "SECRETWORD\n");
+    let mut index = Index::open_in_memory(root).unwrap();
+    index.refresh().unwrap();
+    assert_eq!(indexed(&index), ["app.py"]);
+    let hits: Vec<String> = search_live(root, "SECRETWORD", false, 50)
+        .unwrap()
+        .into_iter()
+        .map(|m| m.path)
+        .collect();
+    assert_eq!(hits, ["app.py"]);
+    // Nor through the watcher.
+    index
+        .update_paths(&[root.join("secrets.yaml"), root.join("server.key")])
+        .unwrap();
+    assert_eq!(indexed(&index), ["app.py"]);
+}
+
+#[test]
+fn the_watcher_skips_what_the_full_scan_skips() {
+    let dir = tempdir().unwrap();
+    let root = dir.path();
+    write(root, "main.py", "print(1)\n");
+    write(root, "apps/api/.gitignore", "local.json\n");
+    let mut index = Index::open_in_memory(root).unwrap();
+    index.refresh().unwrap();
+    let dotenv = write(root, ".env.local", "X=1\n");
+    let nested = write(root, "apps/api/local.json", "{\"key\": 1}\n");
+    let hidden_dir = write(root, ".config/tool.toml", "a = 1\n");
+    let kept = write(root, "apps/api/server.py", "print(2)\n");
+    index
+        .update_paths(&[dotenv, nested, hidden_dir, kept])
+        .unwrap();
+    let mut paths = indexed(&index);
+    paths.sort();
+    assert_eq!(paths, ["apps/api/server.py", "main.py"]);
+}
+
+#[cfg(unix)]
+#[test]
+fn a_file_swapped_for_a_symlink_leaves_the_index() {
+    let dir = tempdir().unwrap();
+    let outside = tempdir().unwrap();
+    let root = dir.path();
+    let secret = write(outside.path(), "credentials", "OUTSIDE_SECRET\n");
+    let config = write(root, "config.md", "harmless\n");
+    let mut index = Index::open_in_memory(root).unwrap();
+    index.refresh().unwrap();
+    assert_eq!(indexed(&index), ["config.md"]);
+    fs::remove_file(&config).unwrap();
+    std::os::unix::fs::symlink(&secret, &config).unwrap();
+    let report = index.update_paths(&[config]).unwrap();
+    assert_eq!(report.removed, 1);
+    assert!(indexed(&index).is_empty());
+}
+
+#[test]
+fn search_truncates_long_lines_and_skips_oversized_files() {
+    let dir = tempdir().unwrap();
+    let root = dir.path();
+    write(root, "min.js", &format!("NEEDLE{}\n", "x".repeat(10_000)));
+    write(
+        root,
+        "huge.txt",
+        &format!(
+            "NEEDLE\n{}",
+            "y".repeat(crate::walk::MAX_FILE_BYTES as usize)
+        ),
+    );
+    let hits = search_live(root, "NEEDLE", false, 50).unwrap();
+    assert_eq!(
+        hits.len(),
+        1,
+        "{:?}",
+        hits.iter().map(|h| &h.path).collect::<Vec<_>>()
+    );
+    assert_eq!(hits[0].path, "min.js");
+    assert!(hits[0].text.chars().count() <= 401);
+    assert!(search_live(root, &"a".repeat(1001), false, 50).is_err());
+}
+
+// --- security re-verification, 2026-09-25
+
+#[test]
+fn the_watcher_honours_ignore_files_above_the_root_and_ignore_over_gitignore() {
+    let repo = tempdir().unwrap();
+    fs::create_dir(repo.path().join(".git")).unwrap();
+    write(repo.path(), ".gitignore", "apps/api/config.local.json\n");
+    let root = repo.path().join("apps");
+    write(&root, "api/server.py", "print(1)\n");
+    write(&root, ".ignore", "prec.txt\n");
+    write(&root, ".gitignore", "!prec.txt\n");
+    let mut index = Index::open_in_memory(&root).unwrap();
+    index.refresh().unwrap();
+    let local = write(&root, "api/config.local.json", "{\"token\": 1}\n");
+    let prec = write(&root, "prec.txt", "x\n");
+    index.update_paths(&[local, prec]).unwrap();
+    assert_eq!(indexed(&index), ["api/server.py"]);
+}
+
+#[cfg(unix)]
+#[test]
+fn a_directory_swapped_for_a_symlink_takes_its_rows_along() {
+    let dir = tempdir().unwrap();
+    let outside = tempdir().unwrap();
+    let root = dir.path();
+    write(root, "sub/a.txt", "a\n");
+    write(root, "sub/b.txt", "b\n");
+    let mut index = Index::open_in_memory(root).unwrap();
+    index.refresh().unwrap();
+    fs::remove_dir_all(root.join("sub")).unwrap();
+    std::os::unix::fs::symlink(outside.path(), root.join("sub")).unwrap();
+    let report = index.update_paths(&[root.join("sub")]).unwrap();
+    assert_eq!(report.removed, 2);
+    assert!(indexed(&index).is_empty());
+}
+
+#[cfg(unix)]
+#[test]
+fn one_unreadable_file_does_not_fail_the_batch() {
+    use std::os::unix::fs::PermissionsExt;
+    let dir = tempdir().unwrap();
+    let root = dir.path();
+    write(root, "gone.md", "old\n");
+    let mut index = Index::open_in_memory(root).unwrap();
+    index.refresh().unwrap();
+    let locked = write(root, "locked.txt", "x\n");
+    fs::set_permissions(&locked, fs::Permissions::from_mode(0o000)).unwrap();
+    fs::remove_file(root.join("gone.md")).unwrap();
+    let result = index.update_paths(&[locked.clone(), root.join("gone.md")]);
+    let refreshed = index.refresh();
+    fs::set_permissions(&locked, fs::Permissions::from_mode(0o644)).unwrap();
+    assert!(result.is_ok(), "{result:?}");
+    assert!(refreshed.is_ok(), "{refreshed:?}");
+    assert!(indexed(&index).is_empty());
+}

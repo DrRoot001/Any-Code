@@ -9,7 +9,10 @@ repository.workspace = true
 [dependencies]
 rusqlite = { version = "0.32", features = ["bundled"] }
 serde = { workspace = true }
+serde_json = { workspace = true }
 thiserror = { workspace = true }
+# `path_risk`: files classified as secrets are never indexed or searched.
+anycode-security = { path = "../anycode-security" }
 ignore = "0.4"
 grep-searcher = "0.1"
 grep-regex = "0.1"
