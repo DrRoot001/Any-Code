@@ -189,6 +189,23 @@ the earlier failure.
   now drops the slash before the drive letter and uses backslashes, and `path_to_uri` strips
   the verbatim `\\?\` prefix. That branch can only be checked in Windows CI; see the next
   run. Every other job passed, including macOS, Ubuntu and the desktop runtime.
+- **Fail, then fixed: macOS CI on `8b6b1bf`.** `rust_analyzer_definition_lookup` failed with
+  `initialize: ProcessExited`, and Windows passed.
+  - **Root cause, a bug from the PATH hardening:** `find_in` returned the canonicalised binary.
+    `~/.cargo/bin/rust-analyzer` is a symlink to `rustup`, which picks what to run from the name
+    it was invoked as, so the client spawned bare `rustup`. The same would break any multi-call
+    binary.
+  - **Fix:** a candidate is still judged by where it resolves, but it is spawned by the PATH
+    entry's own absolute path.
+  - **The test was also timing-dependent.** It waited 3 s to see whether the proxy exited, and
+    the previous run only passed because the proxy exited inside that window. It now asks
+    `--version` and skips when that fails. Locally the skip now fires, because the proxy's
+    component is not installed.
+- **Flaky test, fixed:** `a_file_named_in_the_instruction_is_included_whole_with_the_right_reason`
+  failed once in 6 local runs. The context tests' `TempDir` was named by pid and nanoseconds,
+  but macOS time has microsecond resolution, so two parallel tests could share a directory and
+  delete each other's files. An atomic counter was added to the name. After the fix: 10 of 10
+  runs passed.
 - **Known limitations:**
   - notify 7's inotify backend follows symlinks when adding recursive watches (Linux). It has
     no option to stop until notify 8; content is still refused by canonicalisation.

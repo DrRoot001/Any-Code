@@ -44,18 +44,20 @@ pub struct ServerCommand {
 
 /// Searches `PATH` for `program`. Only absolute entries count, and a candidate that
 /// resolves inside the workspace is refused: `.`, `node_modules/.bin` or a direnv-added
-/// project directory would otherwise run a binary the repository supplies. The
-/// resolved, absolute path is what gets spawned. std-only: no dependency pulls its
-/// weight over a directory scan and an executable-bit check.
+/// project directory would otherwise run a binary the repository supplies. The absolute
+/// PATH entry (not its symlink target) is what gets spawned. std-only: no dependency
+/// pulls its weight over a directory scan and an executable-bit check.
 fn find_on_path(program: &str, workspace_root: &Path) -> Option<PathBuf> {
     find_in(program, &std::env::var_os("PATH")?, workspace_root)
 }
 
 fn find_in(program: &str, path_var: &std::ffi::OsStr, workspace_root: &Path) -> Option<PathBuf> {
     let workspace = path_util::best_effort_canonical(workspace_root);
+    // Judged by where it resolves, but spawned by the name found: a rustup proxy or other
+    // multi-call binary decides what to run from the name it was invoked as.
     let accept = |candidate: PathBuf| -> Option<PathBuf> {
         let resolved = candidate.canonicalize().ok()?;
-        (!resolved.starts_with(&workspace)).then_some(resolved)
+        (!resolved.starts_with(&workspace)).then_some(candidate)
     };
     for dir in std::env::split_paths(path_var).filter(|d| d.is_absolute()) {
         let candidate = dir.join(program);
@@ -644,32 +646,23 @@ mod tests {
         let source = "fn greet() -> u32 {\n    41\n}\n\nfn main() {\n    let _ = greet();\n}\n";
         std::fs::write(root.join("src/main.rs"), source).unwrap();
 
-        let timeout = Duration::from_secs(60);
-        let mut client = LspClient::spawn(&server, root).expect("spawn rust-analyzer");
-
-        // A `rust-analyzer` resolved on PATH can still be a non-functional
-        // stub (e.g. a `rustup` proxy for a toolchain component that was
-        // never installed, which exits immediately with an error). That is
-        // a real, reportable condition ("found on PATH" and "actually
-        // works" are different things) — skip the rest of this exercise
-        // rather than fail the suite over a broken local toolchain, but
-        // only for that specific case; any other failure is a real bug.
-        let give_up_at = Instant::now() + Duration::from_secs(3);
-        loop {
-            if let Ok(Some(status)) = client.child.try_wait() {
-                eprintln!(
-                    "skipping rust_analyzer_definition_lookup: the rust-analyzer on PATH exited \
-                     ({status}) instead of speaking LSP — likely a rustup proxy for an \
-                     uninstalled component, not a real server"
-                );
-                return;
-            }
-            if Instant::now() >= give_up_at {
-                break;
-            }
-            thread::sleep(Duration::from_millis(200));
+        // A `rust-analyzer` on PATH can be a rustup proxy for a component that was never
+        // installed: found, but not a server. Asked directly rather than timed — how long
+        // the proxy takes to give up varies (CI's took over 3 s).
+        let works = std::process::Command::new(&server.program)
+            .arg("--version")
+            .output()
+            .is_ok_and(|o| o.status.success());
+        if !works {
+            eprintln!(
+                "skipping rust_analyzer_definition_lookup: the rust-analyzer on PATH does not \
+                 run (`--version` failed) — likely a rustup proxy, not a real server"
+            );
+            return;
         }
 
+        let timeout = Duration::from_secs(60);
+        let mut client = LspClient::spawn(&server, root).expect("spawn rust-analyzer");
         client.initialize(timeout).expect("initialize");
         client
             .did_open("src/main.rs", Language::Rust, source)
