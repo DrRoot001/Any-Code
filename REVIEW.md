@@ -44,6 +44,49 @@ the earlier failure.
 
 ## Verification history
 
+### 2026-09-25 — Phase 4 close-out, part 1: context alignment, watcher limits
+
+- **Scope:** the remaining Phase 4 items that don't depend on the parallel work (LSP wiring,
+  memory scopes and `.vsix` are being built separately and get their own entries).
+- **Pass — context alignment:**
+  - **Change:** a full-text match inside a definition is passed on as the enclosing
+    definition. That is the contiguous run of methods sharing its container, i.e. the `impl`
+    or class, up to 120 lines, instead of a fixed 50-line chunk. Neighbouring spans are merged.
+  - **Measurements, re-run** (`--example measure`; 148 files, ~313,329 estimated tokens):
+    - **`index_status`:** 11 items, 0.93%. It includes the `IndexStatus` enum (20–45),
+      `ready_status` and `publish` (61–126), the command (186–189) and the TypeScript
+      `IndexStatus` (301–313).
+    - **`parse_plan`:** 9 items, 0.94%. It includes `plan.rs` 21–43 and 50–77.
+    - **`code.search`:** 6 items, 0.95%. It includes `crates/anycode-tools/src/code.rs` 16–73,
+      the whole `CodeSearchTool` impl with `execute`, which the 2026-09-25 package missed.
+  - **Bugs found on the way:**
+    - `add()` kept the shorter passage when two candidates started on the same line, because
+      a symbol-lookup hit on `name` shadowed the aligned impl. The longer passage now wins.
+    - The Rust tags query recorded every method twice, as both Method and Function. Symbols
+      are now deduplicated.
+    - A new `INDEX_FORMAT` (`PRAGMA user_version`) empties indexes written before that fix.
+      Test: `an_index_from_an_older_format_is_rebuilt_on_open`.
+  - **Test added:** `a_match_inside_a_method_brings_its_whole_impl_even_across_a_chunk_boundary`.
+  - **Remaining noise:** prose matches. `REVIEW.md` quotes these very instructions. Prose now
+    weighs half when the instruction names an identifier, but not for plain-word
+    instructions.
+- **Pass — watcher limits** (both recorded as limitations in the entry below):
+  - **Symlinks:** notify-debouncer-mini 0.5 was upgraded to 0.7 (notify 8), and the watcher
+    is created with `with_follow_symlinks(false)`.
+  - **Test:** `the_watcher_indexes_a_new_file` runs the real watcher end to end with an
+    in-memory index. The inotify symlink behaviour itself is Linux-only and was not observed
+    here.
+  - **Global excludes:** the watcher path now honours the user's global git excludes
+    (`core.excludesFile`), matching the full scan. Test:
+    `relative_patterns_match_a_path_or_any_directory_above_it`. Observed with this machine's
+    `~/.gitignore_global`: `notes.swp` stays out of the index on both the full scan and a
+    watcher event.
+- **Gates:** `cargo test --workspace` 187 passed, 0 failed; desktop crate 20 passed,
+  2 ignored; clippy and fmt clean in both workspaces.
+- **Housekeeping:** the stale, gitignored `target/` (5.1 GB) and
+  `apps/desktop/src-tauri/target/` (8.4 GB) caches were deleted when free disk reached
+  3.9 GB. All builds use `target-agents/`.
+
 ### 2026-09-25 — Phase 4: index in the app, context in the agent loop, reviews
 
 - **Scope:** uncommitted work on `591f376`.

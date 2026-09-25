@@ -39,6 +39,21 @@ pub(crate) struct AppState {
 }
 
 impl AppState {
+    /// An empty state over an in-memory store, for tests.
+    #[cfg(test)]
+    pub(crate) fn for_tests() -> Self {
+        Self {
+            store: Mutex::new(Store::open_in_memory().unwrap()),
+            workspace: Mutex::new(None),
+            terminals: Mutex::new(HashMap::new()),
+            tools: ToolRegistry::standard(),
+            pending_approvals: Mutex::new(HashMap::new()),
+            running_tasks: Mutex::new(HashMap::new()),
+            index: Mutex::new(Default::default()),
+            session_id: uuid::Uuid::new_v4(),
+        }
+    }
+
     /// Appends an app-level event to the audit log (docs/ARCHITECTURE.md invariant #10).
     /// A write failure is reported, never allowed to fail the action being audited.
     fn audit(&self, kind: &str, payload: serde_json::Value) {

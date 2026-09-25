@@ -26,6 +26,10 @@ const WHOLE_FILE_MAX_LINES: u32 = 200;
 /// A definition longer than this is included from its start only.
 const DEFINITION_MAX_LINES: u32 = 120;
 const LEXICAL_HITS: usize = 20;
+/// Blank lines, attributes and doc comments between two definitions that belong together.
+const SIBLING_GAP_LINES: u32 = 4;
+/// A prose match counts for this much of a code match when the instruction names code.
+const PROSE_WEIGHT_WITH_IDENTIFIERS: f64 = 0.5;
 const DEFINITIONS_PER_NAME: usize = 5;
 
 #[derive(Debug, thiserror::Error)]
@@ -126,15 +130,24 @@ fn add(
     reason: Reason,
     score: f64,
 ) {
-    let entry = candidates
-        .entry((path.to_string(), start))
-        .or_insert_with(|| Candidate {
+    let entry = match candidates.entry((path.to_string(), start)) {
+        std::collections::btree_map::Entry::Vacant(slot) => slot.insert(Candidate {
             end_line: end,
             text,
             outline,
             reasons: Vec::new(),
             score: 0.0,
-        });
+        }),
+        std::collections::btree_map::Entry::Occupied(slot) => {
+            let entry = slot.into_mut();
+            // Same start line, longer passage: the longer one holds the shorter, so it is kept.
+            if !outline && !entry.outline && end > entry.end_line {
+                entry.end_line = end;
+                entry.text = text;
+            }
+            entry
+        }
+    };
     if !entry.reasons.contains(&reason) {
         entry.reasons.push(reason);
     }
@@ -175,6 +188,93 @@ fn outline(index: &Index, path: &str) -> Result<Option<String>, IndexError> {
             .collect::<Vec<_>>()
             .join("\n"),
     ))
+}
+
+/// The definitions enclosing the lines of `hit` that contain one of `words`, as line
+/// spans. A method's span is its whole container (the `impl` or class: every symbol in
+/// the file with the same container) when that fits in [`DEFINITION_MAX_LINES`], else the
+/// method itself. Empty when no matching line sits inside a definition that fits — the
+/// caller then keeps the chunk as it is.
+fn aligned_spans(
+    index: &Index,
+    hit: &anycode_code_intelligence::Chunk,
+    words: &[&str],
+) -> Result<Vec<(u32, u32)>, IndexError> {
+    let lowered: Vec<String> = words.iter().map(|w| w.to_lowercase()).collect();
+    let matching_lines: Vec<u32> = hit
+        .text
+        .lines()
+        .zip(hit.start_line..)
+        .filter(|(line, _)| {
+            let line = line.to_lowercase();
+            lowered.iter().any(|w| line.contains(w.as_str()))
+        })
+        .map(|(_, n)| n)
+        .collect();
+    if matching_lines.is_empty() {
+        return Ok(Vec::new());
+    }
+    let symbols = index.symbols_in(&hit.path)?;
+    let fits = |start: u32, end: u32| end >= start && end - start < DEFINITION_MAX_LINES;
+    let mut spans: Vec<(u32, u32)> = Vec::new();
+    for line in matching_lines {
+        let Some(innermost) = symbols
+            .iter()
+            .filter(|s| s.start_line <= line && line <= s.end_line)
+            .min_by_key(|s| s.end_line - s.start_line)
+        else {
+            continue;
+        };
+        let own = (innermost.start_line, innermost.end_line);
+        let span = match &innermost.container {
+            Some(container) => {
+                // Siblings in one contiguous run: two `impl Tool for …` blocks in a file
+                // share a container name but are different blocks.
+                let mut siblings: Vec<(u32, u32)> = symbols
+                    .iter()
+                    .filter(|s| s.container.as_deref() == Some(container.as_str()))
+                    .map(|s| (s.start_line, s.end_line))
+                    .collect();
+                siblings.sort_unstable();
+                let (mut start, mut end) = own;
+                for &(s_start, s_end) in siblings.iter().rev().filter(|(s, _)| *s < own.0) {
+                    if s_end + SIBLING_GAP_LINES >= start {
+                        start = start.min(s_start);
+                    } else {
+                        break;
+                    }
+                }
+                for &(s_start, s_end) in siblings.iter().filter(|(s, _)| *s > own.0) {
+                    if s_start <= end + SIBLING_GAP_LINES {
+                        end = end.max(s_end);
+                    } else {
+                        break;
+                    }
+                }
+                if fits(start, end) {
+                    (start, end)
+                } else {
+                    own
+                }
+            }
+            None => own,
+        };
+        if fits(span.0, span.1) {
+            spans.push(span);
+        }
+    }
+    // Neighbouring small definitions become one passage rather than a scatter of items.
+    spans.sort_unstable();
+    let mut merged: Vec<(u32, u32)> = Vec::new();
+    for (start, end) in spans {
+        match merged.last_mut() {
+            Some(last) if start <= last.1 + SIBLING_GAP_LINES && fits(last.0, end.max(last.1)) => {
+                last.1 = last.1.max(end);
+            }
+            _ => merged.push((start, end)),
+        }
+    }
+    Ok(merged)
 }
 
 pub fn build(index: &Index, request: &ContextRequest) -> Result<ContextPackage, ContextError> {
@@ -266,16 +366,49 @@ pub fn build(index: &Index, request: &ContextRequest) -> Result<ContextPackage, 
                 .collect();
             // Normalised so the strongest lexical hit is worth about one symbol match.
             let relative = if best > 0.0 { hit.score / best } else { 0.5 };
-            add(
-                &mut candidates,
-                &hit.path,
-                hit.start_line,
-                hit.end_line,
-                hit.text,
-                false,
-                Reason::MatchesTerms { terms: matched },
-                2.0 + 4.0 * relative.clamp(0.0, 1.0),
-            );
+            let mut score = 2.0 + 4.0 * relative.clamp(0.0, 1.0);
+            // An instruction that names code is about code; a document that quotes the same
+            // words (a changelog, this repository's review ledger) is weaker evidence.
+            let prose = files
+                .iter()
+                .find(|f| f.path == hit.path)
+                .is_some_and(|f| f.language == anycode_code_intelligence::Language::Other);
+            if prose && !intent.identifiers.is_empty() {
+                score *= PROSE_WEIGHT_WITH_IDENTIFIERS;
+            }
+            // Chunks are fixed 50-line windows that cut definitions in half; a match inside
+            // a definition is passed on as that definition instead (its whole `impl` or
+            // class when that fits), so the model gets the code around the match.
+            let spans = aligned_spans(index, &hit, &words)?;
+            if spans.is_empty() {
+                add(
+                    &mut candidates,
+                    &hit.path,
+                    hit.start_line,
+                    hit.end_line,
+                    hit.text,
+                    false,
+                    Reason::MatchesTerms { terms: matched },
+                    score,
+                );
+                continue;
+            }
+            for (start, end) in spans {
+                if let Some(text) = read_lines(index, &hit.path, start, end) {
+                    add(
+                        &mut candidates,
+                        &hit.path,
+                        start,
+                        end,
+                        text,
+                        false,
+                        Reason::MatchesTerms {
+                            terms: matched.clone(),
+                        },
+                        score,
+                    );
+                }
+            }
         }
     }
 
@@ -844,6 +977,38 @@ mod tests {
         .unwrap();
         let package = build(&index, &request("Look at notes2.md", &[])).unwrap();
         assert!(!render(&package).contains("DOTENV_SECRET"));
+    }
+
+    #[test]
+    fn a_match_inside_a_method_brings_its_whole_impl_even_across_a_chunk_boundary() {
+        let dir = TempDir::new();
+        // `run` sits on both sides of the line-50 chunk boundary; the match is in `name`.
+        let mut src = String::from("pub struct Widget;\n\n");
+        src.push_str(
+            "impl Widget {\n    pub fn name(&self) -> &str {\n        \"gizmo.lookup\"\n    }\n\n",
+        );
+        src.push_str("    pub fn run(&self) -> u32 {\n");
+        for i in 0..50 {
+            src.push_str(&format!("        let v{i} = {i};\n"));
+        }
+        src.push_str("        UNIQUE_BODY_MARKER\n    }\n}\n");
+        write(dir.path(), "widget.rs", &src);
+        let package = build(
+            &index_of(dir.path()),
+            &request("The `gizmo.lookup` name should change", &[]),
+        )
+        .unwrap();
+        let passage = package
+            .items
+            .iter()
+            .find(|i| i.path == "widget.rs")
+            .expect("widget.rs should be included");
+        assert!(
+            passage.text.contains("UNIQUE_BODY_MARKER"),
+            "{}",
+            passage.text
+        );
+        assert!(passage.start_line <= 4, "starts at {}", passage.start_line);
     }
 
     #[test]

@@ -575,3 +575,22 @@ fn one_unreadable_file_does_not_fail_the_batch() {
     assert!(refreshed.is_ok(), "{refreshed:?}");
     assert!(indexed(&index).is_empty());
 }
+
+#[test]
+fn an_index_from_an_older_format_is_rebuilt_on_open() {
+    let dir = tempdir().unwrap();
+    let data = tempdir().unwrap();
+    write(dir.path(), "a.py", "def f():\n    pass\n");
+    let db = data.path().join("i.sqlite");
+    {
+        let mut index = Index::open(&db, dir.path()).unwrap();
+        index.refresh().unwrap();
+    }
+    // Pretend an older build wrote it.
+    rusqlite::Connection::open(&db)
+        .unwrap()
+        .pragma_update(None, "user_version", 1)
+        .unwrap();
+    let index = Index::open(&db, dir.path()).unwrap();
+    assert!(indexed(&index).is_empty(), "stale rows kept");
+}

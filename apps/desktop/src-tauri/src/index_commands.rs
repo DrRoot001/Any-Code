@@ -5,7 +5,9 @@
 
 use crate::AppState;
 use anycode_code_intelligence::Index;
-use notify_debouncer_mini::{new_debouncer, notify::RecursiveMode, DebounceEventResult};
+use notify_debouncer_mini::{
+    new_debouncer_opt, notify, notify::RecursiveMode, DebounceEventResult,
+};
 use serde::Serialize;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
@@ -154,26 +156,34 @@ fn watch<R: Runtime>(
     index: Arc<Mutex<Index>>,
 ) -> Result<Watcher, String> {
     let app = app.clone();
-    let mut debouncer = new_debouncer(DEBOUNCE, move |result: DebounceEventResult| {
-        let Ok(events) = result else { return };
-        let paths: Vec<PathBuf> = events.into_iter().map(|e| e.path).collect();
-        // ponytail: ignored paths (target/, .git/) are filtered inside update_paths, so a
-        // build's burst of events still takes the lock once per batch; pre-filter if it shows.
-        if paths.is_empty() {
-            return;
-        }
-        let status = {
-            let Ok(mut index) = index.lock() else { return };
-            match index.update_paths(&paths) {
-                Ok(report) if report.reindexed == 0 && report.removed == 0 => return,
-                Ok(report) => ready_status(&index, report.elapsed_ms),
-                Err(e) => IndexStatus::Failed {
-                    error: e.to_string(),
-                },
+    // Symlinks are never followed: the index never reads through one, and following a
+    // link such as `x -> /` would spend the user's inotify watches on the whole disk.
+    let config = notify_debouncer_mini::Config::default()
+        .with_timeout(DEBOUNCE)
+        .with_notify_config(notify::Config::default().with_follow_symlinks(false));
+    let mut debouncer = new_debouncer_opt::<_, notify::RecommendedWatcher>(
+        config,
+        move |result: DebounceEventResult| {
+            let Ok(events) = result else { return };
+            let paths: Vec<PathBuf> = events.into_iter().map(|e| e.path).collect();
+            // ponytail: ignored paths (target/, .git/) are filtered inside update_paths, so a
+            // build's burst of events still takes the lock once per batch; pre-filter if it shows.
+            if paths.is_empty() {
+                return;
             }
-        };
-        publish(&app, generation, status);
-    })
+            let status = {
+                let Ok(mut index) = index.lock() else { return };
+                match index.update_paths(&paths) {
+                    Ok(report) if report.reindexed == 0 && report.removed == 0 => return,
+                    Ok(report) => ready_status(&index, report.elapsed_ms),
+                    Err(e) => IndexStatus::Failed {
+                        error: e.to_string(),
+                    },
+                }
+            };
+            publish(&app, generation, status);
+        },
+    )
     .map_err(|e| format!("cannot watch the workspace: {e}"))?;
     debouncer
         .watcher()
@@ -191,6 +201,42 @@ pub fn index_status(state: State<AppState>) -> Result<IndexStatus, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The real watcher, end to end: a file written after indexing is picked up within the
+    /// debounce. Uses an in-memory index so nothing is written to the app's data directory.
+    #[test]
+    fn the_watcher_indexes_a_new_file() {
+        let dir = std::env::temp_dir().join(format!("anycode-watch-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let root = dir.canonicalize().unwrap();
+        std::fs::write(root.join("a.py"), "def a():\n    pass\n").unwrap();
+        let mut index = Index::open_in_memory(&root).unwrap();
+        index.refresh().unwrap();
+        let index = Arc::new(Mutex::new(index));
+
+        let app = tauri::test::mock_builder()
+            .build(tauri::test::mock_context(tauri::test::noop_assets()))
+            .unwrap();
+        app.manage(crate::AppState::for_tests());
+        let _watcher = watch(app.handle(), &root, 1, index.clone()).unwrap();
+        // FSEvents may deliver the watch's own start-up late; give it a moment first.
+        std::thread::sleep(Duration::from_millis(300));
+        std::fs::write(root.join("b.py"), "def b():\n    pass\n").unwrap();
+
+        let deadline = std::time::Instant::now() + Duration::from_secs(10);
+        let found = loop {
+            let files = index.lock().unwrap().files().unwrap();
+            if files.iter().any(|f| f.path == "b.py") {
+                break true;
+            }
+            if std::time::Instant::now() > deadline {
+                break false;
+            }
+            std::thread::sleep(Duration::from_millis(100));
+        };
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(found, "b.py was never indexed by the watcher");
+    }
 
     #[test]
     fn status_serialises_to_the_frontend_contract() {

@@ -212,6 +212,19 @@ pub fn extract_symbols(language: Language, source: &str, path: &str) -> Vec<Symb
             })
         })
         .collect();
+    // Rust's tags query tags a method both `definition.method` and `definition.function`:
+    // one symbol per definition, the more specific kind kept.
+    symbols.sort_by_key(|s| {
+        (
+            s.start_line,
+            s.end_line,
+            s.name.clone(),
+            s.kind != SymbolKind::Method,
+        )
+    });
+    symbols.dedup_by(|a, b| {
+        a.start_line == b.start_line && a.end_line == b.end_line && a.name == b.name
+    });
 
     for symbol in &mut symbols {
         let self_span = symbol.end_line.saturating_sub(symbol.start_line);

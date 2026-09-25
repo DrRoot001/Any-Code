@@ -90,8 +90,23 @@ pub fn is_sensitive(rel: &str) -> bool {
 /// default skips), sensitive, or ignored by any `.gitignore`/`.ignore` between the
 /// repository's top level and the file, or by `.git/info/exclude`.
 ///
-/// ponytail: the user's global git excludes file is not consulted here (the full walk
-/// honours it); read `core.excludesFile` if a project relies on it for secrets.
+/// The user's global git excludes (`core.excludesFile`), which the full walk honours
+/// too. Read once: it lives in git config, not in the workspace.
+fn global_excludes() -> &'static ignore::gitignore::Gitignore {
+    static GLOBAL: std::sync::OnceLock<ignore::gitignore::Gitignore> = std::sync::OnceLock::new();
+    GLOBAL.get_or_init(|| ignore::gitignore::Gitignore::global().0)
+}
+
+/// Whether `rel` or any directory above it matches `matcher`, whose patterns are relative.
+fn matches_relative(matcher: &ignore::gitignore::Gitignore, rel: &str, is_dir: bool) -> bool {
+    let parts: Vec<&str> = rel.split('/').collect();
+    (1..=parts.len()).any(|n| {
+        let prefix = parts[..n].join("/");
+        let this_is_dir = n < parts.len() || is_dir;
+        matcher.matched(Path::new(&prefix), this_is_dir).is_ignore()
+    })
+}
+
 pub fn is_excluded(root: &Path, fs_path: &Path) -> bool {
     let Some(rel) = to_workspace_relative(root, fs_path) else {
         return true;
@@ -103,6 +118,9 @@ pub fn is_excluded(root: &Path, fs_path: &Path) -> bool {
         return true;
     }
     let is_dir = fs_path.is_dir();
+    if matches_relative(global_excludes(), &rel, is_dir) {
+        return true;
+    }
     // Deepest directory first: as in git, its rules override its parents'. The climb goes
     // past `root` to the enclosing repository's top level, as the full walk does — a
     // workspace opened at `monorepo/apps` still honours `monorepo/.gitignore`.
@@ -136,6 +154,18 @@ pub fn is_excluded(root: &Path, fs_path: &Path) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn relative_patterns_match_a_path_or_any_directory_above_it() {
+        let mut builder = ignore::gitignore::GitignoreBuilder::new("");
+        builder.add_line(None, "*.secret").unwrap();
+        builder.add_line(None, "scratch/").unwrap();
+        let matcher = builder.build().unwrap();
+        assert!(matches_relative(&matcher, "a/b/key.secret", false));
+        assert!(matches_relative(&matcher, "scratch/notes.md", false));
+        assert!(matches_relative(&matcher, "deep/scratch/notes.md", false));
+        assert!(!matches_relative(&matcher, "src/main.rs", false));
+    }
 
     #[test]
     fn nul_byte_marks_binary() {

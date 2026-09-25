@@ -436,6 +436,10 @@ fn row_to_symbol(row: &rusqlite::Row) -> rusqlite::Result<Symbol> {
     })
 }
 
+/// Bumped whenever extraction changes what a file's rows are. 2: one symbol per Rust
+/// method (the tags query tags each twice).
+const INDEX_FORMAT: u32 = 2;
+
 impl Index {
     /// Opens (creating if needed) the index database at `db_path` and
     /// applies its schema. `workspace_root` is canonicalised once here and
@@ -450,6 +454,15 @@ impl Index {
         conn.busy_timeout(std::time::Duration::from_secs(30))?;
         conn.pragma_update(None, "journal_mode", "WAL")?;
         conn.execute_batch(SCHEMA)?;
+        // An index written by an older extractor is emptied, so the next refresh rebuilds
+        // it rather than keeping rows the current code would not produce.
+        let version: u32 = conn.query_row("PRAGMA user_version", [], |r| r.get(0))?;
+        if version < INDEX_FORMAT {
+            conn.execute_batch(
+                "DELETE FROM chunks; DELETE FROM symbols; DELETE FROM imports; DELETE FROM files;",
+            )?;
+            conn.pragma_update(None, "user_version", INDEX_FORMAT)?;
+        }
         Ok(Self {
             conn,
             root: canonical_root(workspace_root),
